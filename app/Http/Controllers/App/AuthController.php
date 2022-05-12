@@ -292,7 +292,7 @@ class AuthController extends Controller
         return Auth::guard($guard);
     }
 
-    // Overiding the Trait Method
+    // Overriding the Trait Method
     public function sendResetLinkEmail(Request $request)
     {
         $validator =  Validator::make($request->all(), [
@@ -318,6 +318,57 @@ class AuthController extends Controller
         $this->sendResetOtp($user);
 
         return $this->sendResponse([], 'You will get recovery e-mail shortly.');
+    }
+
+    /**
+     * Reset Password
+     *
+     * @return \Illuminate\Contracts\Auth\Guard
+     */
+    public function reset_password(Request $request)
+    {
+
+        $validator =  Validator::make($request->all(), [
+            // 'current_password' => ['required', new MatchOldPassword],
+            'otp' => ['required', 'string', 'max:10'],
+            'new_password' => [
+                'required',
+                'min:8', 
+                'regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/'
+                ],
+            'new_confirm_password' => ['same:new_password'],
+        ],[
+            'new_password.regex' => 'The password must be at least 8 characters and must be combination of uppercase, lowercase, special character and a digit.'
+        ]);
+        $user = User::where('email',$request->email)->first();
+        if(!$user){
+            return $this->validationError("Email doesn't exists",[], 400);
+        }
+
+        if ($validator->fails()) {
+            $errors = [];
+            foreach($validator->errors()->toArray() as $key => $error ){
+                 $errors[] = $error[0];
+            }
+            return api_response("",400,implode("\n ", $errors),$errors);
+        }
+        
+        // dd($user, $request->email);
+
+        if ($user->otp !=$request->otp) {
+            return $this->validationError('Unauthorised.',[array('key'=>'otp','message'=>'Otp is Invalid')],400);
+        }
+        else if(Carbon::parse($user->otp_expiry)->lt(Carbon::now())){
+            return $this->validationError('Unauthorised.','Otp is Expired',400);
+        }
+
+        Auth::logoutOtherDevices($user->password);
+        $user->update(['password'=> Hash::make($request->new_password)]);
+        
+        $user->otp = null;
+        $user->save();
+        return api_response("Password Changed Successfully.",200);
+       
     }
 
 

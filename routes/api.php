@@ -26,6 +26,7 @@ Route::group([
 
     Route::post('login', 'AuthController@login');
     Route::post('forgot/password', 'AuthController@sendResetLinkEmail');
+    Route::post('reset/password', 'AuthController@reset_password');
     Route::post('update/password', 'AuthController@change_password');
 
     Route::group(['middleware' => ['auth:sanctum']], function () {
