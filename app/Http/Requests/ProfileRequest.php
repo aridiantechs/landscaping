@@ -32,8 +32,7 @@ class ProfileRequest extends FormRequest
             'last_name' => 'required|string|max:191',
             'profile_image' => 'nullable|image',
             // 'phone' => 'required|numeric|digits_between:11,13|unique:users,phone,'.auth()->user()->id,
-            'email' => 'required|email',
-            'city' => 'required|string|max:191',
+            'email' => 'required|regex:/[a-z0-9]+@[a-z]+\.[a-z]{2,3}/i',
             // 'password' => [
             //     'nullable',
             //     'min:8',
@@ -42,9 +41,9 @@ class ProfileRequest extends FormRequest
         ];
 
         // if (auth()->user()->hasRole('supplier')) {
-            $rules['gender'] = 'required|string|in:male,female' ;
-            $rules['date_of_birth'] = 'required|string' ;
-        // }
+        //     $rules['gender'] = 'required|string|in:male,female' ;
+        //     $rules['date_of_birth'] = 'required|string' ;
+        // // }
         
         $requestWise = [];
 

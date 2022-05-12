@@ -43,25 +43,22 @@ class AuthController extends Controller
         
     	if ($validator->fails()) {
             $valid_errors=$validator->getMessageBag()->toArray();
-            $errors=[];
+            
 
             $fields1=new User;
             $fields=$fields1->getFillable();
-            foreach ($fields as $key) 
-            {
-                $message="";
-                if(isset($valid_errors[$key]))
-                {
-                    $message= implode("|",$valid_errors[$key]);
-                }
-                $errors[] = ['key' => $key,'message' => $message];
-            }
+            $errors= $this->formatErrors($fields, $valid_errors);
             return $this->validationError('Fields are Missing', $errors, 400);
         }
 
         $user= User::where('email', request('email'))->first();
         if ( Auth::attempt($request->only('email', 'password'))) {
+            
             Auth::login($user);
+            if(auth()->user()->hasRole('superadmin')) {
+                $user->tokens()->delete();
+                return $this->validationError('Unauthorised.', [['title'=>'signin','message'=>'Unauthorised']],400);
+            }
             $user->otp_verified_at=null;
             
             $device = UserDevice::where('user_id',$user->id)->where('device_id',$request->device_id)->first();
@@ -93,10 +90,12 @@ class AuthController extends Controller
             'last_name' => $request->last_name,
             'phone' => $request->phone,
             'email' => $request->email,
-            'profile_image' => custom_file_upload($request->profile_image,USER_IMAGE_PATH_PUBLIC),
+            'photo_path' => custom_file_upload($request->profile_image,USER_IMAGE_PATH_PUBLIC),
             'password' => Hash::make($request->password),
         ]);
         $user->save();
+
+        return $user;
 
     }
 
@@ -118,23 +117,16 @@ class AuthController extends Controller
 
     	if ($validator->fails()) {
             $valid_errors=$validator->getMessageBag()->toArray();
-            $errors=[];
+            
 
             $fields1=new User;
             $fields=$fields1->getFillable();
-            foreach ($fields as $key) 
-            {
-                $message="";
-                if(isset($valid_errors[$key]))
-                {
-                    $message= implode("|",$valid_errors[$key]);
-                }
-                $errors[] = ['key' => $key,'message' => $message];
-            }
+            $errors=$this->formatErrors($fields, $valid_errors);
             return $this->validationError('Fields are Missing', $errors, 400);
         }
 
-        $this->createUser($request);
+        $user = $this->createUser($request);
+        $user->assignRole($request->role);
         
         if (Auth::attempt(['email' => $request->email,'password' => $request->password])) {
         
@@ -165,6 +157,27 @@ class AuthController extends Controller
             'otp' =>  $user->otp,
             'otp_expiry' =>  Carbon::parse($user->otp_expiry)->format('Y-m-d H:i:s'),
             'body_text'=>'Hi, here is your verification code'
+        ];
+
+        try {
+            Mail::to($user->email)->send(new EmailOtp($data));
+        } catch (\Throwable $th) {
+             
+        }
+
+    }
+
+    public function sendResetOtp($user)
+    {
+        $user->otp=unique_serial('users','otp',null);
+        $user->otp_expiry=Carbon::now()->addMinutes('60');
+        $user->otp_verified_at=null;
+        $user->save();
+
+        $data=[
+            'otp' =>  $user->otp,
+            'otp_expiry' =>  Carbon::parse($user->otp_expiry)->format('Y-m-d H:i:s'),
+            'body_text'=>'Hi, here is your verification code to reset your password'
         ];
 
         try {
@@ -246,12 +259,11 @@ class AuthController extends Controller
                 $user->email_verified_at=Carbon::now();
                 $user->save();
 
-                $user->assignRole('endUser');
             }
         // }
         $success['token'] =  $user->createToken('API Token')->plainTextToken;
         $success['user'] =  new UserResource($user);
-        $success['profile_completed'] = $user->email ? true : false;
+        // $success['profile_completed'] = $user->email ? true : false;
 
         return $this->sendResponse( $success, 'Otp verified.');
     }
@@ -299,9 +311,11 @@ class AuthController extends Controller
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.
-        $response = $this->broker()->sendResetLink(
-            $request->only('email')
-        );
+        // $response = $this->broker()->sendResetLink(
+        //     $request->only('email')
+        // );
+
+        $this->sendResetOtp($user);
 
         return $this->sendResponse([], 'You will get recovery e-mail shortly.');
     }
@@ -324,7 +338,7 @@ class AuthController extends Controller
                 ],
             'new_confirm_password' => ['same:new_password'],
         ],[
-            'new_password.regex' => 'The password must be alteast 8 characters and must be combination of uppercase, lowercase, special character and a digit.'
+            'new_password.regex' => 'The password must be at least 8 characters and must be combination of uppercase, lowercase, special character and a digit.'
         ]);
 
         if ($validator->fails()) {

@@ -34,6 +34,23 @@ trait ApiResponser
 		],$code);
 	}
 
+
+	protected function formatErrors($fields, $valid_errors)
+	{
+		$errors=[];
+
+		foreach ($fields as $key) 
+            {
+                $message="";
+                if(isset($valid_errors[$key]))
+                {
+                    $message= implode("|",$valid_errors[$key]);
+                }
+                $errors[] = ['key' => $key,'message' => $message];
+            }
+		return $errors;
+	}
+
 	/**
      * Return an error JSON response.
      *

@@ -40,6 +40,16 @@ Route::group([
     
     // Route::post('refresh', 'AuthController@refresh');
     Route::post('signup', 'AuthController@signup');
+});
 
-    Route::post('forgot/password', 'AuthController@sendResetLinkEmail');
+Route::group([
+    'namespace' => '\App\Http\Controllers\App',
+    'prefix' => 'account',
+    'middleware'=>['auth:sanctum', 'isVerifiedUser'/* ,'otp_verified' */]
+
+], function ($router) {
+
+    Route::post('profile', 'Account\ProfileController@update');
+    Route::get('profile', 'Account\ProfileController@index');
+
 });
