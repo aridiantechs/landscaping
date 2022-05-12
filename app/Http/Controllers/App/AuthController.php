@@ -164,6 +164,7 @@ class AuthController extends Controller
         $data=[
             'otp' =>  $user->otp,
             'otp_expiry' =>  Carbon::parse($user->otp_expiry)->format('Y-m-d H:i:s'),
+            'body_text'=>'Hi, here is your verification code'
         ];
 
         try {

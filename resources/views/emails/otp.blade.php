@@ -239,7 +239,7 @@
                                                                                     <![endif]-->
                                                                                     <div style="color:#000000;font-family:'Roboto', Tahoma, Verdana, Segoe, sans-serif;line-height:1.5;padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
                                                                                        <div class="txtTinyMce-wrapper" style="line-height: 1.5; font-size: 12px; font-family: 'Roboto', Tahoma, Verdana, Segoe, sans-serif; color: #000000; mso-line-height-alt: 18px;">
-                                                                                          <p style="line-height: 1.5; word-break: break-word; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; font-size: 16px; mso-line-height-alt: 24px; margin: 0;"><span style="font-size: 16px;">Hi, here is your verification code</span></p>
+                                                                                          <p style="line-height: 1.5; word-break: break-word; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; font-size: 16px; mso-line-height-alt: 24px; margin: 0;"><span style="font-size: 16px;">{{$data['body_text'] ?? ''}}</span></p>
                                                                                        </div>
                                                                                     </div>
                                                                                     <!--[if mso]>
