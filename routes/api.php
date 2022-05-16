@@ -45,7 +45,7 @@ Route::group([
 Route::group([
     'namespace'   => '\App\Http\Controllers\App',
     'prefix'      => '1.0/worker',
-    'middleware'  => ['auth:sanctum', 'isVerifiedUser', 'isWorker'/* ,'otp_verified' */]
+    'middleware'  => ['auth:sanctum', 'isVerifiedUser'/* ,'otp_verified' */]
 ], function ($router) {
 
     // Worker Profile
@@ -59,7 +59,7 @@ Route::group([
     // Worker Side Notifications Ends Here
     
     // Worker Side Orders
-    Route::get('order/listing', 'Account\OrderController@worker_index'); /* Order Listing */
+    Route::get('order/listing', 'Account\OrderController@index'); /* Order Listing */
     Route::post('order/action', 'Account\OrderController@worker_action'); /* Order Action */
     Route::post('order/quote/submit', 'Account\OrderController@worker_quoteSubmit'); /* Order Quote Submit */
     Route::get('order/quote/get', 'Account\OrderController@worker_quoteGet'); /* Order Quote Get */    
@@ -72,7 +72,7 @@ Route::group([
 Route::group([
     'namespace'   => '\App\Http\Controllers\App',
     'prefix'      => '1.0/customer',
-    'middleware'  => ['auth:sanctum', 'isVerifiedUser', 'isEndUser'/* ,'otp_verified' */]
+    'middleware'  => ['auth:sanctum', 'isVerifiedUser'/* ,'otp_verified' */]
 ], function ($router) {
 
     // Customer Profile

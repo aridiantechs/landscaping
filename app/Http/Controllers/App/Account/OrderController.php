@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\App\Account;
 
-use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\OrderStatus;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class OrderController extends Controller
 {
@@ -15,7 +16,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        $orders = OrderStatus::with('order')->get()->pluck('order');
+        return $this->sendResponse($orders, 'Orders Listing.');
     }
 
     /**
