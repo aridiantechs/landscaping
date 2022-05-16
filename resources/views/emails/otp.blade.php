@@ -209,7 +209,7 @@
                                                                               <table width="100%" cellpadding="0" cellspacing="0" border="0">
                                                                                  <tr style="line-height:0px">
                                                                                     <td style="padding-right: 0px;padding-left: 0px;" align="center">
-                                                                                       <![endif]--><a href="{{route('/')}}" target="_blank" style="outline:none" tabindex="-1"><img class="center fixedwidth" align="center" border="0" src="{{ asset('frontend/images/logo/kundkontakter.webp') }}" alt="Kundkontakter" title="Kundkontakter" style="text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; width: 100%; max-width: 232px; display: block;" width="232"></a>
+                                                                                       <![endif]--><a href="{{url('/')}}" target="_blank" style="outline:none" tabindex="-1"><img class="center fixedwidth" align="center" border="0" src="{{ asset('frontend/images/logo/kundkontakter.webp') }}" alt="Kundkontakter" title="Kundkontakter" style="text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; width: 100%; max-width: 232px; display: block;" width="232"></a>
                                                                                        <!--[if mso]>
                                                                                     </td>
                                                                                  </tr>
@@ -373,7 +373,7 @@
                                                                               <table width="100%" cellpadding="0" cellspacing="0" border="0">
                                                                                  <tr style="line-height:0px">
                                                                                     <td style="padding-right: 0px;padding-left: 0px;" align="center">
-                                                                                       <![endif]--><a href="{{route('/')}}" target="_blank" style="outline:none" tabindex="-1"><img class="center fixedwidth" align="center" border="0" src="{{ asset('frontend/images/logo/kundkontakter.webp') }}" alt="Kundkontakter" title="Kundkontakter" style="text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; width: 100%; max-width: 120px; display: block;" width="120"></a>
+                                                                                       <![endif]--><a href="{{url('/')}}" target="_blank" style="outline:none" tabindex="-1"><img class="center fixedwidth" align="center" border="0" src="{{ asset('frontend/images/logo/kundkontakter.webp') }}" alt="Kundkontakter" title="Kundkontakter" style="text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; width: 100%; max-width: 120px; display: block;" width="120"></a>
                                                                                        <!--[if mso]>
                                                                                     </td>
                                                                                  </tr>

@@ -3,9 +3,11 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Traits\ApiResponser;
 
-class isendUser
+class isEndUser
 {
+    use ApiResponser;
     /**
      * Handle an incoming request.
      *
@@ -15,10 +17,11 @@ class isendUser
      */
     public function handle($request, Closure $next)
     {
-        if(\Auth::check() && \Auth::user()->hasRole("end_user") ){ // endUser
+
+        if(\Auth::check() && \Auth::user()->hasRole("endUser") ){ // endUser
             return $next($request);
         }else{
-            return redirect()->route('login');
+            return $this->sendResponse([], 'You are not authorized to access this resource.', 400);
         }
         
     }

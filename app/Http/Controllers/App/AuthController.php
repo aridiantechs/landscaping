@@ -183,6 +183,7 @@ class AuthController extends Controller
         try {
             Mail::to($user->email)->send(new EmailOtp($data));
         } catch (\Throwable $th) {
+            // dd($th);
              
         }
 
@@ -329,6 +330,7 @@ class AuthController extends Controller
     {
 
         $validator =  Validator::make($request->all(), [
+            'email' => ['required', 'email' , 'exists:users'],
             // 'current_password' => ['required', new MatchOldPassword],
             'otp' => ['required', 'string', 'max:10'],
             'new_password' => [
@@ -340,19 +342,19 @@ class AuthController extends Controller
         ],[
             'new_password.regex' => 'The password must be at least 8 characters and must be combination of uppercase, lowercase, special character and a digit.'
         ]);
-        $user = User::where('email',$request->email)->first();
-        if(!$user){
-            return $this->validationError("Email doesn't exists",[], 400);
-        }
-
+        
         if ($validator->fails()) {
             $errors = [];
             foreach($validator->errors()->toArray() as $key => $error ){
-                 $errors[] = $error[0];
+                $errors[] = $error[0];
             }
             return api_response("",400,implode("\n ", $errors),$errors);
         }
         
+        $user = User::where('email',$request->email)->first();
+        // if(!$user){
+        //     return $this->validationError("Email doesn't exists",[], 400);
+        // }
         // dd($user, $request->email);
 
         if ($user->otp !=$request->otp) {
@@ -377,35 +379,35 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Contracts\Auth\Guard
      */
-    public function change_password(Request $request)
-    {
+    // public function change_password(Request $request)
+    // {
 
-        $validator =  Validator::make($request->all(), [
-            'current_password' => ['required', new MatchOldPassword],
-            'new_password' => [
-                'required',
-                'min:8', 
-                'regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/'
-                ],
-            'new_confirm_password' => ['same:new_password'],
-        ],[
-            'new_password.regex' => 'The password must be at least 8 characters and must be combination of uppercase, lowercase, special character and a digit.'
-        ]);
+    //     $validator =  Validator::make($request->all(), [
+    //         'current_password' => ['required', new MatchOldPassword],
+    //         'new_password' => [
+    //             'required',
+    //             'min:8', 
+    //             'regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/'
+    //             ],
+    //         'new_confirm_password' => ['same:new_password'],
+    //     ],[
+    //         'new_password.regex' => 'The password must be at least 8 characters and must be combination of uppercase, lowercase, special character and a digit.'
+    //     ]);
 
-        if ($validator->fails()) {
-            $errors = [];
-            foreach($validator->errors()->toArray() as $key => $error ){
-                 $errors[] = $error[0];
-            }
-            return api_response("",400,implode("\n ", $errors),$errors);
-        }
+    //     if ($validator->fails()) {
+    //         $errors = [];
+    //         foreach($validator->errors()->toArray() as $key => $error ){
+    //              $errors[] = $error[0];
+    //         }
+    //         return api_response("",400,implode("\n ", $errors),$errors);
+    //     }
 
-        Auth::logoutOtherDevices(auth()->user()->password);
-        User::find(auth()->user()->id)->update(['password'=> Hash::make($request->new_password)]);
+    //     // Auth::logoutOtherDevices(auth()->user()->password);
+    //     User::find(auth()->user()->id)->update(['password'=> Hash::make($request->new_password)]);
         
-        return api_response("Password Updated.",200);
+    //     return api_response("Password Updated.",200);
        
-    }
+    // }
 
     public function sendEmailVerification($user){
 
