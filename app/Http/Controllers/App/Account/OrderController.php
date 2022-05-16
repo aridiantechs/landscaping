@@ -6,6 +6,8 @@ use App\Models\Order;
 use App\Models\OrderStatus;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\OrderResource;
+use App\Http\Resources\OrderResourceCollection;
 
 class OrderController extends Controller
 {
@@ -17,7 +19,31 @@ class OrderController extends Controller
     public function index()
     {
         $orders = OrderStatus::with('order')->get()->pluck('order');
-        return $this->sendResponse($orders, 'Orders Listing.');
+        
+        return $this->sendResponse(new OrderResourceCollection($orders), 'Orders Listing.');
+    }
+
+    public function worker_action(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'order_id'=>'required|exists:orders,uuid',
+            'status' => 'required|in:ACCEPTED,REJECTED,SCHEDULE',
+        ]);
+
+        if ($validator->fails()) {
+            $fillable = new Order;
+            $fillable = $fillable->getFillable();
+            $valid_errors = $this->formatErrors($fillable,$validator->errors());
+            return $this->validationError('Validation Error.',$valid_errors);
+        }
+
+        $order = Order::where('uuid', $uuid)->first();
+        $order->order_responses()->create([
+            'worker_id' => auth()->user()->id,
+            'status' => $request->status,
+        ]);
+
+        return $this->sendResponse(new OrderResource($order), 'Order Status Updated.');
     }
 
     /**

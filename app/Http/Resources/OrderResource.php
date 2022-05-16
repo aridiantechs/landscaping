@@ -14,6 +14,20 @@ class OrderResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'order_id' => $this->uuid,
+            'user' => $this->user->name,
+            'city'=> $this->city,
+            'state'=> $this->state,
+            'country'=> $this->country,
+            'lat'=>$this->lat,
+            'lng'=>$this->lng,
+            'full_address'=>$this->full_address,
+            'status' => $this->order_status->status ?? 'PENDING',
+            'worker'=>$this->when(auth()->user()->hasRole('endUser') && $this->order_status()->exists(), function () {
+                return $this->order_status->worker;
+            }),
+        ];
     }
 }

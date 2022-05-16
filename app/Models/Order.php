@@ -12,6 +12,18 @@ class Order extends Model
 {
     use HasFactory;
 
+    protected $table = 'orders';
+    protected $fillable=[
+        'uuid',
+        'user_id',
+        'city',
+        'state',
+        'country',
+        'lat',
+        'lng',
+        'full_address',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -29,7 +41,7 @@ class Order extends Model
 
     public function order_status()
     {
-        return $this->hasOne(OrderStatus::class);
+        return $this->hasOne(OrderStatus::class, 'order_id', 'uuid');
     }
 
 }

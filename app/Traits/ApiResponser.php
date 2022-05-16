@@ -38,7 +38,7 @@ trait ApiResponser
 	protected function formatErrors($fields, $valid_errors)
 	{
 		$errors=[];
-
+        $valid_errors=$valid_errors->getMessages();
 		foreach ($fields as $key) 
             {
                 $message="";
