@@ -30,12 +30,14 @@ Route::group([
 
     Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('logout', 'AuthController@logout');
-        Route::post('update/password', 'AuthController@change_password');
         Route::get('me', 'AuthController@me')/* ->middleware('otp_verified') */;
        
         Route::get('refresh', 'AuthController@refreshToken');
         Route::post('otp', 'AuthController@verifyEmailUsingOtp');
 
+        Route::get('profile', 'Account\ProfileController@index');
+        Route::post('profile', 'Account\ProfileController@update');
+        Route::post('profile/password/update', 'Account\ProfileController@update_password');
     });
     
     // Route::post('refresh', 'AuthController@refresh');
@@ -48,12 +50,6 @@ Route::group([
     'middleware'  => ['auth:sanctum', 'isVerifiedUser'/* ,'otp_verified' */]
 ], function ($router) {
 
-    // Worker Profile
-    Route::get('profile', 'Account\ProfileController@index');
-    Route::post('profile', 'Account\ProfileController@update');
-    Route::post('profile/password/update', 'Account\ProfileController@update_password');
-    // Worker Profile Ends here
-
     // Worker Side Notifications
     Route::get('notification/listing/get', 'Account\NotificationController@worker_index'); /* Notification Listing Type */
     // Worker Side Notifications Ends Here
@@ -62,7 +58,7 @@ Route::group([
     Route::get('order/listing', 'Account\OrderController@index'); /* Order Listing */
     Route::post('order/action', 'Account\OrderController@worker_action'); /* Order Action */
     Route::post('order/{order}/quote/submit', 'Account\OrderController@quoteSubmit'); /* Order Quote Submit */
-    Route::get('order/{order}/quote', 'Account\OrderController@worker_quoteGet'); /* Order Quote Get */    
+    // Route::get('order/{order}/quote', 'Account\OrderController@worker_quoteGet'); 
     
     Route::post('order/{order}/schedule', 'Account\OrderController@schedule'); /* Order Action */
 
@@ -78,12 +74,6 @@ Route::group([
     'middleware'  => ['auth:sanctum', 'isVerifiedUser'/* ,'otp_verified' */]
 ], function ($router) {
 
-    // Customer Profile
-    Route::get('profile', 'Account\ProfileController@index');
-    Route::post('profile', 'Account\ProfileController@update');
-    Route::post('profile/password/update', 'Account\ProfileController@update_password');
-    // Customer Profile Ends here
-
     // Customer Side Notifications
     Route::get('notification/listing/get', 'Account\NotificationController@customer_index'); /* Notification Listing Type */
     // Customer Side Notifications Ends Here
@@ -92,10 +82,8 @@ Route::group([
     Route::get ('order/listing/get',   'Account\OrderController@index'); /* Order Listing */
     Route::post('order/post',         'Account\OrderController@store'); /* Order Listing */
     Route::post('order/action',       'Account\OrderController@customer_action'); /* Order Action */
-    Route::post('order/quote/submit', 'Account\OrderController@customer_quoteSubmit'); /* Order Quote Submit */
-    Route::get ('order/quote/get',     'Account\OrderController@customer_quoteGet'); /* Order Quote Get */    
+    // Route::get ('order/quote/get',     'Account\OrderController@customer_quoteGet');
     Route::post('order/{order}/quote/action', 'Account\OrderController@customer_quoteAction'); /* Order Quote Action Will only be performed by Customer */
-    Route::get ('order/details',       'Account\OrderController@customer_details'); /* Order Details */
     Route::get('order/{order}/detail', 'Account\OrderController@show');
     // Customer Side Orders Ends Here
 });
