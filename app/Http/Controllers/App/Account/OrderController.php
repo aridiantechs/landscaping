@@ -5,7 +5,6 @@ namespace App\Http\Controllers\App\Account;
 use App\Models\Order;
 use App\Models\OrderArea;
 use App\Models\OrderStatus;
-use App\Models\OrderArea;
 use Illuminate\Http\Request;
 use App\Http\Requests\OrderRequest;
 use App\Models\OrderResponse;
@@ -45,7 +44,11 @@ class OrderController extends Controller
         }
 
         $order = Order::where('uuid', $request->order_id)->first();
-
+        
+        // if order response already exists
+        if ( count($order->order_responses) && $order->accepted_response->count()) {
+            return $this->validationError('Order already accepted.', []);
+        }
         $order_r = new OrderResponse;
         $order_r->order_id = $request->order_id;
         $order_r->user_id = auth()->user()->id;

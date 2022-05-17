@@ -31,7 +31,7 @@ class Order extends Model
 
     public function order_responses()
     {
-        return $this->hasMany(OrderResponse::class);
+        return $this->hasMany(OrderResponse::class, 'order_id', 'uuid');
     }
 
     public function order_area()
@@ -44,4 +44,9 @@ class Order extends Model
         return $this->hasOne(OrderStatus::class, 'order_id', 'uuid');
     }
 
+    // get accepted response
+    public function accepted_response()
+    {
+        return $this->hasOne(OrderResponse::class, 'order_id', 'uuid')->where('response_type', 'ACCEPTED');
+    }
 }
