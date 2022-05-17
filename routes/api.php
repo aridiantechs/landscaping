@@ -61,8 +61,8 @@ Route::group([
     // Worker Side Orders
     Route::get('order/listing', 'Account\OrderController@index'); /* Order Listing */
     Route::post('order/action', 'Account\OrderController@worker_action'); /* Order Action */
-    Route::post('order/quote/submit', 'Account\OrderController@worker_quoteSubmit'); /* Order Quote Submit */
-    Route::get('order/quote/get', 'Account\OrderController@worker_quoteGet'); /* Order Quote Get */    
+    Route::post('order/{order}/quote/submit', 'Account\OrderController@quoteSubmit'); /* Order Quote Submit */
+    Route::get('order/{order}/quote', 'Account\OrderController@worker_quoteGet'); /* Order Quote Get */    
     
     Route::post('order/{order}/schedule', 'Account\OrderController@schedule'); /* Order Action */
 

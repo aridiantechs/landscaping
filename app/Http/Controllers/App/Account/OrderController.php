@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\App\Account;
 
 use App\Models\Order;
+use App\Models\OrderArea;
 use App\Models\OrderStatus;
 use Illuminate\Http\Request;
 use App\Models\OrderResponse;
@@ -76,24 +77,36 @@ class OrderController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function quoteSubmit(Request $request,$order_id)
     {
-        //
+        $validator = \Validator::make($request->all(), [
+            'length'=>'required|numeric',
+            'width'=>'required|numeric',
+        ]);
+
+        if ($validator->fails()) {
+            $valid_errors = $this->formatErrors(['length','width'],$validator->errors());
+            return $this->validationError('Validation Error.',$valid_errors);
+        }
+
+        $order = Order::where('uuid', $order_id)->first();
+        
+        // store order area
+        $area=new OrderArea;
+        $area->order_id= $order_id;
+        $area->worker_id= auth()->user()->id;
+        $area->length = $request->length;
+        $area->width = $request->width;
+        $area->total_amount=totalCostPerSqft($request->length,$request->width);
+        $area->customer_response = 'PENDING';
+        $area->save();
+
+        return $this->sendResponse($area, 'Order Area Submitted.');
     }
 
     /**

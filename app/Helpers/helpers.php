@@ -111,7 +111,16 @@ if (!function_exists('unique_serial')) {
     } 
 }
 
-
+if (!function_exists('totalCostPerSqft')) {
+    
+    function totalCostPerSqft($length, $width)
+    {
+        $price=5;
+        $total = $length * $width * $price;
+        return number_format($total, 2);
+    }
+    
+}
 
 if (!function_exists('text_format')) {
     /**
