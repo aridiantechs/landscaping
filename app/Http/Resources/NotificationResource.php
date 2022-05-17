@@ -15,14 +15,32 @@ class NotificationResource extends JsonResource
     public function toArray($request)
     {
         // return parent::toArray($request);
+        // return [
+        //     "id"      => (string)$this->id ?? '',
+        //     "type"    => (string)$this->type ?? '',
+        //     "user_id" => (string)$this->form_user_id ?? '',
+        //     "title"   => (string)$this->title ?? '',
+        //     "body"    => (string)$this->body ?? '',
+        //     "object"  => (string)$this->object ?? '',
+        //     "seen"    => (string)$this->seen ?? '',	
+        // ];
+
+        $action = "";
+        if($this->object){
+            if(array_key_exists('action_status', $this->object))
+            $action = $this->object['action_status'];
+        }
+
         return [
-            "id"      => $this->id ?? '',
-            "type"    => $this->type ?? '',
-            "user_id" => $this->form_user_id ?? '',
-            "title"   => $this->title ?? '',
-            "body"    => $this->body ?? '',
-            "object"  => $this->object ?? '',
-            "seen"    => $this->seen ?? '',	
-        ];
+            'id' => (string)$this->id ?? "",
+            'type' => (string)$this->type ?? "",
+            'user_id' => (string)$this->user_id ?? "",
+            'title' => (string)$this->title ?? "",
+            'body' => (string)$this->body ?? "",
+            'object' => (string)$this->object ?? "",
+            'date' => (string)dateToTimezone($this->created_at,'m-d-Y') ?? "",
+            'time' => (string)dateToTimezone($this->created_at,'h:i A') ?? "",
+            'seen' => (string)$this->seen ?? "",
+            'action' => (string)$action ?? "",
     }
 }

@@ -6,13 +6,17 @@ use App\Models\Order;
 use App\Models\OrderArea;
 use App\Models\OrderStatus;
 use Illuminate\Http\Request;
+use App\Http\Requests\OrderRequest;
 use App\Models\OrderResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\OrderResourceCollection;
+use App\Traits\ApiResponser;
+use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
+    use ApiResponser;
     /**
      * Display a listing of the resource.
      *
@@ -82,6 +86,7 @@ class OrderController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
     public function quoteSubmit(Request $request,$order_id)
     {
         $validator = \Validator::make($request->all(), [
@@ -107,6 +112,37 @@ class OrderController extends Controller
         $area->save();
 
         return $this->sendResponse($area, 'Order Area Submitted.');
+
+    }
+    
+    public function store(OrderRequest $request)
+    {
+        $req=Order::create([
+            'uuid' => unique_serial('orders','uuid',null),
+            'user_id'=>auth()->user()->id,
+            'city' => $request->city,
+            'state' => $request->state,
+            'country' => $request->country,
+            'lat'   => $request->lat,
+            'lng'   => $request->lng,
+            'full_address' => $request->full_address,
+        ]);
+        
+
+        // OrderItem::insert([
+        //     'order_id' => $req->id,
+        //     'company_id' => $request->company_id,
+        //     'service_id' => $request->service_id,
+        //     'se_id' => $request->se_id,
+        // ]);
+
+        //store order status
+
+        // Send Push notification
+        // $this->sendNotification($req);
+
+        return $this->sendResponse(new OrderResource($req), 'Order Created.');
+
     }
 
     /**
@@ -115,10 +151,11 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function show(Order $order)
+    public function show(Order $order, Request $request)
     {
         //
     }
+    
 
     /**
      * Show the form for editing the specified resource.

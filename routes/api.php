@@ -89,11 +89,12 @@ Route::group([
     // Customer Side Notifications Ends Here
 
     // Customer Side Orders
-    Route::get('order/listing/get', 'Account\OrderController@customer_index'); /* Order Listing */
-    Route::post('order/action', 'Account\OrderController@customer_action'); /* Order Action */
+    Route::get ('order/listing/get',   'Account\OrderController@index'); /* Order Listing */
+    Route::post('order/post',         'Account\OrderController@store'); /* Order Listing */
+    Route::post('order/action',       'Account\OrderController@customer_action'); /* Order Action */
     Route::post('order/quote/submit', 'Account\OrderController@customer_quoteSubmit'); /* Order Quote Submit */
-    Route::get('order/quote/get', 'Account\OrderController@customer_quoteGet'); /* Order Quote Get */    
+    Route::get ('order/quote/get',     'Account\OrderController@customer_quoteGet'); /* Order Quote Get */    
     Route::post('order/quote/action', 'Account\OrderController@customer_quoteAction'); /* Order Quote Action Will only be performed by Customer */
-    Route::get('order/details', 'Account\OrderController@customer_details'); /* Order Details */
+    Route::get ('order/details',       'Account\OrderController@customer_details'); /* Order Details */
     // Customer Side Orders Ends Here
 });
