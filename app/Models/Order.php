@@ -24,6 +24,22 @@ class Order extends Model
         'full_address',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::addGlobalScope( function ($builder) {
+            if (auth()->user()->hasRole('worker')) {
+                $builder->whereHas('order_status', function ($query) {
+                    $query->where('worker_id', auth()->user()->id);
+                });
+            } else {
+                $builder->where('user_id', auth()->user()->id);
+            }
+            
+        });
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

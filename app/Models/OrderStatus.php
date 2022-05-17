@@ -13,22 +13,22 @@ class OrderStatus extends Model
 
     protected $table = 'order_status';
 
-    protected static function boot()
-    {
-        parent::boot();
+    // protected static function boot()
+    // {
+    //     parent::boot();
 
-        self::addGlobalScope( function ($builder) {
-            $builder=$builder->has('order');
-            if (auth()->user()->hasRole('worker')) {
-                $builder->where('worker_id', auth()->user()->id);
-            } else {
-                $builder->whereHas('order', function ($query) {
-                    $query->where('user_id', auth()->user()->id);
-                });
-            }
+    //     self::addGlobalScope( function ($builder) {
+    //         $builder=$builder->has('order');
+    //         if (auth()->user()->hasRole('worker')) {
+    //             $builder->where('worker_id', auth()->user()->id);
+    //         } else {
+    //             $builder->whereHas('order', function ($query) {
+    //                 $query->where('user_id', auth()->user()->id);
+    //             });
+    //         }
             
-        });
-    }
+    //     });
+    // }
 
     public function order()
     {
