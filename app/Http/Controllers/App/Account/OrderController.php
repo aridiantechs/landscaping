@@ -5,6 +5,7 @@ namespace App\Http\Controllers\App\Account;
 use App\Models\Order;
 use App\Models\OrderArea;
 use App\Models\OrderStatus;
+use App\Models\OrderArea;
 use Illuminate\Http\Request;
 use App\Http\Requests\OrderRequest;
 use App\Models\OrderResponse;
@@ -151,10 +152,19 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function show(Order $order, Request $request)
+    public function show( Request $request, $order_id)
     {
-        //
+        $order = Order::where('uuid', $order_id)->first();
+        // dd($order);
+        return $this->sendResponse(new OrderResource($order), 'Order Details.');
     }
+    // // {
+    //     $data = Order::where('user_id',auth()->user()->id)->where('order_id',$id)->first();
+    //     if (!$data) {
+    //         return $this->validationError('Not found !',[],400 );
+    //     }
+    //     return $this->sendResponse(new OrderResource($data), 'Order Details.');
+    // }
     
 
     /**

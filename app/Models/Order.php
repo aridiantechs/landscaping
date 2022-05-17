@@ -36,7 +36,7 @@ class Order extends Model
 
     public function order_area()
     {
-        return $this->hasMany(OrderArea::class);
+        return $this->hasOne(OrderArea::class, 'order_id', 'uuid');
     }
 
     public function order_status()

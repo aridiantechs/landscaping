@@ -67,7 +67,7 @@ Route::group([
     Route::post('order/{order}/schedule', 'Account\OrderController@schedule'); /* Order Action */
 
     // Route::post('order/quote/action', 'Account\OrderController@worker_quoteAction'); /* Order Quote Action Will only be performed by Customer */
-    Route::get('order/detail', 'Account\OrderController@worker_detail'); /* Order Details */
+    Route::get('order/{order}/detail', 'Account\OrderController@show'); /* Order Details */
     // Worker Side Orders Ends Here
 
 });
@@ -96,5 +96,6 @@ Route::group([
     Route::get ('order/quote/get',     'Account\OrderController@customer_quoteGet'); /* Order Quote Get */    
     Route::post('order/quote/action', 'Account\OrderController@customer_quoteAction'); /* Order Quote Action Will only be performed by Customer */
     Route::get ('order/details',       'Account\OrderController@customer_details'); /* Order Details */
+    Route::get('order/{order}/detail', 'Account\OrderController@show');
     // Customer Side Orders Ends Here
 });
