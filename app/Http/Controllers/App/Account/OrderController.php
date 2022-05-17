@@ -25,7 +25,6 @@ class OrderController extends Controller
     public function index()
     {
         $orders = OrderStatus::withTrashed()->with('order')->get()->pluck('order');
-dd($orders);
         return $this->sendResponse(new OrderResourceCollection($orders), 'Orders Listing.');
     }
 
