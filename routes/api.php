@@ -63,6 +63,9 @@ Route::group([
     Route::post('order/action', 'Account\OrderController@worker_action'); /* Order Action */
     Route::post('order/quote/submit', 'Account\OrderController@worker_quoteSubmit'); /* Order Quote Submit */
     Route::get('order/quote/get', 'Account\OrderController@worker_quoteGet'); /* Order Quote Get */    
+    
+    Route::post('order/{order}/schedule', 'Account\OrderController@schedule'); /* Order Action */
+
     // Route::post('order/quote/action', 'Account\OrderController@worker_quoteAction'); /* Order Quote Action Will only be performed by Customer */
     Route::get('order/detail', 'Account\OrderController@worker_detail'); /* Order Details */
     // Worker Side Orders Ends Here

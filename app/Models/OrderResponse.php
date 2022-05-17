@@ -12,6 +12,14 @@ class OrderResponse extends Model
     use HasFactory;
 
     protected $table = 'order_responses';
+    protected $fillable=[
+        'order_id',
+        'user_id',
+        'response_user',
+        'response_type',
+        'time',
+        'comments',
+    ];
 
     public function order()
     {

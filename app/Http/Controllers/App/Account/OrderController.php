@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\OrderStatus;
 use Illuminate\Http\Request;
 use App\Http\Requests\OrderRequest;
+use App\Models\OrderResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\OrderResourceCollection;
@@ -41,13 +42,41 @@ class OrderController extends Controller
             return $this->validationError('Validation Error.',$valid_errors);
         }
 
-        $order = Order::where('uuid', $uuid)->first();
-        $order->order_responses()->create([
-            'worker_id' => auth()->user()->id,
-            'status' => $request->status,
+        $order = Order::where('uuid', $request->order_id)->first();
+        
+        $order_r=new OrderResponse;
+        $order_r->order_id= $request->order_id;
+        $order_r->user_id = auth()->user()->id;
+        $order_r->response_user = auth()->user()->roles()->first()->name ?? '';
+        $order_r->response_type = $request->status;
+        $order_r->save();
+        
+        return $this->sendResponse(new OrderResource($order), 'Order Status Updated.');
+    }
+    
+    public function schedule(Request $request,$order_id)
+    {
+        $validator = \Validator::make($request->all(), [
+            'time'=>'required',
+            'comments' => 'required|string|max:255',
         ]);
 
-        return $this->sendResponse(new OrderResource($order), 'Order Status Updated.');
+        if ($validator->fails()) {
+            $valid_errors = $this->formatErrors(['time','comments'],$validator->errors());
+            return $this->validationError('Validation Error.',$valid_errors);
+        }
+        
+        $order_r=OrderResponse::where('order_id', $order_id)->where('user_id', auth()->user()->id)->first();
+        if ($order_r->response_type == 'SCHEDULE') {
+            $order_r->time = $request->time;
+            $order_r->comments = $request->comments;
+            $order_r->save();
+            return $this->sendResponse(new OrderResource($order_r->order), 'Order Schedule Updated.');
+
+        } else {
+            return $this->validationError('Validation Error.','Order Status cannot be SCHEDULE');
+        }
+        
     }
 
     /**
