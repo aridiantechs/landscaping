@@ -26,59 +26,57 @@ class OrderController extends Controller
     public function index()
     {
         $orders = OrderStatus::with('order')->get()->pluck('order');
-        
+
         return $this->sendResponse(new OrderResourceCollection($orders), 'Orders Listing.');
     }
 
     public function worker_action(Request $request)
     {
         $validator = \Validator::make($request->all(), [
-            'order_id'=>'required|exists:orders,uuid',
+            'order_id' => 'required|exists:orders,uuid',
             'status' => 'required|in:ACCEPTED,REJECTED,SCHEDULE',
         ]);
 
         if ($validator->fails()) {
             $fillable = new Order;
             $fillable = $fillable->getFillable();
-            $valid_errors = $this->formatErrors($fillable,$validator->errors());
-            return $this->validationError('Validation Error.',$valid_errors);
+            $valid_errors = $this->formatErrors($fillable, $validator->errors());
+            return $this->validationError('Validation Error.', $valid_errors);
         }
 
         $order = Order::where('uuid', $request->order_id)->first();
-        
-        $order_r=new OrderResponse;
-        $order_r->order_id= $request->order_id;
+
+        $order_r = new OrderResponse;
+        $order_r->order_id = $request->order_id;
         $order_r->user_id = auth()->user()->id;
         $order_r->response_user = auth()->user()->roles()->first()->name ?? '';
         $order_r->response_type = $request->status;
         $order_r->save();
-        
+
         return $this->sendResponse(new OrderResource($order), 'Order Status Updated.');
     }
-    
-    public function schedule(Request $request,$order_id)
+
+    public function schedule(Request $request, $order_id)
     {
         $validator = \Validator::make($request->all(), [
-            'time'=>'required',
+            'time' => 'required',
             'comments' => 'required|string|max:255',
         ]);
 
         if ($validator->fails()) {
-            $valid_errors = $this->formatErrors(['time','comments'],$validator->errors());
-            return $this->validationError('Validation Error.',$valid_errors);
+            $valid_errors = $this->formatErrors(['time', 'comments'], $validator->errors());
+            return $this->validationError('Validation Error.', $valid_errors);
         }
-        
-        $order_r=OrderResponse::where('order_id', $order_id)->where('user_id', auth()->user()->id)->first();
+
+        $order_r = OrderResponse::where('order_id', $order_id)->where('user_id', auth()->user()->id)->first();
         if ($order_r->response_type == 'SCHEDULE') {
             $order_r->time = $request->time;
             $order_r->comments = $request->comments;
             $order_r->save();
             return $this->sendResponse(new OrderResource($order_r->order), 'Order Schedule Updated.');
-
         } else {
-            return $this->validationError('Validation Error.','Order Status cannot be SCHEDULE');
+            return $this->validationError('Validation Error.', 'Order Status cannot be SCHEDULE');
         }
-        
     }
 
     /**
@@ -88,39 +86,38 @@ class OrderController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function quoteSubmit(Request $request,$order_id)
+    public function quoteSubmit(Request $request, $order_id)
     {
         $validator = \Validator::make($request->all(), [
-            'length'=>'required|numeric',
-            'width'=>'required|numeric',
+            'length' => 'required|numeric',
+            'width' => 'required|numeric',
         ]);
 
         if ($validator->fails()) {
-            $valid_errors = $this->formatErrors(['length','width'],$validator->errors());
-            return $this->validationError('Validation Error.',$valid_errors);
+            $valid_errors = $this->formatErrors(['length', 'width'], $validator->errors());
+            return $this->validationError('Validation Error.', $valid_errors);
         }
 
         $order = Order::where('uuid', $order_id)->first();
-        
+
         // store order area
-        $area=new OrderArea;
-        $area->order_id= $order_id;
-        $area->worker_id= auth()->user()->id;
+        $area = new OrderArea;
+        $area->order_id = $order_id;
+        $area->worker_id = auth()->user()->id;
         $area->length = $request->length;
         $area->width = $request->width;
-        $area->total_amount=totalCostPerSqft($request->length,$request->width);
+        $area->total_amount = totalCostPerSqft($request->length, $request->width);
         $area->customer_response = 'PENDING';
         $area->save();
 
         return $this->sendResponse($area, 'Order Area Submitted.');
-
     }
-    
+
     public function store(OrderRequest $request)
     {
-        $req=Order::create([
-            'uuid' => unique_serial('orders','uuid',null),
-            'user_id'=>auth()->user()->id,
+        $req = Order::create([
+            'uuid' => unique_serial('orders', 'uuid', null),
+            'user_id' => auth()->user()->id,
             'city' => $request->city,
             'state' => $request->state,
             'country' => $request->country,
@@ -128,7 +125,7 @@ class OrderController extends Controller
             'lng'   => $request->lng,
             'full_address' => $request->full_address,
         ]);
-        
+
 
         // OrderItem::insert([
         //     'order_id' => $req->id,
@@ -143,7 +140,6 @@ class OrderController extends Controller
         // $this->sendNotification($req);
 
         return $this->sendResponse(new OrderResource($req), 'Order Created.');
-
     }
 
     /**
@@ -152,20 +148,11 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function show( Request $request, $order_id)
+    public function show(Request $request, $order_id)
     {
         $order = Order::where('uuid', $order_id)->first();
-        // dd($order);
         return $this->sendResponse(new OrderResource($order), 'Order Details.');
     }
-    // // {
-    //     $data = Order::where('user_id',auth()->user()->id)->where('order_id',$id)->first();
-    //     if (!$data) {
-    //         return $this->validationError('Not found !',[],400 );
-    //     }
-    //     return $this->sendResponse(new OrderResource($data), 'Order Details.');
-    // }
-    
 
     /**
      * Show the form for editing the specified resource.
@@ -178,6 +165,48 @@ class OrderController extends Controller
         //
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Order  $order
+     * @return \Illuminate\Http\Response
+     */
+
+    public function customer_quoteAction(Request $request, $order_id)
+    {
+        $validator = \Validator::make($request->all(), [
+            'action' => 'required|in:ACCEPTED,REJECTED,RESUBMIT',
+        ]);
+
+        if ($validator->fails()) {
+            $valid_errors = $this->formatErrors(['action'], $validator->errors());
+            return $this->validationError('Validation Error.', $valid_errors);
+        }
+
+        $order = Order::where('uuid', $order_id)->first();
+
+        if ($request->action == 'ACCEPTED') {
+            $order->order_area->customer_response = 'ACCEPTED';
+            $order->save();
+            return $this->sendResponse($order->order_area, 'Order Quote Accepted.');
+        } elseif ($request->action == 'RESUBMIT') {
+            $order->order_area->customer_response = 'REJECTED';
+            $order->save();
+
+            $order->order_status()->delete();
+            $order->order_area()->delete();
+
+            $resend_order = $order->replicate();
+            $resend_order->uuid = unique_serial('orders', 'uuid', null);
+            $resend_order->resent= 1;
+            $resend_order->resent_order_id = $order_id;
+            $resend_order->save();
+            return $this->sendResponse($resend_order, 'Order Resubmitted.');
+        }
+        
+        // return $this->sendResponse($order, 'Order Area Submitted.');
+    }
     /**
      * Update the specified resource in storage.
      *
