@@ -5,7 +5,6 @@ namespace App\Http\Controllers\App\Account;
 use App\Models\Order;
 use App\Models\OrderArea;
 use App\Models\OrderStatus;
-use App\Models\OrderArea;
 use Illuminate\Http\Request;
 use App\Http\Requests\OrderRequest;
 use App\Models\OrderResponse;
