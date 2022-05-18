@@ -42,5 +42,6 @@ class NotificationResource extends JsonResource
             'time' => (string)dateToTimezone($this->created_at,'h:i A') ?? "",
             'seen' => (string)$this->seen ?? "",
             'action' => (string)$action ?? "",
+        ];
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use App\Http\Controllers\Controller;
 use Closure;
+use App\Traits\ApiResponser;
 
 class isVerifiedUser
 {
