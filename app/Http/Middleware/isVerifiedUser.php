@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Http\Controllers\Controller;
 use Closure;
 
 class isVerifiedUser

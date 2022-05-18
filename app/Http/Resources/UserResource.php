@@ -19,6 +19,7 @@ class UserResource extends JsonResource
         }else{
             $email_verified = false;
         }
+        
         if($this->hasRole('superadmin')){
             $role = 'super_admin';
         }elseif($this->hasRole('endUser')){
@@ -35,7 +36,7 @@ class UserResource extends JsonResource
             "profile_image" => $this->profile_image ?? "",
             "role" => $role ?? "",
             // "company_profile" => $this->company_profile ?? null,
-            // "email_verified" => $email_verified ?? false,
+            "email_verified" => $email_verified ?? false,
         ];
         return parent::toArray($request);
     }

@@ -42,12 +42,10 @@ class AuthController extends Controller
         ]);
         
     	if ($validator->fails()) {
-            $valid_errors=$validator->getMessageBag()->toArray();
             
-
             $fields1=new User;
             $fields=$fields1->getFillable();
-            $errors= $this->formatErrors($fields, $valid_errors);
+            $errors= $this->formatErrors($fields, $validator->errors());
             return $this->validationError('Fields are Missing', $errors, 400);
         }
 

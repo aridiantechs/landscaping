@@ -79,7 +79,7 @@ Route::group([
     // Customer Side Notifications Ends Here
 
     // Customer Side Orders
-    Route::get ('order/listing/get',   'Account\OrderController@index'); /* Order Listing */
+    Route::get ('order/listing',   'Account\OrderController@index'); /* Order Listing */
     Route::post('order/post',         'Account\OrderController@store'); /* Order Listing */
     Route::post('order/action',       'Account\OrderController@customer_action'); /* Order Action */
     // Route::get ('order/quote/get',     'Account\OrderController@customer_quoteGet');
