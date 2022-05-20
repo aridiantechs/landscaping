@@ -24,7 +24,7 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
-        $orders = new Order;
+        $orders = Order::listing();
         if($request->query('search')){
             
             $orders = $orders->where(function($q) use ($request){
@@ -43,17 +43,17 @@ class OrderController extends Controller
         ]);
 
         if ($validator->fails()) {
-            $fillable = new Order;
-            $fillable = $fillable->getFillable();
-            $valid_errors = $this->formatErrors($fillable, $validator->errors());
+            $valid_errors = $this->formatErrors(['order_id','status'], $validator->errors());
             return $this->validationError('Validation Error.', $valid_errors);
         }
 
         $order = Order::where('uuid', $request->order_id)->first();
-        
         // if order response already exists
-        if ( count($order->order_responses) && $order->accepted_response->count()) {
+        if ( $order->accepted_response && $order->accepted_response->count()) {
             return $this->validationError('Order already accepted.', []);
+        }
+        elseif($order->accepted_response_user()){
+            return $this->validationError('You are not authorized to perform this action again.', []);
         }
         $order_r = new OrderResponse;
         $order_r->order_id = $request->order_id;
@@ -61,8 +61,43 @@ class OrderController extends Controller
         $order_r->response_user = auth()->user()->roles()->first()->name ?? '';
         $order_r->response_type = $request->status;
         $order_r->save();
+        if ($request->status == 'ACCEPTED') {
+            $order_s = new OrderStatus;
+            $order_s->order_id = $request->order_id;
+            $order_s->worker_id = auth()->user()->id;
+            $order_s->status = 'PENDING';
+            $order_s->save();
+        }
 
         return $this->sendResponse(new OrderResource($order), 'Order Status Updated.');
+    }
+
+    public function customer_action(Request $request){
+        $validator = \Validator::make($request->all(), [
+            'order_id' => 'required|exists:orders,uuid',
+            'worker_id' => 'required|exists:users,id',
+            'status' => 'required|in:ACCEPTED,REJECTED',
+        ]);
+
+        
+        if ($validator->fails()) {
+            $valid_errors = $this->formatErrors(['order_id', 'worker_id', 'status'], $validator->errors());
+            return $this->validationError('Validation Error.', $valid_errors);
+        }
+
+        $order = Order:: where('uuid', $request->order_id)->first();
+        $order_r = $order->order_responses->where('user_id', $request->worker_id)->where('response_type', 'SCHEDULE')->first();
+        if (!$order_r) {
+            return $this->validationError('Order response not found.', []);
+        }
+        $order_r = new OrderStatus;
+        $order_r->order_id = $request->order_id;
+        $order_r->worker_id = $request->worker_id;
+        $order_r->status = 'PENDING';
+        $order_r->save();
+
+        return $this->sendResponse(new OrderResource($order), 'Order Status Updated.');
+        
     }
 
     public function schedule(Request $request, $order_id)
@@ -75,6 +110,11 @@ class OrderController extends Controller
         if ($validator->fails()) {
             $valid_errors = $this->formatErrors(['time', 'comments'], $validator->errors());
             return $this->validationError('Validation Error.', $valid_errors);
+        }
+
+        $order = Order::where('uuid', $order_id)->first();
+        if($order->hasBeenScheduled()){
+            return $this->validationError('Order already scheduled.', []);
         }
 
         $order_r = OrderResponse::where('order_id', $order_id)->where('user_id', auth()->user()->id)->first();
@@ -108,7 +148,9 @@ class OrderController extends Controller
         }
 
         $order = Order::where('uuid', $order_id)->first();
-
+        if ( $order->hasCustomerResponse()) {
+            return $this->validationError("You can't perform this action again", []);
+        }
         // store order area
         $area = new OrderArea;
         $area->order_id = $order_id;
@@ -194,14 +236,23 @@ class OrderController extends Controller
         }
 
         $order = Order::where('uuid', $order_id)->first();
-
+        if ( $order->hasCustomerResponse()) {
+            return $this->validationError("You can't perform this action again", []);
+        }
+        $order_a = OrderArea::where('order_id', $order_id)->first();
         if ($request->action == 'ACCEPTED') {
-            $order->order_area->customer_response = 'ACCEPTED';
-            $order->save();
+            $order_a->customer_response = 'ACCEPTED';
+            $order_a->save();
             return $this->sendResponse($order->order_area, 'Order Quote Accepted.');
-        } elseif ($request->action == 'RESUBMIT') {
-            $order->order_area->customer_response = 'REJECTED';
-            $order->save();
+        }elseif($request->action == 'REJECTED'){
+            $order_a->customer_response = 'REJECTED';
+            $order_a->save();
+            $order->order_status()->delete();
+            $order->order_area()->delete();
+            return $this->sendResponse($order->order_area, 'Order Quote Rejected.');
+        }elseif ($request->action == 'RESUBMIT') {
+            $order_a->order_area->customer_response = 'REJECTED';
+            $order_a->save();
 
             $order->order_status()->delete();
             $order->order_area()->delete();

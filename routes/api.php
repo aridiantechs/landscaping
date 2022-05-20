@@ -31,7 +31,7 @@ Route::group([
     Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('logout', 'AuthController@logout');
         Route::get('me', 'AuthController@me')/* ->middleware('otp_verified') */;
-       
+
         Route::get('refresh', 'AuthController@refreshToken');
         Route::post('otp', 'AuthController@verifyEmailUsingOtp');
 
@@ -39,7 +39,7 @@ Route::group([
         Route::post('profile', 'Account\ProfileController@update');
         Route::post('profile/password/update', 'Account\ProfileController@update_password');
     });
-    
+
     // Route::post('refresh', 'AuthController@refresh');
     Route::post('signup', 'AuthController@signup');
 });
@@ -47,23 +47,21 @@ Route::group([
 Route::group([
     'namespace'   => '\App\Http\Controllers\App',
     'prefix'      => '1.0/worker',
-    'middleware'  => ['auth:sanctum', 'isVerifiedUser'/* ,'otp_verified' */]
+    'middleware'  => ['auth:sanctum', 'isVerifiedUser', 'isWorker'/* ,'otp_verified' */]
 ], function ($router) {
 
     // Worker Side Notifications
     Route::get('notification/listing/get', 'Account\NotificationController@worker_index'); /* Notification Listing Type */
     // Worker Side Notifications Ends Here
-    
-    // Worker Side Orders
-    Route::get('order/listing', 'Account\OrderController@index'); /* Order Listing */
-    Route::post('order/action', 'Account\OrderController@worker_action'); /* Order Action */
-    Route::post('order/{order}/quote/submit', 'Account\OrderController@quoteSubmit'); /* Order Quote Submit */
-    // Route::get('order/{order}/quote', 'Account\OrderController@worker_quoteGet'); 
-    
-    Route::post('order/{order}/schedule', 'Account\OrderController@schedule'); /* Order Action */
 
+    // Worker Side Orders
+    Route::get('order/listing', 'Account\OrderController@index');         /* Order Listing */
+    Route::post('order/action', 'Account\OrderController@worker_action'); /* Order Action */
+    Route::post('order/{order}/schedule', 'Account\OrderController@schedule');     /* Order Action */
+    Route::post('order/{order}/quote/submit', 'Account\OrderController@quoteSubmit');   /* Order Quote Submit */
+    Route::get('order/{order}/detail', 'Account\OrderController@show');          /* Order Details */
+    // Route::get('order/{order}/quote', 'Account\OrderController@worker_quoteGet'); 
     // Route::post('order/quote/action', 'Account\OrderController@worker_quoteAction'); /* Order Quote Action Will only be performed by Customer */
-    Route::get('order/{order}/detail', 'Account\OrderController@show'); /* Order Details */
     // Worker Side Orders Ends Here
 
 });
@@ -71,7 +69,7 @@ Route::group([
 Route::group([
     'namespace'   => '\App\Http\Controllers\App',
     'prefix'      => '1.0/customer',
-    'middleware'  => ['auth:sanctum', 'isVerifiedUser'/* ,'otp_verified' */]
+    'middleware'  => ['auth:sanctum', 'isVerifiedUser', 'isEndUser'/* ,'otp_verified' */]
 ], function ($router) {
 
     // Customer Side Notifications
@@ -79,11 +77,11 @@ Route::group([
     // Customer Side Notifications Ends Here
 
     // Customer Side Orders
-    Route::get ('order/listing',   'Account\OrderController@index'); /* Order Listing */
-    Route::post('order/post',         'Account\OrderController@store'); /* Order Listing */
-    Route::post('order/action',       'Account\OrderController@customer_action'); /* Order Action */
-    // Route::get ('order/quote/get',     'Account\OrderController@customer_quoteGet');
-    Route::post('order/{order}/quote/action', 'Account\OrderController@customer_quoteAction'); /* Order Quote Action Will only be performed by Customer */
+    Route::get('order/listing', 'Account\OrderController@index'); /* Order Listing */
+    Route::post('order/post', 'Account\OrderController@store'); /* Order Listing */
+    Route::post('order/action', 'Account\OrderController@customer_action'); /* Order Action */
+    Route::post('order/{order}/quote/action',  'Account\OrderController@customer_quoteAction'); /* Order Quote Action Will only be performed by Customer */
     Route::get('order/{order}/detail', 'Account\OrderController@show');
+    // Route::get ('order/quote/get',     'Account\OrderController@customer_quoteGet');
     // Customer Side Orders Ends Here
 });

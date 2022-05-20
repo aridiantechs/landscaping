@@ -13,6 +13,14 @@ class OrderArea extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'order_area';
+    protected $fillable=[
+        'order_id',
+        'worker_id',
+        'width',
+        'length',
+        'total_amount',
+        'customer_response',
+    ];
 
     public function order()
     {

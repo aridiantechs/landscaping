@@ -12,6 +12,12 @@ class OrderStatus extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'order_status';
+    protected $fillable=[
+        'order_id',
+        'worker_id',
+        'status',
+        'response_type',
+    ];
 
     // protected static function boot()
     // {
