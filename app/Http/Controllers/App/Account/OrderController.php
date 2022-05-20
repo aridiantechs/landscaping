@@ -22,9 +22,16 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::all();
+        $orders = new Order;
+        if($request->query('search')){
+            
+            $orders = $orders->where(function($q) use ($request){
+                $q->where('uuid','LIKE','%'.trim($request->query('search')).'%');
+            });
+        }
+        $orders = $orders->get();
         return $this->sendResponse(new OrderResourceCollection($orders), 'Orders Listing.');
     }
 

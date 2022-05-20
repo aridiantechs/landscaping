@@ -37,7 +37,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $validator =  Validator::make($request->all(), [
-            'email' => 'required|string|email',
+            'email' => 'required|string|regex:/[a-z0-9]+@[a-z]+\.[a-z]{2,3}/i',
             'password' => 'required|string',
         ]);
         
@@ -72,7 +72,7 @@ class AuthController extends Controller
                 'user' =>  new UserResource($user),
             ];
 
-            // $this->sendOtp($user);
+            $this->sendOtp($user);
             
             return $this->sendResponse($success, 'User login successfully.');
         }
@@ -103,7 +103,7 @@ class AuthController extends Controller
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'numeric','unique:users,phone'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'regex:/[a-z0-9]+@[a-z]+\.[a-z]{2,3}/i', 'max:255', 'unique:users'],
             'profile_image' => 'nullable|image',
             'role' => ['required', 'string', 'in:endUser,worker'],
             'password' => [
@@ -114,12 +114,11 @@ class AuthController extends Controller
         ]);
 
     	if ($validator->fails()) {
-            $valid_errors=$validator->getMessageBag()->toArray();
-            
+        
 
             $fields1=new User;
             $fields=$fields1->getFillable();
-            $errors=$this->formatErrors($fields, $valid_errors);
+            $errors=$this->formatErrors(array_merge($fields,['role']), $validator->errors());
             return $this->validationError('Fields are Missing', $errors, 400);
         }
 
@@ -295,7 +294,7 @@ class AuthController extends Controller
     public function sendResetLinkEmail(Request $request)
     {
         $validator =  Validator::make($request->all(), [
-            'email' => ['required', 'string', 'email', 'exists:users'],
+            'email' => ['required', 'string', 'regex:/[a-z0-9]+@[a-z]+\.[a-z]{2,3}/i', 'exists:users'],
         ]);
 
         if ($validator->fails()) {
@@ -328,7 +327,7 @@ class AuthController extends Controller
     {
 
         $validator =  Validator::make($request->all(), [
-            'email' => ['required', 'email' , 'exists:users'],
+            'email' => ['required', 'regex:/[a-z0-9]+@[a-z]+\.[a-z]{2,3}/i' , 'exists:users'],
             // 'current_password' => ['required', new MatchOldPassword],
             'otp' => ['required', 'string', 'max:10'],
             'new_password' => [
