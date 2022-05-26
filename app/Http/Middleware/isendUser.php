@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use App\Traits\ApiResponser;
 
-class isEndUser
+class IsEndUser
 {
     use ApiResponser;
     /**

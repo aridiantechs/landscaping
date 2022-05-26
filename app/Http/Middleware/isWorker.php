@@ -6,7 +6,7 @@ use Closure;
 use App\Traits\ApiResponser;
 use Illuminate\Support\Facades\Response;
 
-class isWorker
+class IsWorker
 {
     use ApiResponser;
     /**
