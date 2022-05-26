@@ -28,10 +28,7 @@ class ProfileController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $success = [
-            'user' =>  new UserResource($user),
-            // 'wallet' => $user->wallet ?? 0,
-        ];
+        $data = new UserResource($user);
 
         // if (auth()->user()->hasRole('endUser')) {
 
@@ -44,7 +41,7 @@ class ProfileController extends Controller
         //     $success['payment_methods'] = $user->payment_methods;
         // }
 
-        return $this->sendResponse($success, 'User Profile.');
+        return $this->sendResponse($data, 'User Profile.');
     }
 
     /**
