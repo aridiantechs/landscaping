@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class IsAdmin
+class IsSuperAdmin
 {
     /**
      * Handle an incoming request.
