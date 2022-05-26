@@ -47,7 +47,7 @@ Route::group([
 Route::group([
     'namespace'   => '\App\Http\Controllers\App',
     'prefix'      => '1.0/worker',
-    'middleware'  => ['auth:sanctum', 'isVerifiedUser', 'isWorker'/* ,'otp_verified' */]
+    'middleware'  => ['auth:sanctum', 'IsVerifiedUser', 'IsWorker'/* ,'otp_verified' */]
 ], function ($router) {
 
     // Worker Side Notifications
@@ -69,7 +69,7 @@ Route::group([
 Route::group([
     'namespace'   => '\App\Http\Controllers\App',
     'prefix'      => '1.0/customer',
-    'middleware'  => ['auth:sanctum', 'isVerifiedUser', 'isEndUser'/* ,'otp_verified' */]
+    'middleware'  => ['auth:sanctum', 'IsVerifiedUser', 'IsEndUser'/* ,'otp_verified' */]
 ], function ($router) {
 
     // Customer Side Notifications
