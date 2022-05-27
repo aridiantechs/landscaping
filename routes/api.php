@@ -85,3 +85,20 @@ Route::group([
     // Route::get ('order/quote/get',     'Account\OrderController@customer_quoteGet');
     // Customer Side Orders Ends Here
 });
+
+Route::get('/test_fcm', function (Request $request) {
+
+    fcm()
+    ->to($request->query('token'))
+    ->priority('high')
+    ->timeToLive(0)
+    ->notification([
+        'title' => 'Test FCM',
+        'body' => 'This is a test of FCM',
+    ])
+    ->data([
+        'title' => 'Test FCM',
+        'body' => 'This is a test of FCM',
+    ])
+    ->send();
+});
