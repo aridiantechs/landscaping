@@ -101,4 +101,6 @@ Route::get('/test_fcm', function (Request $request) {
         'body' => 'This is a test of FCM',
     ])
     ->send();
+
+    dd($request->query('token'));
 });
