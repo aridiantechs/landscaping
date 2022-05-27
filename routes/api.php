@@ -96,11 +96,11 @@ Route::get('/test_fcm', function (Request $request) {
         'title' => 'Test FCM',
         'body' => 'This is a test of FCM',
     ])
-    ->data([
-        'title' => 'Test FCM',
-        'body' => 'This is a test of FCM',
-    ])
+    // ->data([
+    //     'title' => 'Test FCM',
+    //     'body' => 'This is a test of FCM',
+    // ])
     ->send();
 
-    dd($request->query('token'));
+    dd($request->query('token'),config('laravel-fcm.server_key'));
 });
