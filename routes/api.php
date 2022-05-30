@@ -93,13 +93,28 @@ Route::get('/test_fcm', function (Request $request) {
     ->priority('high')
     ->timeToLive(0)
     ->notification([
-        'title' => 'Test FCM',
-        'body' => 'This is a test of FCM',
+        'title' => $request->query('title') ?? 'Test FCM',
+        'body' => $request->query('body') ?? 'This is a test of FCM',
     ])
-    // ->data([
+    ->send();
+
+    dd($request->query('token'),config('laravel-fcm.server_key'));
+});
+
+Route::get('/test_fcm_data', function (Request $request) {
+
+    fcm()
+    ->to($request->query('token'))
+    ->priority('high')
+    ->timeToLive(0)
+    // ->notification([
     //     'title' => 'Test FCM',
     //     'body' => 'This is a test of FCM',
     // ])
+    ->data([
+        'title' => $request->query('title') ?? 'Test FCM',
+        'body' => $request->query('body') ?? 'This is a test of FCM',
+    ])
     ->send();
 
     dd($request->query('token'),config('laravel-fcm.server_key'));
