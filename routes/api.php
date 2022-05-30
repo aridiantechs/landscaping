@@ -88,23 +88,32 @@ Route::group([
 
 Route::get('/test_fcm', function (Request $request) {
 
-    fcm()
-    ->to($request->query('token'))
-    ->priority('high')
-    ->timeToLive(0)
-    ->notification([
+    $data = [
         'first_name' => $request->query('first_name') ?? 'Nisar',
         'last_name' => $request->query('last_name') ?? 'Ahmed',
         'about' => $request->query('about') ?? 'about',
         'rating' => $request->query('rating') ?? '5',
-    ])
+    ];
+    fcm()
+    ->to($request->query('token'))
+    ->priority('high')
+    ->timeToLive(0)
+    ->notification($data)
     ->send();
 
-    dd($request->query('token'),config('laravel-fcm.server_key'));
+    return [
+        'data' => $data,
+        'token' => $request->query('token'),
+    ]
 });
 
 Route::get('/test_fcm_data', function (Request $request) {
-
+    $data = [
+        'first_name' => $request->query('first_name') ?? 'Nisar',
+        'last_name' => $request->query('last_name') ?? 'Ahmed',
+        'about' => $request->query('about') ?? 'about',
+        'rating' => $request->query('rating') ?? '5',
+    ];
     fcm()
     ->to($request->query('token'))
     ->priority('high')
@@ -113,14 +122,13 @@ Route::get('/test_fcm_data', function (Request $request) {
     //     'title' => 'Test FCM',
     //     'body' => 'This is a test of FCM',
     // ])
-    ->data([
-        'first_name' => $request->query('first_name') ?? 'Nisar',
-        'last_name' => $request->query('last_name') ?? 'Ahmed',
-        'about' => $request->query('about') ?? 'about',
-        'rating' => $request->query('rating') ?? '5',
-    ])
+    ->data($data)
     ->send();
 
-    dd($request->query('token'),config('laravel-fcm.server_key'));
+    return [
+        'data' => $data,
+        'token' => $request->query('token'),
+    ]
+   
 });
 
