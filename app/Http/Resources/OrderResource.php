@@ -25,7 +25,7 @@ class OrderResource extends JsonResource
             'lng'=>$this->lng,
             'full_address'=>$this->full_address,
             'status' => $this->order_status->status ?? 'PENDING',
-            'worker'=>$this->order_status->worker()->get([
+            'worker'=> $this->order_status && $this->order_status->worker ?$this->order_status->worker()->get([
                 'id',
                 'first_name',
                 'last_name',
@@ -33,7 +33,7 @@ class OrderResource extends JsonResource
                 'email',
                 'email_verified_at',
                 'photo_path'
-            ]) ?? [],
+            ]) : [],
             'enable_action' => $this->when(auth()->user()->hasRole('endUser') && $this->order_area()->exists() && $this->order_area->customer_response == 'PENDING', function () {
                 return true;
             }, function () {
