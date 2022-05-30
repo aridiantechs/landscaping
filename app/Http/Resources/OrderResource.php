@@ -14,6 +14,18 @@ class OrderResource extends JsonResource
      */
     public function toArray($request)
     {
+
+        if ($this->order_status) {
+            if ($this->order_status->status == 'PENDING') {
+                $o_status = 'ACCEPTED';
+            } else {
+                $o_status = $this->order_status->status;
+            }
+            
+        } else {
+            $o_status = 'PENDING';
+        }
+        
         return [
             'id' => $this->id,
             'order_id' => $this->uuid,
@@ -24,8 +36,8 @@ class OrderResource extends JsonResource
             'lat'=>$this->lat,
             'lng'=>$this->lng,
             'full_address'=>$this->full_address,
-            'status' => $this->order_status->status ?? 'PENDING',
-            'worker'=>$this->order_status->worker()->get([
+            'status' => $o_status,
+            'worker'=> $this->order_status && $this->order_status->worker ?$this->order_status->worker()->select(
                 'id',
                 'first_name',
                 'last_name',
@@ -33,7 +45,7 @@ class OrderResource extends JsonResource
                 'email',
                 'email_verified_at',
                 'photo_path'
-            ]) ?? [],
+            )->first() : (object)[],
             'enable_action' => $this->when(auth()->user()->hasRole('endUser') && $this->order_area()->exists() && $this->order_area->customer_response == 'PENDING', function () {
                 return true;
             }, function () {
