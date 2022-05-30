@@ -104,7 +104,7 @@ Route::get('/test_fcm', function (Request $request) {
     return [
         'data' => $data,
         'token' => $request->query('token'),
-    ]
+    ];
 });
 
 Route::get('/test_fcm_data', function (Request $request) {
@@ -128,7 +128,7 @@ Route::get('/test_fcm_data', function (Request $request) {
     return [
         'data' => $data,
         'token' => $request->query('token'),
-    ]
+    ];
    
 });
 
