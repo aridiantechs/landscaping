@@ -114,16 +114,17 @@ Route::get('/test_fcm_data', function (Request $request) {
         'about' => $request->query('about') ?? 'about',
         'rating' => $request->query('rating') ?? '5',
     ];
-    fcm()
-    ->to($request->query('token'))
-    ->priority('high')
-    ->timeToLive(0)
-    // ->notification([
-    //     'title' => 'Test FCM',
-    //     'body' => 'This is a test of FCM',
-    // ])
-    ->data($data)
-    ->send();
+
+    try {
+        return fcm()
+            ->to([$request->query('token')])
+            ->priority('high')
+            ->timeToLive(0)
+            ->data($data)
+        ->send();
+    } catch (\Exception $e) {
+        dd($e->getMessage( ));
+    }
 
     return [
         'data' => $data,

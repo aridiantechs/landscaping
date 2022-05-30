@@ -20,6 +20,31 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//test notify
+Route::get('/test_notify', function () {
+    
+    //fcm notification
+    try {
+        return fcm()
+            ->to([
+                'dGUxtk3jSzKHIAc8qMFvq-:APA91bH_dQyU2Ata_p0lWznWibvCNCIydfDyAfD9UP0MjciIsrYa9xQsKvfA3W7y1S-2r2NGN1WEus4i9O5UXMjsvSI18YxPr_aNJJungk9j2KvejoeTm9kiplEHD0kUKrklyOSem2qV',
+            ])
+            ->priority('high')
+            ->timeToLive(0)
+            ->data([
+                'title' => 'Test Notification',
+                'body' => 'This is a test notification',
+            ])->notification([
+                'title' => 'Test Notification',
+                'body' => 'This is a test notification',
+            ])
+        ->send();
+    } catch (\Exception $e) {
+        dd($e->getMessage( ));
+    }
+        
+});
+
 // Auth
 
 Route::get('login', [AuthenticatedSessionController::class, 'create'])
