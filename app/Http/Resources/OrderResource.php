@@ -45,7 +45,7 @@ class OrderResource extends JsonResource
                 'email',
                 'email_verified_at',
                 'photo_path'
-            )->first() : [],
+            )->first() : (object)[],
             'enable_action' => $this->when(auth()->user()->hasRole('endUser') && $this->order_area()->exists() && $this->order_area->customer_response == 'PENDING', function () {
                 return true;
             }, function () {
