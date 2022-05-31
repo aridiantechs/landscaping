@@ -17,6 +17,7 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "league/glide-laravel": "^1.0",
+        "pusher/pusher-php-server": "~3.0",
         "spatie/laravel-permission": "^4.0"
     },
     "require-dev": {

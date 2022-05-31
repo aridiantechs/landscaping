@@ -1,13 +1,14 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Events\RequestRecieved;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UsersController;
+use App\Http\Controllers\ImagesController;
+use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\OrganizationsController;
-use App\Http\Controllers\ReportsController;
-use App\Http\Controllers\UsersController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,25 +24,13 @@ use Illuminate\Support\Facades\Route;
 //test notify
 Route::get('/test_notify', function () {
     
-    //fcm notification
     try {
-        return fcm()
-            ->to([
-                'dGUxtk3jSzKHIAc8qMFvq-:APA91bH_dQyU2Ata_p0lWznWibvCNCIydfDyAfD9UP0MjciIsrYa9xQsKvfA3W7y1S-2r2NGN1WEus4i9O5UXMjsvSI18YxPr_aNJJungk9j2KvejoeTm9kiplEHD0kUKrklyOSem2qV',
-            ])
-            ->priority('high')
-            ->timeToLive(0)
-            ->data([
-                'title' => 'Test Notification',
-                'body' => 'This is a test notification',
-            ])->notification([
-                'title' => 'Test Notification',
-                'body' => 'This is a test notification',
-            ])
-        ->send();
-    } catch (\Exception $e) {
-        dd($e->getMessage( ));
+        broadcast(new RequestRecieved(/* auth()->user(), 'You have a new request' */))->toOthers();
+    } catch (\Throwable $th) {
+       dd($th->getMessage()) ;
     }
+
+    return ['status' => 'Message Sent!'];
         
 });
 

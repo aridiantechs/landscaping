@@ -2,10 +2,13 @@
 
 namespace App\Providers;
 
+use App\Events\RequestRecieved;
+use App\Events\NotificationSent;
+use App\Listeners\RequestAction;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -18,6 +21,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        RequestRecieved::class => [
+            RequestAction::class,
+        ],
     ];
 
     /**
@@ -27,6 +33,8 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // Event::listen(function (NotificationSent $event) {
+        //     // $event->user->notify($event->message);
+        // });
     }
 }
