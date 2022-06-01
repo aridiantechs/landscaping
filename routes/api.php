@@ -60,6 +60,11 @@ Route::group([
     Route::post('order/{order}/schedule', 'Account\OrderController@schedule');     /* Order Action */
     Route::post('order/{order}/quote/submit', 'Account\OrderController@quoteSubmit');   /* Order Quote Submit */
     Route::get('order/{order}/detail', 'Account\OrderController@show');          /* Order Details */
+
+    // Route to get update worker location
+    Route::get('state/update', 'Account\DashboardController@stateUpdate'); 
+    Route::post('location/update', 'Account\DashboardController@locationUpdate');
+    
     // Route::get('order/{order}/quote', 'Account\OrderController@worker_quoteGet'); 
     // Route::post('order/quote/action', 'Account\OrderController@worker_quoteAction'); /* Order Quote Action Will only be performed by Customer */
     // Worker Side Orders Ends Here
@@ -82,6 +87,8 @@ Route::group([
     Route::post('order/action', 'Account\OrderController@customer_action'); /* Order Action */
     Route::post('order/{order}/quote/action',  'Account\OrderController@customer_quoteAction'); /* Order Quote Action Will only be performed by Customer */
     Route::get('order/{order}/detail', 'Account\OrderController@show');
+    
+    Route::get('get_available_workers', 'Account\DashboardController@getWorkers');
     // Route::get ('order/quote/get',     'Account\OrderController@customer_quoteGet');
     // Customer Side Orders Ends Here
 });

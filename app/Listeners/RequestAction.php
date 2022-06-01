@@ -22,11 +22,11 @@ class RequestAction
     {
         // $data = $event->message;
         // store dummy user
-        $user = User::create([
-            'name' => 'ghafwghdfhgawfd',
-            'email' => 'testevent@test.com',
-            'password' => bcrypt('12341234'),
-        ]);
+        // $user = User::create([
+        //     'name' => 'ghafwghdfhgawfd',
+        //     'email' => 'testevent@test.com',
+        //     'password' => bcrypt('12341234'),
+        // ]);
 
         dd(983475834785439587349548);
     }

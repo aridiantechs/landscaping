@@ -122,6 +122,27 @@ if (!function_exists('totalCostPerSqft')) {
     
 }
 
+if (!function_exists('distance')) {
+    function distance($lat1, $lng1, $lat2, $lng2, $radius = 6378137)
+    {
+        static $x = M_PI / 180;
+        $lat1 *= $x; $lng1 *= $x;
+        $lat2 *= $x; $lng2 *= $x;
+        $distance = 2 * asin(sqrt(pow(sin(($lat1 - $lat2) / 2), 2) + cos($lat1) * cos($lat2) * pow(sin(($lng1 - $lng2) / 2), 2)));
+    
+        $d= $distance * $radius;
+        // echo $d ;
+        if($d  < 5000)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+}
+
 if (!function_exists('text_format')) {
     /**
      * // Check if Property Exists then Echo it
