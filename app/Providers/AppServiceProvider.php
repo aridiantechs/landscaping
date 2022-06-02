@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Sockets\WebSocketHandler;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
+use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,6 +17,8 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         Model::unguard();
+
+        // WebSocketsRouter::webSocket('/test_socket', WebSocketHandler::class);
     }
 
     /**

@@ -1,6 +1,8 @@
 <?php
 
 use App\Events\RequestRecieved;
+use Ratchet\ConnectionInterface;
+use App\Sockets\WebSocketHandler;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ImagesController;
@@ -8,6 +10,7 @@ use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrganizationsController;
+use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 /*
@@ -23,12 +26,33 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 //test notify
 Route::get('/test_notify', function () {
+
+    // $connection = new ConnectionInterface;
+    // $socketId =  '631178440.316680364';
+    // $connection->socketId = $socketId;
+    // $connection->app = new \stdClass();
+    // $connection->app->id = 'my_app';
+
+    // $connection->send('asdasd');
+
+
     
-    try {
+
+    // $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+    // $conexion = socket_connect($socket , '127.0.0.1', 6001);
+    // $msg = "Ping !";
+    // $len = strlen($msg);
+
+    // socket_sendto($socket,$msg, $len, 0, 'test_socket', 1223);
+
+    // socket_close($socket);
+    // dd($conexion);
+    // try {
         broadcast(new RequestRecieved(/* auth()->user(), 'You have a new request' */))->toOthers();
-    } catch (\Throwable $th) {
-       dd($th->getMessage()) ;
-    }
+    // } catch (\Throwable $th) {
+    //    dd($th->getMessage()) ;
+    
+    // }
 
     return ['status' => 'Message Sent!'];
         
@@ -48,13 +72,11 @@ Route::delete('logout', [AuthenticatedSessionController::class, 'destroy'])
     ->name('logout');
 
 // Dashboard
-
 Route::get('/', [DashboardController::class, 'index'])
     ->name('dashboard')
     ->middleware('auth');
 
 // Users
-
 Route::get('users', [UsersController::class, 'index'])
     ->name('users')
     ->middleware('auth');

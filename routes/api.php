@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Sockets\WebSocketHandler;
 use Illuminate\Support\Facades\Route;
+use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
 
 /*
 |--------------------------------------------------------------------------
@@ -139,4 +141,3 @@ Route::get('/test_fcm_data', function (Request $request) {
     ];
    
 });
-
