@@ -2,14 +2,28 @@
 
 namespace App\Http\Controllers\App\Account;
 
+use App\Models\Order;
 use App\Models\GeoLocation;
 use Illuminate\Support\Str;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\OrderResourceCollection;
 
 class DashboardController extends Controller
 {
+    // dashboard
+    public function index(Request $request)
+    {
+        $orders = Order::orderBy('id', 'desc')->limit(20)->get();
+        
+        $data=[
+            'total_recent_requests' =>count($orders),
+            'recent_requests' =>  new OrderResourceCollection($orders),
+        ];
+
+        return $this->sendResponse($data, 'Orders Listing.');
+    }
 
     /**
      * Show the form for creating a new resource.

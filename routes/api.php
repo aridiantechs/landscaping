@@ -40,6 +40,8 @@ Route::group([
         Route::get('profile', 'Account\ProfileController@index');
         Route::post('profile', 'Account\ProfileController@update');
         Route::post('profile/password/update', 'Account\ProfileController@update_password');
+
+        Route::get('dashboard', 'Account\DashboardController@index');
     });
 
     // Route::post('refresh', 'AuthController@refresh');
@@ -89,7 +91,7 @@ Route::group([
     Route::post('order/action', 'Account\OrderController@customer_action'); /* Order Action */
     Route::post('order/{order}/quote/action',  'Account\OrderController@customer_quoteAction'); /* Order Quote Action Will only be performed by Customer */
     Route::get('order/{order}/detail', 'Account\OrderController@show');
-    
+
     Route::get('get_available_workers', 'Account\DashboardController@getWorkers');
     // Route::get ('order/quote/get',     'Account\OrderController@customer_quoteGet');
     // Customer Side Orders Ends Here
