@@ -25,6 +25,21 @@ class OrderResource extends JsonResource
         } else {
             $o_status = 'PENDING';
         }
+
+        if ($this->order_status && $this->order_status->worker) {
+            $worker = $this->order_status->worker()->select(
+                'id',
+                'first_name',
+                'last_name',
+                'phone',
+                'email',
+                'email_verified_at',
+                'photo_path'
+            )->first();
+        } else {
+            $worker = (object)[];
+        }
+        
         
         return [
             'id' => $this->id,
@@ -37,15 +52,7 @@ class OrderResource extends JsonResource
             'lng'=>$this->lng,
             'full_address'=>$this->full_address,
             'status' => $o_status,
-            'worker'=> $this->order_status && $this->order_status->worker ?$this->order_status->worker()->select(
-                'id',
-                'first_name',
-                'last_name',
-                'phone',
-                'email',
-                'email_verified_at',
-                'photo_path'
-            )->first() : (object)[],
+            'worker'=>  $this->when(auth()->user()->hasRole('endUser'), $worker),
             'enable_action' => $this->when(auth()->user()->hasRole('endUser') && $this->order_area()->exists() && $this->order_area->customer_response == 'PENDING', function () {
                 return true;
             }, function () {
