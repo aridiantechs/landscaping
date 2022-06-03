@@ -57,7 +57,7 @@ class AuthController extends Controller
                 $user->tokens()->delete();
                 return $this->validationError('Unauthorised.', [['title'=>'signin','message'=>'Unauthorised']],400);
             }
-            $user->otp_verified_at=null;
+            // $user->otp_verified_at=null;
             
             $device = UserDevice::where('user_id',$user->id)->where('device_id',$request->device_id)->first();
             if(!$device && $request->device_id){
