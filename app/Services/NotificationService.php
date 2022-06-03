@@ -27,7 +27,7 @@ class NotificationService{
 	}
 
     //push notification function
-    public function push_notification($user_devices,$data = array()){
+    public static function push_notification($user_devices,$data = array()){
 
         if(!$user_devices){
             return false;
@@ -45,7 +45,7 @@ class NotificationService{
     }
 
     //app notifcation function
-    public function app_notification($data = array()){
+    public static function app_notification($data = array()){
         $noti = NotificationModel::create($data);
     }
 
