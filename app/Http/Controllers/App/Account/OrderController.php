@@ -188,9 +188,28 @@ class OrderController extends Controller
         //store order status
 
         // Send Push notification
-        // $this->sendNotification($req);
+        $this->sendNotification($req);
 
         return $this->sendResponse(new OrderResource($req), 'Order Created.');
+    }
+
+    public function sendNotification($req)
+    {
+        $suppliers=[]; // user_ids
+
+        $user_devices = UserDevice::where('user_id',$suppliers)->get()->pluck('device_id')->toArray();
+        
+        $data=[
+            'type'=>"Request",
+            'to_user_id'=> $suppliers,
+            'title'=> 'You have recieved a request !',
+            'body'=> $req->additional_info,
+            'req_id' => $req->id,
+            'object'=> ['req_id' => $req->id]
+            
+        ];
+        // dd($car_detail,$suppliers,$user_devices,$data);
+        NotificationService::send($user_devices,$data);
     }
 
     /**
