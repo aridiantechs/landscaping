@@ -13,14 +13,14 @@ class NotificationService{
             foreach ($data['to_user_id'] as $key => $to_user) {
                 $new_data = $data;
                 $new_data['to_user_id'] = $to_user;
-                self::app_notification($new_data);
+                $this->app_notification($new_data);
             }
         } else {
-            self::app_notification($data);
+            $this->app_notification($data);
         }
 
         if($push_notify){
-            self::push_notification($user_devices,$data);
+            $this->push_notification($user_devices,$data);
         }
 
         return true;
