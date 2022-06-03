@@ -72,7 +72,7 @@ class AuthController extends Controller
                 'user' =>  new UserResource($user),
             ];
 
-            $this->sendOtp($user);
+            // $this->sendOtp($user);
             
             return $this->sendResponse($success, 'User login successfully.');
         }
