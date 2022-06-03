@@ -4,15 +4,18 @@ namespace App\Http\Controllers\App\Account;
 
 use App\Models\Order;
 use App\Models\OrderArea;
+use App\Models\UserDevice;
+use App\Models\GeoLocation;
 use App\Models\OrderStatus;
+use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
-use App\Http\Requests\OrderRequest;
 use App\Models\OrderResponse;
+use App\Http\Requests\OrderRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
-use App\Http\Resources\OrderResourceCollection;
-use App\Traits\ApiResponser;
+use App\Services\NotificationService;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\OrderResourceCollection;
 
 class OrderController extends Controller
 {
@@ -195,20 +198,29 @@ class OrderController extends Controller
 
     public function sendNotification($req)
     {
-        $suppliers=[]; // user_ids
+        $workers=[];
+        $geo_ls=GeoLocation::whereHas('user',function($q){
+            $q->where('state','ACTIVE');
+        })->with('user')->get();
 
-        $user_devices = UserDevice::where('user_id',$suppliers)->get()->pluck('device_id')->toArray();
+        foreach ($geo_ls as $key => $g) {
+            if (distance($req->lat, $req->lng, $g->lat, $g->lng)) {
+                $workers[]=$g->user->id; 
+            }
+        }
+
+        $user_devices = UserDevice::where('user_id',$workers)->get()->pluck('device_id')->toArray();
         
         $data=[
             'type'=>"Request",
-            'to_user_id'=> $suppliers,
+            'to_user_id'=> $workers,
             'title'=> 'You have recieved a request !',
             'body'=> $req->additional_info,
-            'req_id' => $req->id,
-            'object'=> ['req_id' => $req->id]
+            // 'req_id' => $req->id,
+            'object'=> json_encode(['req_id' => $req->id])
             
         ];
-        // dd($car_detail,$suppliers,$user_devices,$data);
+        // dd($data);
         NotificationService::send($user_devices,$data);
     }
 

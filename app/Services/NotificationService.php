@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\Notification as NotificationModel;
 
-class Notification{
+class NotificationService{
 
 	public static function send($user_devices,$data = array(),$push_notify=true){
         
