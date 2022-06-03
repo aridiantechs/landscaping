@@ -90,7 +90,7 @@ class DashboardController extends Controller
         }
 
         $workers=[];
-        $geo_ls=GeoLocation::has('user')->all();
+        $geo_ls=GeoLocation::has('user')->get();
         foreach ($geo_ls as $key => $g) {
             if (distance($request->lat, $request->lng, $g->lat, $g->lng)) {
                 $workers[]=$g; 
