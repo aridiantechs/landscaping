@@ -221,7 +221,8 @@ class OrderController extends Controller
             
         ];
         // dd($data);
-        NotificationService::send($user_devices,$data);
+        $notify=new NotificationService;
+        $notify->send($user_devices,$data);
     }
 
     /**
