@@ -62,6 +62,12 @@ class Order extends Model
         return $this->hasOne(OrderResponse::class, 'order_id', 'uuid')->where('response_type', 'ACCEPTED');
     }
 
+    // get customer response
+    public function accepted_schedule_response()
+    {
+        return $this->hasOne(OrderArea::class, 'order_id', 'uuid')->where('customer_response', 'ACCEPTED');
+    }
+
     public function hasCustomerResponse()
     {
         return $this->hasOne(OrderArea::class, 'order_id', 'uuid')->where('customer_response', 'ACCEPTED')->orWhere('customer_response', 'REJECTED')->orWhere('customer_response', 'RESUBMIT');

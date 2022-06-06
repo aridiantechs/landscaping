@@ -55,8 +55,6 @@ class OrderResource extends JsonResource
             'worker'=>  $this->when(auth()->user()->hasRole('endUser'), $worker),
             'enable_action' => $this->when(auth()->user()->hasRole('endUser') && $this->order_area()->exists() && $this->order_area->customer_response == 'PENDING', function () {
                 return true;
-            }, function () {
-                return false;
             }),
         ];
     }

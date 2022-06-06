@@ -213,10 +213,10 @@ class OrderController extends Controller
         
         $data=[
             'type'=>"Request",
+            'req_id'=>$req->id,
             'to_user_id'=> $workers,
             'title'=> 'You have recieved a request !',
             'body'=> $req->additional_info,
-            // 'req_id' => $req->id,
             'object'=> json_encode(['req_id' => $req->id])
             
         ];

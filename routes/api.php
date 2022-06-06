@@ -55,7 +55,7 @@ Route::group([
 ], function ($router) {
 
     // Worker Side Notifications
-    Route::get('notification/listing/get', 'Account\NotificationController@worker_index'); /* Notification Listing Type */
+    Route::get('notification/listing/get', 'Account\NotificationController@index'); /* Notification Listing Type */
     // Worker Side Notifications Ends Here
 
     // Worker Side Orders
@@ -82,7 +82,7 @@ Route::group([
 ], function ($router) {
 
     // Customer Side Notifications
-    Route::get('notification/listing/get', 'Account\NotificationController@customer_index'); /* Notification Listing Type */
+    Route::get('notification/listing/get', 'Account\NotificationController@index'); /* Notification Listing Type */
     // Customer Side Notifications Ends Here
 
     // Customer Side Orders
