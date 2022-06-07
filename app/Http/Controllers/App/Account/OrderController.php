@@ -75,8 +75,8 @@ class OrderController extends Controller
             $order_s->save();
         }
 
-        $user_devices = auth()->user()->devices->whereNotNull('device_id')->pluck('device_id')->toArray();
-        
+        $user_devices = UserDevice::where('user_id',$order->user_id)->whereNotNull('device_id')->pluck('device_id')->toArray();
+        // dd($user_devices);
         if (in_array($request->status, array('ACCEPTED','SCHEDULE'))) {
             $data=[
                 'type'=>"Request Action",
