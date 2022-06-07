@@ -16,7 +16,9 @@ class NotificationController extends Controller
      */
     public function index()
     {
-    	$notifications = Notification::where('to_user_id',auth()->user()->id)->latest()->limit(15)->get();
+        $notifications=Notification::where('to_user_id',auth()->user()->id);
+    	(clone $notifications)->update(['seen' => 1]);
+    	$notifications = $notifications->latest()->limit(15)->get();
         return $this->sendResponse(new NotificationResourceCollection($notifications), 'Notifications.');
     }
 

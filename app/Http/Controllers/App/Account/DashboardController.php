@@ -16,10 +16,12 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $orders = Order::orderBy('id', 'desc')->limit(20)->get();
+        $new_notifications = Notification::where('to_user_id',auth()->user()->id)->where('seen', 0)->count();
         
         $data=[
             'total_recent_requests' =>count($orders),
             'recent_requests' =>  new OrderResourceCollection($orders),
+            'new_notifications' => $new_notifications,
         ];
 
         return $this->sendResponse($data, 'Orders Listing.');
