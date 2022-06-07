@@ -83,7 +83,7 @@ class OrderController extends Controller
                 'to_user_id'=> $order->user_id,
                 'title'=> "Order Update !",
                 'body'=> "Your Order has been ".$request->status." by ".auth()->user()->name,
-                'object'=> json_encode(['req_id' => $req->id])
+                'object'=> json_encode(['req_id' => $order->id,'order_r'=>$order_r,'order_s'=>$order_s])
                 
             ];
             // dd($data);
