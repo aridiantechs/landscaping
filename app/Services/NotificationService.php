@@ -33,7 +33,7 @@ class NotificationService{
             return false;
         }
 
-        $data=collect($data)->only(['title','body','req_id']);
+        // $data=collect($data)->only(['title','body','req_id']);
 
         return fcm()
             ->to($user_devices)
@@ -46,7 +46,14 @@ class NotificationService{
 
     //app notifcation function
     public static function app_notification($data = array()){
-        $noti = NotificationModel::create($data);
+        $noti = NotificationModel::create([
+            'type' => $data['type'] ?? null,
+            'to_user_id' => $data['to_user_id'] ?? null,
+            'title' => $data['title'] ?? null,
+            'body' => $data['body'] ?? null,
+            'req_id' => $data['req_id'] ?? null,
+            'object' => $data['object'] ?? null,
+        ]);
     }
 
 }
