@@ -75,7 +75,7 @@ class OrderController extends Controller
             $order_s->save();
         }
 
-        $user_devices = auth()->user()->user_devices()->toArray();
+        $user_devices = auth()->user()->devices()->toArray();
         
         if (in_array($request->status, array('ACCEPTED','SCHEDULE'))) {
             $data=[
@@ -163,7 +163,7 @@ class OrderController extends Controller
             $order_r->comments = $request->comments;
             $order_r->save();
 
-            $user_devices = auth()->user()->user_devices()->toArray();
+            $user_devices = auth()->user()->devices()->toArray();
             $data=[
                 'type'=>"Request Schedule",
                 'to_role'=>"endUser",
