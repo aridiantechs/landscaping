@@ -201,8 +201,15 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function logout()
+    public function logout(Request $request)
     {
+        if ($request_device_id) {
+            $device = UserDevice::where('user_id',auth()->user()->id)->where('device_id',$request_device_id)->first();
+            if($device){
+                $device->delete();
+            }
+        }
+        
         $user = Auth::user();
     	$user->tokens()->delete();
         $user->otp_verified_at=null;

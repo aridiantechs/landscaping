@@ -214,7 +214,7 @@ class OrderController extends Controller
         // dd($user_devices);
         $data=[
             'type'=>"Request",
-            'role'=>"Worker",
+            'role'=>"worker",
             'req_id'=>$req->id,
             'order_address'=>$req->full_address,
             'to_user_id'=> $workers,
