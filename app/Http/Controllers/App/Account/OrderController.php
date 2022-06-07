@@ -118,6 +118,21 @@ class OrderController extends Controller
         $order_r->status = 'PENDING';
         $order_r->save();
 
+        if (in_array($request->status, array('ACCEPTED'))) {
+            $data=[
+                'type'=>"Customer Request Action",
+                'to_role'=>"worker",
+                'req_id'=>$order->id,
+                'to_user_id'=> $order->user_id,
+                'title'=> "Order Schedule accepted !",
+                'body'=> "Order schedule accepted by ".auth()->user()->name,
+                'object'=> json_encode(['req_id' => $order->id,'order_r'=>$order_r])
+                
+            ];
+            
+            NotificationService::send($user_devices,$data);
+        }
+
         return $this->sendResponse(new OrderResource($order), 'Order Status Updated.');
         
     }
@@ -149,12 +164,13 @@ class OrderController extends Controller
             $data=[
                 'type'=>"Request Schedule",
                 'to_role'=>"endUser",
-                'req_id'=>$order->id,
-                'order_address'=>$order->full_address,
+                'order_response_id'=>$order_r->id,
+                'schedule_time'=>$order_r->time,
+                'schedule_comments'=>$order_r->comments,
                 'to_user_id'=> $order->user_id,
                 'title'=> "Order Update !",
-                'body'=> "Your Order has been ".$request->status." by ".auth()->user()->name,
-                'object'=> json_encode(['req_id' => $order->id,'order_r'=>$order_r,'order_s'=>$order_s])
+                'body'=> "Your Order has been scheduled by ".auth()->user()->name." at ".$request->time,
+                'object'=> json_encode(['req_id' => $order->id,'order_r'=>$order_r])
                 
             ];
             // dd($data);
