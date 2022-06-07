@@ -51,6 +51,9 @@ class OrderController extends Controller
         }
 
         $order = Order::where('uuid', $request->order_id)->first();
+        if (auth()->user()->hasAcceptedOrder()) {
+            return $this->validationError('You are already to an order, and its not completed !', []);
+        }
         // if order response already exists
         if ( $order->accepted_response && $order->accepted_response->count()) {
             return $this->validationError('Order already accepted.', []);
