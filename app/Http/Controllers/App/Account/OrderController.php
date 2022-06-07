@@ -72,6 +72,25 @@ class OrderController extends Controller
             $order_s->save();
         }
 
+        $user_devices = auth()->user()->user_devices()->toArray();
+        
+        if (in_array($request->status, array('ACCEPTED','SCHEDULE'))) {
+            $data=[
+                'type'=>"Request Action",
+                'role'=>"endUser",
+                'req_id'=>$order->id,
+                'order_address'=>$order->full_address,
+                'to_user_id'=> $order->user_id,
+                'title'=> "Order Update !",
+                'body'=> "Your Order has been ".$request->status." by ".auth()->user()->name,
+                'object'=> json_encode(['req_id' => $req->id])
+                
+            ];
+            // dd($data);
+            NotificationService::send($user_devices,$data);
+        } 
+        
+        
         return $this->sendResponse(new OrderResource($order), 'Order Status Updated.');
     }
 
