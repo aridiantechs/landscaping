@@ -128,7 +128,12 @@ Route::get('/test_fcm_data', function (Request $request) {
 
     try {
         return fcm()
-            ->to([$request->query('token')])
+            ->to([
+                "er5aYf-lSyOiIURP47tQkp:APA91bEcBiI0DL_xydW7QwwXfW6gI5cA6xlp_aj-XGa4lTHxGH_s0-VZwmFwc9hqJTzc-x4v-R75rjJPrNVxNSrJSrRWOK7JTIgBfVfm2oZHjKbAKZZ2wB_Mn4mYqKEbss_j4yTNNT6s",
+                "cn-C3Db5QgWQjeTnfPf_J6:APA91bEoYktu0CP-x2fuBt83jDGQvRsNhRsGZWg-xse6n3oskQ62cDB-vWzi2kyQhBBmOXFRJx3XnR3JviuzQCDGyKk6rGVgxYeJ1VvZARKozBshsOmWEyoVanJv4wZKOP5ctbeuCUqe",
+                "cn-C3Db5QgWQjeTnfPf_J6:APA91bEoYktu0CP-x2fuBt83jDGQvRsNhRsGZWg-xse6n3oskQ62cDB-vWzi2kyQhBBmOXFRJx3XnR3JviuzQCDGyKk6rGVgxYeJ1VvZARKozBshsOmWEyoVanJv4wZKOP5ctbeuCUqe",
+                "er5aYf-lSyOiIURP47tQkp:APA91bEcBiI0DL_xydW7QwwXfW6gI5cA6xlp_aj-XGa4lTHxGH_s0-VZwmFwc9hqJTzc-x4v-R75rjJPrNVxNSrJSrRWOK7JTIgBfVfm2oZHjKbAKZZ2wB_Mn4mYqKEbss_j4yTNNT6s"
+            ])
             ->priority('high')
             ->timeToLive(0)
             ->data($data)
@@ -139,7 +144,7 @@ Route::get('/test_fcm_data', function (Request $request) {
 
     return [
         'data' => $data,
-        'token' => $request->query('token'),
+        'token' => $request->query('token') ?? '',
     ];
    
 });

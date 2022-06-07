@@ -209,13 +209,12 @@ class OrderController extends Controller
             }
         }
 
-        $user_devices = UserDevice::where('user_id',$workers)->get()->pluck('device_id')->toArray();
-        
+        $user_devices = UserDevice::whereIn('user_id',$workers)->get()->pluck('device_id')->toArray();
+        $user_devices = array_values(array_filter($user_devices));
+        // dd($user_devices);
         $data=[
             'type'=>"Request",
-            "role"=>"Worker",
             'req_id'=>$req->id,
-            'order_address'=>$req->full_address,
             'to_user_id'=> $workers,
             'title'=> 'You have recieved a request !',
             'body'=> $req->additional_info,

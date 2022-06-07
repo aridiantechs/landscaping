@@ -32,7 +32,7 @@ class NotificationService{
         if(!$user_devices){
             return false;
         }
-
+        
         // $data=collect($data)->only(['title','body','req_id']);
 
         return fcm()
