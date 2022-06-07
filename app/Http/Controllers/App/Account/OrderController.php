@@ -77,7 +77,7 @@ class OrderController extends Controller
         if (in_array($request->status, array('ACCEPTED','SCHEDULE'))) {
             $data=[
                 'type'=>"Request Action",
-                'role'=>"endUser",
+                'to_role'=>"endUser",
                 'req_id'=>$order->id,
                 'order_address'=>$order->full_address,
                 'to_user_id'=> $order->user_id,
@@ -144,6 +144,22 @@ class OrderController extends Controller
             $order_r->time = $request->time;
             $order_r->comments = $request->comments;
             $order_r->save();
+
+            $user_devices = auth()->user()->user_devices()->toArray();
+            $data=[
+                'type'=>"Request Schedule",
+                'to_role'=>"endUser",
+                'req_id'=>$order->id,
+                'order_address'=>$order->full_address,
+                'to_user_id'=> $order->user_id,
+                'title'=> "Order Update !",
+                'body'=> "Your Order has been ".$request->status." by ".auth()->user()->name,
+                'object'=> json_encode(['req_id' => $order->id,'order_r'=>$order_r,'order_s'=>$order_s])
+                
+            ];
+            // dd($data);
+            NotificationService::send($user_devices,$data);
+
             return $this->sendResponse(new OrderResource($order_r->order), 'Order Schedule Updated.');
         } else {
             return $this->validationError('Validation Error.', 'Order Status cannot be SCHEDULE');
@@ -233,7 +249,7 @@ class OrderController extends Controller
         // dd($user_devices);
         $data=[
             'type'=>"Request",
-            'role'=>"worker",
+            'to_role'=>"worker",
             'req_id'=>$req->id,
             'order_address'=>$req->full_address,
             'to_user_id'=> $workers,
