@@ -27,7 +27,7 @@ class NotificationResource extends JsonResource
         }
         
         $worker_id = $this->order && $this->order_response() ? $this->order_response()->user_id : null;
-
+        
         return [
             'id' => (string)$this->id ?? "",
             'type' => (string)$type,
