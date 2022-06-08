@@ -77,7 +77,7 @@ class OrderController extends Controller
 
         $user_devices = UserDevice::where('user_id',$order->user_id)->whereNotNull('device_id')->pluck('device_id')->toArray();
         // dd($user_devices);
-        if (in_array($request->status, array('ACCEPTED','SCHEDULE'))) {
+        if (in_array($request->status, array('ACCEPTED'))) {
             $data=[
                 'type'=>"Request Action",
                 'to_role'=>"endUser",
@@ -89,7 +89,7 @@ class OrderController extends Controller
                 'object'=> json_encode(['req_id' => $order->id,'order_r'=>$order_r])
                 
             ];
-            // dd($data);
+            
             NotificationService::send($user_devices,$data);
         } 
         
