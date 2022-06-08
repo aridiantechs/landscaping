@@ -121,15 +121,16 @@ class OrderController extends Controller
         $order_r->status = 'PENDING';
         $order_r->save();
 
-        if (in_array($request->status, array('ACCEPTED'))) {
+        $user_devices = UserDevice::where('user_id',$request->worker_id)->whereNotNull('device_id')->pluck('device_id')->toArray();
+        if ($user_devices && in_array($request->status, array('ACCEPTED'))) {
             $data=[
                 'type'=>"Customer Request Action",
                 'to_role'=>"worker",
                 'req_id'=>$order->id,
-                'to_user_id'=> $order->user_id,
+                'to_user_id'=> $request->worker_id,
                 'title'=> "Order Schedule accepted !",
                 'body'=> "Order schedule accepted by ".auth()->user()->name,
-                'object'=> json_encode(['req_id' => $order->id,'order_r'=>$order_r])
+                'object'=> json_encode(['req_id' => $order->id])
                 
             ];
             
