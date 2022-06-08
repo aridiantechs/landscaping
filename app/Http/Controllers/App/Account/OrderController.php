@@ -167,6 +167,7 @@ class OrderController extends Controller
             $data=[
                 'type'=>"Request Schedule",
                 'to_role'=>"endUser",
+                'req_id'=>$order->id,
                 'order_response_id'=>$order_r->id,
                 'schedule_time'=>$order_r->time,
                 'schedule_comments'=>$order_r->comments,
