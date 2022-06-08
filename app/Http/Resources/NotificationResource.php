@@ -16,7 +16,12 @@ class NotificationResource extends JsonResource
     public function toArray($request)
     {
         if ($this->order && !$this->order->accepted_response && !$this->order->accepted_schedule_response) {
-            $type='new_request';
+            if ($this->order->hasBeenScheduled()) {
+                $type='old_request';
+            } else {
+                $type='new_request';
+            }
+            
         } else {
             $type='old_request';
         }
