@@ -13,4 +13,17 @@ class Notification extends Model
     {
         return $this->belongsTo(Order::class,'req_id');
     }
+
+    // get order response
+    public function order_response()
+    {
+        // fetch order response from object key
+        $object=json_decode($this->object);
+        if ($object->order_r) {
+            return $this->hasOne(OrderResponse::class, 'id', $order_r->id);
+        }else{
+            return null;
+        }
+
+    }
 }
