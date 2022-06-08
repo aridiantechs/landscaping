@@ -158,7 +158,7 @@ class OrderController extends Controller
         }
 
         $order_r = OrderResponse::where('order_id', $order_id)->where('user_id', auth()->user()->id)->first();
-        if ($order_r->response_type == 'SCHEDULE') {
+        if ($order_r && $order_r->response_type == 'SCHEDULE') {
             $order_r->time = $request->time;
             $order_r->comments = $request->comments;
             $order_r->save();
