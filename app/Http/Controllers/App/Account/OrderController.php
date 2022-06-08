@@ -177,7 +177,7 @@ class OrderController extends Controller
                 
             ];
             // dd($data);
-            NotificationService::send($user_devices,$data);
+            $notify=NotificationService::send($user_devices,$data);
 
             return $this->sendResponse(new OrderResource($order_r->order), 'Order Schedule Updated.');
         } else {
