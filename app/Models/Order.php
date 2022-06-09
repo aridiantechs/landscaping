@@ -92,9 +92,9 @@ class Order extends Model
     // get scehdule data
     public function schedule_data()
     {
-        $o_status=$this->order_status->where('order_id', $this->uuid)->first();
+        $o_status=$this->order_status()->where('order_id', $this->uuid)->first();
         if($o_status){
-            $o_res=$this->order_responses->where('user_id', $o_status->worker_id)->where('time', '!=' ,null)->first();
+            $o_res=$this->order_responses()->where('user_id', $o_status->worker_id)->where('time', '!=' ,null)->first();
             if ($o_res) {
                 return $o_res;
             } else {
