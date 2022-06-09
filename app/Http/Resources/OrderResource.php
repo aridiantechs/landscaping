@@ -53,6 +53,8 @@ class OrderResource extends JsonResource
             'lng'=>$this->lng,
             'full_address'=>$this->full_address,
             'status' => $o_status,
+            'created_date' => $this->created_at->format('Y-m-d'),
+            'created_time' => $this->created_at->format('H:i:s'),
             'schedule_data'=>$this->schedule_data() ? $this->schedule_data() : null,
             'worker'=>  $this->when(auth()->user()->hasRole('endUser'), $worker),
             'enable_action' => $this->when(auth()->user()->hasRole('endUser') && $this->order_area()->exists() && $this->order_area->customer_response == 'PENDING', function () {
