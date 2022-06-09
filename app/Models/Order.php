@@ -62,6 +62,12 @@ class Order extends Model
         return $this->hasOne(OrderResponse::class, 'order_id', 'uuid')->where('response_type', 'ACCEPTED');
     }
 
+    // get schedule response
+    public function schedule_response()
+    {
+        return $this->hasOne(OrderResponse::class, 'order_id', 'uuid')->where('response_type', 'SCHEDULE');
+    }
+
     // get customer response
     public function accepted_schedule_response()
     {
@@ -78,6 +84,17 @@ class Order extends Model
         $r = $this->order_responses->where('user_id', auth()->user()->id)->where('time', '!=' ,null);
         if($r->count()){
             return $r;
+        }else{
+            return false;
+        }
+    }
+
+    // get scehdule data
+    public function schedule_data()
+    {
+        $res=$this->order_responses->where('response_type', 'SCHEDULE')->first();
+        if($res){
+            return $res;
         }else{
             return false;
         }
