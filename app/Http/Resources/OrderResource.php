@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrderResource extends JsonResource
@@ -44,7 +45,7 @@ class OrderResource extends JsonResource
         return [
             'id' => $this->id,
             'order_id' => $this->uuid,
-            'user' => $this->user->name,
+            'user' =>$this->when(Route::is('order.show') ,new UserResource($this->user), $this->user->name),
             'city'=> $this->city,
             'state'=> $this->state,
             'country'=> $this->country,
@@ -52,7 +53,7 @@ class OrderResource extends JsonResource
             'lng'=>$this->lng,
             'full_address'=>$this->full_address,
             'status' => $o_status,
-            'schedule_data'=>$this->accepted_schedule_response && $this->schedule_response ? $this->schedule_data() : null,
+            'schedule_data'=>$this->schedule_data() ? $this->schedule_data() : null,
             'worker'=>  $this->when(auth()->user()->hasRole('endUser'), $worker),
             'enable_action' => $this->when(auth()->user()->hasRole('endUser') && $this->order_area()->exists() && $this->order_area->customer_response == 'PENDING', function () {
                 return true;

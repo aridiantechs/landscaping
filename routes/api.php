@@ -63,7 +63,7 @@ Route::group([
     Route::post('order/action', 'Account\OrderController@worker_action'); /* Order Action */
     Route::post('order/{order}/schedule', 'Account\OrderController@schedule');     /* Order Action */
     Route::post('order/{order}/quote/submit', 'Account\OrderController@quoteSubmit');   /* Order Quote Submit */
-    Route::get('order/{order}/detail', 'Account\OrderController@show');          /* Order Details */
+    Route::get('order/{order}/detail', 'Account\OrderController@show')->name('order.show');          /* Order Details */
 
     // Route to get update worker location
     Route::get('state/update', 'Account\DashboardController@stateUpdate'); 
@@ -90,7 +90,7 @@ Route::group([
     Route::post('order/post', 'Account\OrderController@store'); /* Order Listing */
     Route::post('order/action', 'Account\OrderController@customer_action'); /* Order Action */
     Route::post('order/{order}/quote/action',  'Account\OrderController@customer_quoteAction'); /* Order Quote Action Will only be performed by Customer */
-    Route::get('order/{order}/detail', 'Account\OrderController@show');
+    Route::get('order/{order}/detail', 'Account\OrderController@show'); /* Order Details */
 
     Route::get('get_available_workers', 'Account\DashboardController@getWorkers');
     // Route::get ('order/quote/get',     'Account\OrderController@customer_quoteGet');
