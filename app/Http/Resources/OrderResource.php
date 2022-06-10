@@ -41,7 +41,6 @@ class OrderResource extends JsonResource
             $worker = (object)[];
         }
         
-        
         return [
             'id' => $this->id,
             'order_id' => $this->uuid,
@@ -56,7 +55,7 @@ class OrderResource extends JsonResource
             'created_date' => $this->created_at->format('Y-m-d'),
             'created_time' => $this->created_at->format('h:i A'),
             'schedule_data'=>$this->schedule_data() ? $this->schedule_data() : null,
-            'area'=>$this->order_area()->exists() ? $this->order_area : null,
+            'area'=>$this->order_area ? $this->order_area : null,
             'worker'=>  $this->when(auth()->user()->hasRole('endUser'), $worker),
             'enable_action' => $this->when(auth()->user()->hasRole('endUser') && $this->order_area()->exists() && $this->order_area->customer_response == 'PENDING', function () {
                 return true;

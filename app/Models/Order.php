@@ -79,6 +79,12 @@ class Order extends Model
         return $this->hasOne(OrderArea::class, 'order_id', 'uuid')->where('customer_response', 'ACCEPTED')->orWhere('customer_response', 'REJECTED')->orWhere('customer_response', 'RESUBMIT');
     }
 
+    // user has submitted area
+    public function userSubmittedArea()
+    {
+        return $this->hasOne(OrderArea::class, 'order_id', 'uuid')->where('worker_id', auth()->user()->id);
+    }
+
     public function hasBeenScheduled()
     {
         $r = $this->order_responses->where('user_id', auth()->user()->id)->where('time', '!=' ,null);
