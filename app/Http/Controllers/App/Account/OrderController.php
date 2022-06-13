@@ -363,7 +363,6 @@ class OrderController extends Controller
         if ($request->action == 'ACCEPTED') {
             $order_a->customer_response = 'ACCEPTED';
             $order_a->save();
-            return $this->sendResponse($order->order_area, 'Order Quote Accepted.');
         }elseif($request->action == 'REJECTED'){
             $order_a->customer_response = 'REJECTED';
             $order_a->save();
@@ -400,6 +399,7 @@ class OrderController extends Controller
             
             NotificationService::send($user_devices,$data);
         }
+        return $this->sendResponse($order->order_area, 'Order Quote Accepted.');
         // return $this->sendResponse($order, 'Order Area Submitted.');
     }
     /**
