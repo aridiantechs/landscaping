@@ -239,7 +239,7 @@ class OrderController extends Controller
                 'title'=> "Dimentions Submitted !",
                 'body'=> "Dimentions of the property have been submitted by ".auth()->user()->name,
                 'object'=> json_encode(['req_id' => $order->id]),
-                'dimentions_submitted'=>true
+                'dimensions_submitted'=>true
             ];
             
             NotificationService::send($user_devices,$data);
