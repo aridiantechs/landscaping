@@ -15,7 +15,10 @@ class NotificationResource extends JsonResource
      */
     public function toArray($request)
     {
-        if ($this->order && !$this->order->accepted_response && !$this->order->accepted_schedule_response) {
+        //get deleted area
+        $deleted_area = $this->order && $this->order->order_area()->withTrashed()->first() ? $this->order->order_area()->withTrashed()->first() : false;
+
+        if ($this->order && !$deleted_area && !$this->order->accepted_response && !$this->order->accepted_schedule_response) {
             if ($this->order->hasBeenScheduled()) {
                 $type='old_request';
             } else {

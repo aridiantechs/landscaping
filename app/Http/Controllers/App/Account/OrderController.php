@@ -359,7 +359,10 @@ class OrderController extends Controller
         if ( $order->hasCustomerResponse) {
             return $this->validationError("You can't perform this action again", []);
         }
+
         $order_a = OrderArea::where('order_id', $order_id)->first();
+        $user_devices = UserDevice::where('user_id',$order_a->worker_id)->whereNotNull('device_id')->pluck('device_id')->toArray();
+        
         if ($request->action == 'ACCEPTED') {
             $order_a->customer_response = 'ACCEPTED';
             $order_a->save();
@@ -384,7 +387,6 @@ class OrderController extends Controller
             return $this->sendResponse($resend_order, 'Order Resubmitted.');
         }
 
-        $user_devices = UserDevice::where('user_id',$order_a->worker_id)->whereNotNull('device_id')->pluck('device_id')->toArray();
         if ($user_devices && count($user_devices)) {
             $data=[
                 'type'=>"Customer Dimention Submit",
