@@ -235,6 +235,7 @@ class OrderController extends Controller
                 'type'=>"Worker Dimention Submit",
                 'to_role'=>"endUser",
                 'req_id'=>$order->id,
+                'order_id'=>$order->uuid,
                 'to_user_id'=> $order->user_id,
                 'title'=> "Dimentions Submitted !",
                 'body'=> "Dimentions of the property have been submitted by ".auth()->user()->name,
