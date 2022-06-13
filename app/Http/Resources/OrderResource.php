@@ -38,7 +38,7 @@ class OrderResource extends JsonResource
                 'photo_path'
             )->first();
         } else {
-            $worker = (object)[];
+            $worker = null;
         }
         
         return [
@@ -56,7 +56,7 @@ class OrderResource extends JsonResource
             'created_time' => $this->created_at->format('h:i A'),
             'schedule_data'=>$this->schedule_data() ? $this->schedule_data() : null,
             'area'=>$this->order_area ? $this->order_area : null,
-            'worker'=>  $this->when(auth()->user()->hasRole('endUser'), $worker,null),
+            'worker'=>  $this->when(auth()->user()->hasRole('endUser'), $worker),
             'enable_action' => $this->when(auth()->user()->hasRole('endUser') && $this->order_area()->exists() && $this->order_area->customer_response == 'PENDING', function () {
                 return true;
             }),
