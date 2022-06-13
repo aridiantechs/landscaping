@@ -399,7 +399,7 @@ class OrderController extends Controller
             
             NotificationService::send($user_devices,$data);
         }
-        return $this->sendResponse($order->order_area, 'Order Quote Accepted.');
+        return $this->sendResponse($order_a, 'Order Quote Accepted.');
         // return $this->sendResponse($order, 'Order Area Submitted.');
     }
     /**
