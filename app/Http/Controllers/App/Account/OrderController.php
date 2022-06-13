@@ -229,6 +229,22 @@ class OrderController extends Controller
         $area->customer_response = 'PENDING';
         $area->save();
 
+        $user_devices = UserDevice::where('user_id',$order->user_id)->whereNotNull('device_id')->pluck('device_id')->toArray();
+        if ($user_devices && count($user_devices)) {
+            $data=[
+                'type'=>"Customer Request Action",
+                'to_role'=>"worker",
+                'req_id'=>$order->id,
+                'to_user_id'=> $order->user_id,
+                'title'=> "Dimentions Submitted !",
+                'body'=> "Dimentions of the property have been submitted by ".auth()->user()->name,
+                'object'=> json_encode(['req_id' => $order->id])
+                
+            ];
+            
+            NotificationService::send($user_devices,$data);
+        }
+
         return $this->sendResponse($area, 'Order Area Submitted.');
     }
 
