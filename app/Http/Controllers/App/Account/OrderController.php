@@ -212,6 +212,10 @@ class OrderController extends Controller
         }
 
         $order = Order::where('uuid', $order_id)->first();
+        if (!$order) {
+            return $this->validationError('Order not found.', []);
+        }
+
         if ( $order->userSubmittedArea) {
             return $this->validationError("You can't perform this action again", []);
         }
