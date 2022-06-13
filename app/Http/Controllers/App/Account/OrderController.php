@@ -232,8 +232,8 @@ class OrderController extends Controller
         $user_devices = UserDevice::where('user_id',$order->user_id)->whereNotNull('device_id')->pluck('device_id')->toArray();
         if ($user_devices && count($user_devices)) {
             $data=[
-                'type'=>"Customer Request Action",
-                'to_role'=>"worker",
+                'type'=>"Worker Dimention Submit",
+                'to_role'=>"endUser",
                 'req_id'=>$order->id,
                 'to_user_id'=> $order->user_id,
                 'title'=> "Dimentions Submitted !",
@@ -351,7 +351,11 @@ class OrderController extends Controller
         }
 
         $order = Order::where('uuid', $order_id)->first();
-        if ( $order->hasCustomerResponse()) {
+        if (!$order || ($order && !$order->order_area)) {
+            return $this->validationError('Order/ order area not found.', []);
+        }
+
+        if ( $order->hasCustomerResponse) {
             return $this->validationError("You can't perform this action again", []);
         }
         $order_a = OrderArea::where('order_id', $order_id)->first();
@@ -379,7 +383,22 @@ class OrderController extends Controller
             $resend_order->save();
             return $this->sendResponse($resend_order, 'Order Resubmitted.');
         }
-        
+
+        $user_devices = UserDevice::where('user_id',$order_a->worker_id)->whereNotNull('device_id')->pluck('device_id')->toArray();
+        if ($user_devices && count($user_devices)) {
+            $data=[
+                'type'=>"Customer Dimention Submit",
+                'to_role'=>"worker",
+                'req_id'=>$order->id,
+                'to_user_id'=> $order_a->worker_id,
+                'title'=> "Order qoute accepted !",
+                'body'=> "Customer has accepted your quote, you can start working on the order.",
+                'object'=> json_encode(['req_id' => $order->id])
+                
+            ];
+            
+            NotificationService::send($user_devices,$data);
+        }
         // return $this->sendResponse($order, 'Order Area Submitted.');
     }
     /**
