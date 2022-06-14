@@ -18,7 +18,8 @@
         "laravel/tinker": "^2.5",
         "league/glide-laravel": "^1.0",
         "pusher/pusher-php-server": "~3.0",
-        "spatie/laravel-permission": "^4.0"
+        "spatie/laravel-permission": "^4.0",
+        "square/square": "19.0.1.20220512"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",

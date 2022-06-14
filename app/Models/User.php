@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Models\UserDevice;
+use App\Models\Subscription;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\SquareCustomerCard;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
@@ -23,6 +25,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $fillable = [
         'name',
+        'square_customer_id',
         'first_name', 
         'last_name', 
         'email', 
@@ -65,6 +68,18 @@ class User extends Authenticatable implements MustVerifyEmail
     public function account()
     {
         return $this->belongsTo(Account::class);
+    }
+
+    //square card
+    public function square_card()
+    {
+        return $this->hasOne(SquareCustomerCard::class);
+    }
+    
+    // active subscription
+    public function activeSubscription()
+    {
+        return $this->hasOne(Subscription::class,'customer_id')->whereDate('end_date', '>', now());
     }
 
     public function getNameAttribute()

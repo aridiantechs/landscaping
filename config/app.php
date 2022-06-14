@@ -123,6 +123,7 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    'SQUARE_ACCESS_TOKEN' => env('SQUARE_ACCESS_TOKEN'),
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

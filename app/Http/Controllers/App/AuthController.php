@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\CompanyProfile;
 use App\Mail\EmailVerification;
 use App\Rules\MatchOldPassword;
+use App\Services\PaymentService;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
@@ -132,6 +133,20 @@ class AuthController extends Controller
                 'user_id' => $user->id,
                 'device_id' => $request->device_id,
             ]);
+
+            // store square customer
+            $ps=new PaymentService;
+            $ps_res=$ps->create_customer([
+                'email' => $user->email,
+                'phone' => $user->phone,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+            ]);
+            
+            if (!is_null($ps_res) && isset($ps_res['customer_id'])) {
+                $user->square_customer_id =$ps_res['customer_id'];
+                $user->save();
+            }
             
             $success['token'] =  $user->createToken('API Token')->plainTextToken;
             $success['user'] =  new UserResource($user);

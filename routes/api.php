@@ -73,6 +73,10 @@ Route::group([
     // Route::post('order/quote/action', 'Account\OrderController@worker_quoteAction'); /* Order Quote Action Will only be performed by Customer */
     // Worker Side Orders Ends Here
 
+    // subscriptions
+    Route::post('create_subscription', 'Account\SubscriptionController@createSubscription');// subscription on signup
+    Route::post('store_subscription', 'Account\SubscriptionController@storeSubscription');// subscription update
+
 });
 
 Route::group([
