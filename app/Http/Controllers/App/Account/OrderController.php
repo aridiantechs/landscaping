@@ -404,6 +404,17 @@ class OrderController extends Controller
         return $this->sendResponse($order_a, 'Order Quote Accepted.');
         // return $this->sendResponse($order, 'Order Area Submitted.');
     }
+
+    public function complete(Request $request, $order_id)
+    {
+        $order = Order::where('uuid', $order_id)->first();
+        if($order && $order->order_status){
+            $order->order_status->status = 'COMPLETED';
+            $order->order_status->save();
+        }
+
+        return $this->sendResponse(new OrderResource($order), 'Order Details.');
+    }
     /**
      * Update the specified resource in storage.
      *

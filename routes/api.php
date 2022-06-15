@@ -68,6 +68,7 @@ Route::group([
     Route::post('order/{order}/schedule', 'Account\OrderController@schedule');     /* Order Action */
     Route::post('order/{order}/quote/submit', 'Account\OrderController@quoteSubmit');   /* Order Quote Submit */
     Route::get('order/{order}/detail', 'Account\OrderController@show')->name('order.show');          /* Order Details */
+    Route::get('order_complete', 'Account\OrderController@complete'); 
 
     // Route to get update worker location
     Route::get('state/update', 'Account\DashboardController@stateUpdate'); 
