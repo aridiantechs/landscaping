@@ -37,6 +37,8 @@ Route::group([
         Route::get('refresh', 'AuthController@refreshToken');
         Route::post('otp', 'AuthController@verifyEmailUsingOtp');
 
+        Route::get('resend/otp', 'AuthController@resendOtp');
+
         Route::get('profile', 'Account\ProfileController@index');
         Route::post('profile', 'Account\ProfileController@update');
         Route::post('profile/password/update', 'Account\ProfileController@update_password');

@@ -179,6 +179,17 @@ class AuthController extends Controller
 
     }
 
+    // resend otp
+    public function resendOtp(Request $request)
+    {
+        $user=User::where('email',auth()->user()->email)->first();
+        if(!$user) {
+            return $this->validationError('User not found.', [['title'=>'signin','message'=>'User not found']],400);
+        }
+        $this->sendOtp($user);
+        return $this->sendResponse([], 'OTP sent successfully.');
+    }
+
     public function sendResetOtp($user)
     {
         $user->otp=unique_serial('users','otp',null);
