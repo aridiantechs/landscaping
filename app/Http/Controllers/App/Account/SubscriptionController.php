@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Services\PaymentService;
 use App\Models\SquareCustomerCard;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 
 class SubscriptionController extends Controller
@@ -121,7 +122,7 @@ class SubscriptionController extends Controller
 
     public function renewSubscription(Request $request)
     {
-        dd($request->all());
+        Storage::disk('public')->put('renew_subscription.txt', json_encode($request->all()));
     }
 
 }
