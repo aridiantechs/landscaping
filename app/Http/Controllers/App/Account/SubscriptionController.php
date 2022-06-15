@@ -156,7 +156,20 @@ class SubscriptionController extends Controller
 
     public function renewSubscription(Request $request)
     {
-        Storage::disk('public')->put('renew_subscription.txt', json_encode($request->all()));
+        // if request has type and type is invoice.payment_made
+        if ($request->type == 'invoice.payment_made') {
+            Storage::disk('public')->put('payment_made.txt', json_encode($request->all()));
+        }elseif($request->type == 'invoice.canceled')
+        {
+            Storage::disk('public')->put('canceled.txt', json_encode($request->all()));
+        }elseif($request->type == 'invoice.scheduled_charge_failed')
+        {
+            Storage::disk('public')->put('scheduled_charge_failed.txt', json_encode($request->all()));
+        }elseif($request->type == 'subscription.updated')
+        {
+            Storage::disk('public')->put('subscription_canceled.txt', json_encode($request->all()));
+        }
+        
     }
 
 }
