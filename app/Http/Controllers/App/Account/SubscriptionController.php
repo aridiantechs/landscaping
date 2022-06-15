@@ -37,6 +37,27 @@ class SubscriptionController extends Controller
         
     }
 
+    //store customer
+    public function storeCustomer($user)
+    {
+        $ps=new PaymentService;
+        $ps_res=$ps->create_customer([
+            'email' => $user->email,
+            'phone' => $user->phone,
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+        ]);
+            
+        if (!is_null($ps_res) && isset($ps_res['customer_id'])) {
+            $user->square_customer_id=$ps_res['customer_id'];
+            $user->save();
+            return $this->sendResponse($user, 'Customer added successfully.');
+        }else{
+            return $this->validationError('Something went wrong!', $ps_res, 400);
+        }
+        
+    }
+
     // create subscription
     public function createCardAndSubscription(Request $request)
     {
@@ -44,37 +65,50 @@ class SubscriptionController extends Controller
             $user = auth()->user();
             if ($user->activeSubscription) {
                 return $this->validationError('You already have an active subscription.', [], 400);
-            }elseif($user->square_customer_id){
-                $data=[
-                    'user'=>$user,
-                    'customer_id' => $user->square_customer_id,
-                ];
-
-                if (!$user->square_card) {
-                    $data['payment_token']=$request->payment_token;
-                    $res=$this->storeCustomerCard($request);
-                    $res=$res->getData();
-                    
-                    // if response_code not 200
-                    if ($res->response_code != 200) {
-                        return $res;
-                    } 
-                }
-
-                $data=[
-                    'card_id'=>$user->square_card->card_id,
-                ];
-        
-                $ps=new PaymentService;
-                $ps_res=$ps->create_subscription($data);
-                if (!is_null($ps_res) && isset($ps_res['subscription_id'])) {
-                    $user->subscription_id=$ps_res['subscription_id'];
-                    $user->save();
-                    return $this->sendResponse($user, 'Subscription created successfully.');
-                }
-        
-                return $this->validationError('Subscription Failed', [], 400);
             }
+
+            // if square customer not found, create it
+            if(is_null($user->square_customer_id)){
+                $this->storeCustomer($user);
+                $res=$res->getData();
+                
+                // if response_code not 200
+                if ($res->response_code != 200) {
+                    return $res;
+                } 
+            }
+
+            $data=[
+                'user'=>$user,
+                'customer_id' => $user->square_customer_id,
+            ];
+
+            // if customer card not found, create it
+            if (!$user->square_card) {
+                $data['payment_token']=$request->payment_token;
+                $res=$this->storeCustomerCard($request);
+                $res=$res->getData();
+                
+                // if response_code not 200
+                if ($res->response_code != 200) {
+                    return $res;
+                } 
+            }
+
+            $data=[
+                'card_id'=>$user->square_card->card_id,
+            ];
+    
+            // create subscription
+            $ps=new PaymentService;
+            $ps_res=$ps->create_subscription($data);
+            if (!is_null($ps_res) && isset($ps_res['subscription_id'])) {
+                $user->subscription_id=$ps_res['subscription_id'];
+                $user->save();
+                return $this->sendResponse($user, 'Subscription created successfully.');
+            }
+    
+            return $this->validationError('Subscription Failed', [], 400);
         } else {
             return $this->validationError('Payment token is required.', [], 400);
         }
