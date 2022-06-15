@@ -107,6 +107,7 @@ class SubscriptionController extends Controller
                 $cs->customer_id=$ps_res['customer_id'];
                 $cs->start_date=$ps_res['start_date'];
                 $cs->end_date=$ps_res['end_date'];
+                $cs->status='ACTIVE';
                 $cs->save();
                 return $this->sendResponse($user, 'Subscription created successfully.');
             }
@@ -160,8 +161,22 @@ class SubscriptionController extends Controller
     public function renewSubscription(Request $request)
     {
         // if request has type and type is invoice.payment_made
-        if ($request->type == 'invoice.payment_made') {
-            Storage::disk('public')->put('payment_made.txt', json_encode($request->all()));
+        if ($request->type == 'invoice.payment_made') 
+        {
+            if ($request->data && $request->data->object && $request->data->object->invoice) {
+                $invoice=$request->data->object->invoice;
+                $inv_subs=Subscription::where('subs_id',$invoice->subscription_id)->first();
+                if (!$inv_subs) {
+                    $cs=$inv_subs->replicate();
+                    $cs->subs_id=$invoice->subscription_id;
+                    $cs->customer_id=$invoice->primary_recipient->customer_id;
+                    $cs->start_date=$invoice->created_at;
+                    $cs->end_date=Carbon::parse($invoice->created_at)->addMonth()->format('Y-m-d H:i:s');
+                    $cs->status='ACTIVE';
+                    $cs->save();
+                }
+                
+            }
         }elseif($request->type == 'invoice.canceled')
         {
             Storage::disk('public')->put('canceled.txt', json_encode($request->all()));
