@@ -223,11 +223,7 @@
                                                          <li><b>Amount</b>: {{$data['plan']->amount ?? ''}}</li>
                                                          <li><b>Started at</b>: {{$data['subscription']->start_date ?? ''}}</li>
                                                          <li><b>Ended at</b>: {{$data['subscription']->end_date ?? ''}}</li>
-                                                         <li><b>Reason</b>
-                                                            <ul>
-                                                               <li><b>Key: </b>{{json_encode($data['error'] ?? '')}}</li>
-                                                            </ul>
-                                                         </li>
+                                                         
                                                       </ul>
                                                       <p>You can count on our exceptional customer service.</p>
                                                    </p>
