@@ -209,7 +209,7 @@
                                                                               <table width="100%" cellpadding="0" cellspacing="0" border="0">
                                                                                  <tr style="line-height:0px">
                                                                                     <td style="padding-right: 0px;padding-left: 0px;" align="center">
-                                                                                       <![endif]--><a href="{{url('/')}}" target="_blank" style="outline:none" tabindex="-1"><img class="center fixedwidth" align="center" border="0" src="{{ asset('frontend/images/logo/kundkontakter.webp') }}" alt="Kundkontakter" title="Kundkontakter" style="text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; width: 100%; max-width: 232px; display: block;" width="232"></a>
+                                                                                       <![endif]--><a href="{{url('/')}}" target="_blank" style="outline:none" tabindex="-1"><img class="center fixedwidth" align="center" border="0" src="{{ asset('frontend/images/logo/LandScaping.webp') }}" alt="LandScaping" title="LandScaping" style="text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; width: 100%; max-width: 232px; display: block;" width="232"></a>
                                                                                        <!--[if mso]>
                                                                                     </td>
                                                                                  </tr>
@@ -373,7 +373,7 @@
                                                                               <table width="100%" cellpadding="0" cellspacing="0" border="0">
                                                                                  <tr style="line-height:0px">
                                                                                     <td style="padding-right: 0px;padding-left: 0px;" align="center">
-                                                                                       <![endif]--><a href="{{url('/')}}" target="_blank" style="outline:none" tabindex="-1"><img class="center fixedwidth" align="center" border="0" src="{{ asset('frontend/images/logo/kundkontakter.webp') }}" alt="Kundkontakter" title="Kundkontakter" style="text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; width: 100%; max-width: 120px; display: block;" width="120"></a>
+                                                                                       <![endif]--><a href="{{url('/')}}" target="_blank" style="outline:none" tabindex="-1"><img class="center fixedwidth" align="center" border="0" src="{{ asset('frontend/images/logo/LandScaping.webp') }}" alt="LandScaping" title="LandScaping" style="text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; width: 100%; max-width: 120px; display: block;" width="120"></a>
                                                                                        <!--[if mso]>
                                                                                     </td>
                                                                                  </tr>
@@ -388,7 +388,7 @@
                                                                                     <![endif]-->
                                                                                     <div style="color:#ffffff;font-family:Poppins, Arial, Helvetica, sans-serif;line-height:1.2;padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
                                                                                        <div class="txtTinyMce-wrapper" style="line-height: 1.2; font-size: 12px; color: #ffffff; font-family: Poppins, Arial, Helvetica, sans-serif; mso-line-height-alt: 14px;">
-                                                                                          <p style="font-size: 14px; line-height: 1.2; word-break: break-word; text-align: center; mso-line-height-alt: 17px; margin: 0;"><span style="font-size: 14px;">Kundkontakter © 2021. All rights reserved</span></p>
+                                                                                          <p style="font-size: 14px; line-height: 1.2; word-break: break-word; text-align: center; mso-line-height-alt: 17px; margin: 0;"><span style="font-size: 14px;">LandScaping © 2021. All rights reserved</span></p>
                                                                                        </div>
                                                                                     </div>
                                                                                     <!--[if mso]>

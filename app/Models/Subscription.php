@@ -14,7 +14,7 @@ class Subscription extends Model
 
     public function user()
 	{
-	    return $this->belongsTo('App\User', 'customer_id', 'customer_id');
+	    return $this->belongsTo('App\Models\User', 'customer_id', 'square_customer_id');
 	}
 
 	public function plan()

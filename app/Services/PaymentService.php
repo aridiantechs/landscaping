@@ -16,6 +16,7 @@ class PaymentService{
         $this->client = new SquareClient([
             'accessToken' => config('app.SQUARE_ACCESS_TOKEN'),
             'environment' => Environment::SANDBOX,
+            'sslVerification' => false,
         ]);
     }
 
@@ -76,7 +77,8 @@ class PaymentService{
         } else {
             $result = $api_response->getErrors();
             $result=[
-                'error'=>$result,
+                'key'=>$result[0]->getField(),
+                'message'=>$result[0]->getDetail(),
             ];
         }
         return $result;
@@ -114,8 +116,10 @@ class PaymentService{
             ];
         } else {
             $result = $api_response->getErrors();
+            
             $result=[
-                'error'=>$result,
+                'key'=>$result[0]->getField(),
+                'message'=>$result[0]->getDetail(),
             ];
         }
 
@@ -147,7 +151,8 @@ class PaymentService{
         } else {
             $result = $api_response->getErrors();
             $result=[
-                'error'=>$result,
+                'key'=>$result[0]->getField(),
+                'message'=>$result[0]->getDetail(),
             ];
         }
 

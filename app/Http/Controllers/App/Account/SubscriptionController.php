@@ -30,14 +30,14 @@ class SubscriptionController extends Controller
             $scc->card_id=$ps_res['card_id'];
             $scc->save();
             return $this->sendResponse($scc, 'Card added successfully.');
+        }else{
+            return $this->validationError('Something went wrong!', $ps_res, 400);
         }
-
-        return $this->validationError('Something went wrong!', [], 400);
         
     }
 
     // create subscription
-    public function createSubscription(Request $request)
+    public function createCardAndSubscription(Request $request)
     {
         if ($request->payment_token) {
             $user = auth()->user();
@@ -52,8 +52,10 @@ class SubscriptionController extends Controller
                 if (!$user->square_card) {
                     $data['payment_token']=$request->payment_token;
                     $res=$this->storeCustomerCard($request);
+                    $res=$res->getData();
+                    
                     // if response_code not 200
-                    if ($res['response_code'] != 200) {
+                    if ($res->response_code != 200) {
                         return $res;
                     } 
                 }
@@ -81,10 +83,17 @@ class SubscriptionController extends Controller
     // store subscription
     public function storeSubscription(Request $request)
     {
-        $user = auth()->user();
-        
+        $user=auth()->user();
+        return $this->store__($user);
+    }
+
+    public function store__($user)
+    {
         if (!$user->square_card) {
-            return $this->validationError('You need to add a card first.', [], 400);
+            return $this->validationError('You need to add a card first.', [
+                'key'=>'card',
+                'message'=>'You need to add a card first!',
+            ], 400);
         }
 
         $data=[
@@ -105,8 +114,14 @@ class SubscriptionController extends Controller
             $cs->end_date=$ps_res['end_date'];
             $cs->save();
             return $this->sendResponse(auth()->user(), 'Subscription created successfully.');
+        }else{
+            return $this->validationError('Subscription Failed',$ps_res, 400);
         }
-        return $this->validationError('Subscription Failed', [], 400);
+    }
+
+    public function renewSubscription(Request $request)
+    {
+        dd($request->all());
     }
 
 }

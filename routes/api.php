@@ -74,8 +74,11 @@ Route::group([
     // Worker Side Orders Ends Here
 
     // subscriptions
-    Route::post('create_subscription', 'Account\SubscriptionController@createSubscription');// subscription on signup
+    Route::post('create_card_subscription', 'Account\SubscriptionController@createCardAndSubscription');// subscription on signup
     Route::post('store_subscription', 'Account\SubscriptionController@storeSubscription');// subscription update
+
+    // renew subscription
+    Route::post('renew_subscription', 'Account\SubscriptionController@renewSubscription');// subscription update
 
 });
 

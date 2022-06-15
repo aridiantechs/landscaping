@@ -38,7 +38,7 @@ class UserResource extends JsonResource
             "role" => $role ?? "",
             // "company_profile" => $this->company_profile ?? null,
             "email_verified" => $email_verified ?? false,
-            'has_active_subscription' => $this->activeSubscription ? true : false,
+            'has_active_subscription' => $this->activeSubscription || $this->dayOldSubscription() ? true : false,
         ];
         return parent::toArray($request);
     }

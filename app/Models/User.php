@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use App\Models\UserDevice;
 use App\Models\Subscription;
 use Laravel\Sanctum\HasApiTokens;
@@ -75,11 +76,27 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(SquareCustomerCard::class);
     }
+
+    // all subscriptions
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class,'customer_id','square_customer_id');
+    }
     
     // active subscription
     public function activeSubscription()
     {
-        return $this->hasOne(Subscription::class,'customer_id')->whereDate('end_date', '>', now());
+        return $this->hasOne(Subscription::class,'customer_id','square_customer_id')->latest()->whereDate('end_date', '>=', now());
+    }
+
+    // subscriptions where 1 day have passed since the end date
+    public function dayOldSubscription()
+    {
+        $sub=$this->subscriptions()->latest()->first();
+        if ($sub && Carbon::parse($sub->end_date)->diffInDays(now()) == 1) {
+            return $sub;
+        }
+        return false;
     }
 
     public function getNameAttribute()
