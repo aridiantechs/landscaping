@@ -182,7 +182,15 @@ class SubscriptionController extends Controller
             Storage::disk('public')->put('canceled.txt', json_encode($request->all()));
         }elseif($request->type == 'invoice.scheduled_charge_failed')
         {
-            Storage::disk('public')->put('scheduled_charge_failed.txt', json_encode($request->all()));
+            if ($request->data && $request->data->object && $request->data->object->invoice) {
+                $invoice=$request->data->object->invoice;
+                $inv_subs=Subscription::where('subs_id',$invoice->subscription_id)->first();
+                if ($inv_subs) {
+                    $cs->status='RENEWAL_FAILED';
+                    $cs->save();
+                }
+                
+            }
         }elseif($request->type == 'subscription.updated')
         {
             Storage::disk('public')->put('subscription_canceled.txt', json_encode($request->all()));
