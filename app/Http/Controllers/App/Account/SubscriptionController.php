@@ -158,43 +158,79 @@ class SubscriptionController extends Controller
         }
     }
 
-    public function renewSubscription(Request $request)
+    public function subscriptionWebhook(Request $request)
     {
         // if request has type and type is invoice.payment_made
         if ($request->type == 'invoice.payment_made') 
         {
             if ($request->data && $request->data->object && $request->data->object->invoice) {
                 $invoice=$request->data->object->invoice;
-                $inv_subs=Subscription::where('subs_id',$invoice->subscription_id)->first();
+                $inv_subs=Subscription::where('customer_id',$invoice->customer_id)->first();
                 if (!$inv_subs) {
-                    $cs=$inv_subs->replicate();
-                    $cs->subs_id=$invoice->subscription_id;
-                    $cs->customer_id=$invoice->primary_recipient->customer_id;
-                    $cs->start_date=$invoice->created_at;
-                    $cs->end_date=Carbon::parse($invoice->created_at)->addMonth()->format('Y-m-d H:i:s');
-                    $cs->status='ACTIVE';
-                    $cs->save();
+                    $ps_res= $this->getSubscription($invoice->subscription_id);
+                    if (!is_null($ps_res) && isset($ps_res['subscription_id'])) {
+                        $cs=new Subscription;
+                        $cs->subs_id=$ps_res['subscription_id'];
+                        $cs->plan_id=$ps_res['plan_id'];
+                        $cs->customer_id=$ps_res['customer_id'];
+                        $cs->start_date=$ps_res['start_date'];
+                        $cs->end_date=$ps_res['end_date'];
+                        $cs->status='ACTIVE';
+                        $cs->save();
+                    }
                 }
                 
             }
         }elseif($request->type == 'invoice.canceled')
         {
-            Storage::disk('public')->put('canceled.txt', json_encode($request->all()));
+            // Storage::disk('public')->put('canceled.txt', json_encode($request->all()));
         }elseif($request->type == 'invoice.scheduled_charge_failed')
         {
             if ($request->data && $request->data->object && $request->data->object->invoice) {
                 $invoice=$request->data->object->invoice;
                 $inv_subs=Subscription::where('subs_id',$invoice->subscription_id)->first();
                 if ($inv_subs) {
-                    $cs->status='RENEWAL_FAILED';
-                    $cs->save();
+                    $inv_subs->status='RENEWAL_FAILED';
+                    $inv_subs->save();
                 }
                 
             }
         }elseif($request->type == 'subscription.updated')
         {
-            Storage::disk('public')->put('subscription_canceled.txt', json_encode($request->all()));
+            // Storage::disk('public')->put('subscription_canceled.txt', json_encode($request->all()));
         }
+        
+    }
+
+    public function getSubscription($subscription_id)
+    {
+        // fetch subscription
+        $ps=new PaymentService;
+        return $ps_res=$ps->get_subscription($subscription_id);
+        
+    }
+
+    public function cancelSubscription(Request $request)
+    {
+        if (auth()->user()->square_customer_id && (auth()->user()->activeSubscription || auth()->user()->dayOldSubscription()) ) {
+            $subscription=auth()->user()->activeSubscription ? auth()->user()->activeSubscription : auth()->user()->dayOldSubscription();
+            // cancel subscription
+            $ps=new PaymentService;
+            $ps_res=$ps->cancel_subscription($subscription->subs_id);
+            
+            if (!is_null($ps_res) && isset($ps_res['cancelled_at'])) {
+                
+                $subscription->cancel_date=$ps_res['cancelled_at'];
+                $subscription->status='CANCELLED';
+                $subscription->save();
+                return $this->sendResponse($subscription, 'Subscription canceled successfully.');
+            }else{
+                return $this->validationError('Subscription Failed',$ps_res, 400);
+            }
+        } else {
+            return $this->validationError('You need to have an active subscription to cancel.', [], 400);
+        }
+        
         
     }
 

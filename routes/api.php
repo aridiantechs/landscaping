@@ -49,7 +49,7 @@ Route::group([
     // Route::post('refresh', 'AuthController@refresh');
     Route::post('signup', 'AuthController@signup');
     // renew subscription
-    Route::post('renew_subscription', 'Account\SubscriptionController@renewSubscription');// subscription update
+    Route::post('renew_subscription', 'Account\SubscriptionController@subscriptionWebhook');// subscription update
 });
 
 Route::group([
@@ -80,6 +80,7 @@ Route::group([
     // subscriptions
     Route::post('create_card_subscription', 'Account\SubscriptionController@createCardAndSubscription');// subscription on signup
     Route::post('store_subscription', 'Account\SubscriptionController@storeSubscription');// subscription update
+    Route::get('cancel_subscription', 'Account\SubscriptionController@cancelSubscription');// subscription update
 
 });
 

@@ -158,5 +158,56 @@ class PaymentService{
 
         return $result;
     }
+
+    // get subscription
+    public function get_subscription($data = array()){
+
+        $body = new \Square\Models\GetSubscriptionRequest(
+            $data['subscription_id']
+        );
+
+        $api_response = $this->client->getSubscriptionsApi()->getSubscription($body);
+
+        if ($api_response->isSuccess()) {
+            $result = $api_response->getResult();
+            $result=[
+                'subscription_id'=>$result->getSubscription()->getId(),
+                'plan_id'=>$result->getSubscription()->getPlanId(),
+                'customer_id'=>$result->getSubscription()->getCustomerId(),
+                'start_date'=>$result->getSubscription()->getStartDate(),
+                'end_date'=>Carbon::parse($result->getSubscription()->getStartDate())->addMonth()->format('Y-m-d H:i:s'),
+            ];
+        } else {
+            $result = $api_response->getErrors();
+            $result=[
+                'key'=>$result[0]->getField(),
+                'message'=>$result[0]->getDetail(),
+            ];
+        }
+
+        return $result;
+    }
+    
+    // cancel subscription
+    public function cancel_subscription($subscription_id){
+
+        $api_response = $this->client->getSubscriptionsApi()->cancelSubscription($subscription_id);
+
+        if ($api_response->isSuccess()) {
+            $result = $api_response->getResult();
+            $result=[
+                'subscription_id'=>$result->getSubscription()->getId(),
+                'cancelled_at'=>$result->getSubscription()->getCanceledDate(),
+            ];
+        } else {
+            $result = $api_response->getErrors();
+            $result=[
+                'key'=>$result[0]->getField(),
+                'message'=>$result[0]->getDetail(),
+            ];
+        }
+
+        return $result;
+    }
         
 }
