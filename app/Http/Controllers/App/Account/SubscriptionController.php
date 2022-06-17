@@ -73,8 +73,7 @@ class SubscriptionController extends Controller
             // if square customer not found, create it
             if(is_null($user->square_customer_id)){
                 $res = $this->storeCustomer($user);
-                $res=$res->getData();
-                
+                 
                 // if response_code not 200
                 if ($res->response_code != 200) {
                     NotificationService::slack("Failed to get or create user in SQUARE");
@@ -92,10 +91,10 @@ class SubscriptionController extends Controller
                 NotificationService::slack("Storing Customer {$user->email}");
                 $data['payment_token']=$request->payment_token;
                 $res=$this->storeCustomerCard($request);
-                $res=$res->getData();
-                
+                NotificationService::slack("Card Added ```".json_encode($res)."```");
                 // if response_code not 200
                 if ($res->response_code != 200) {
+                    NotificationService::slack("Card Failed ```".json_encode($res)."```");
                     return $res;
                 } 
             }
