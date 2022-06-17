@@ -69,7 +69,7 @@ class SubscriptionController extends Controller
 
             // if square customer not found, create it
             if(is_null($user->square_customer_id)){
-                $this->storeCustomer($user);
+                $res = $this->storeCustomer($user);
                 $res=$res->getData();
                 
                 // if response_code not 200
@@ -100,7 +100,7 @@ class SubscriptionController extends Controller
             // create subscription
             $ps=new PaymentService;
             $ps_res=$ps->create_subscription($data);
-            
+
             if (!is_null($ps_res) && isset($ps_res['subscription_id'])) {
                 $cs=new Subscription;
                 $cs->subs_id=$ps_res['subscription_id'];
