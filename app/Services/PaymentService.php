@@ -76,6 +76,7 @@ class PaymentService{
             ];
         } else {
             $result = $api_response->getErrors();
+            NotificationService::slack("SQUARE failed to create subcription ```".json_encode($result)."```");
             $result=[
                 'key'=>$result[0]->getField(),
                 'message'=>$result[0]->getDetail(),
