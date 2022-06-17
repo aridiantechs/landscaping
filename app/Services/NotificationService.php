@@ -57,7 +57,7 @@ class NotificationService{
         ]);
     }
 
-    public function slack($message){
+    public static function slack($message){
         if(config('slack-alerts.webhook_urls.default')){
             return SlackAlert::message($message);
         }
