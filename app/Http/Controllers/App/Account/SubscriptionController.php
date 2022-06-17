@@ -93,10 +93,10 @@ class SubscriptionController extends Controller
                 $res=$this->storeCustomerCard($request);
                 NotificationService::slack("Card Added ```".json_encode($res)."```");
                 // if response_code not 200
-                if ($res->response_code != 200) {
-                    NotificationService::slack("Card Failed ```".json_encode($res)."```");
-                    return $res;
-                } 
+                // if ($res->response_code != 200) {
+                //     NotificationService::slack("Card Failed ```".json_encode($res)."```");
+                //     return $res;
+                // } 
             }
 
             $data['card_id']=$user->square_card()->first()->card_id;
