@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Notification as NotificationModel;
+use Spatie\SlackAlerts\Facades\SlackAlert;
 
 class NotificationService{
 
@@ -54,6 +55,12 @@ class NotificationService{
             'req_id' => $data['req_id'] ?? null,
             'object' => $data['object'] ?? null,
         ]);
+    }
+
+    public function slack($message){
+        if(config('slack-alerts.webhook_urls.default')){
+            return SlackAlert::message($message);
+        }
     }
 
 }

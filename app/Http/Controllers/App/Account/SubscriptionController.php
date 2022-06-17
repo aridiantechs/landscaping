@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\App\Account;
 
-use App\Models\Notification;
-use App\Models\Subscription;
-use Illuminate\Http\Request;
-use App\Services\PaymentService;
-use App\Models\SquareCustomerCard;
 use App\Http\Controllers\Controller;
+use App\Models\Notification;
+use App\Models\SquareCustomerCard;
+use App\Models\Subscription;
+use App\Services\NotificationService;
+use App\Services\PaymentService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Spatie\SlackAlerts\Facades\SlackAlert;
 
 
 class SubscriptionController extends Controller
@@ -47,7 +49,7 @@ class SubscriptionController extends Controller
             'first_name' => $user->first_name,
             'last_name' => $user->last_name,
         ]);
-            
+ 
         if (!is_null($ps_res) && isset($ps_res['customer_id'])) {
             $user->square_customer_id=$ps_res['customer_id'];
             $user->save();
@@ -74,6 +76,7 @@ class SubscriptionController extends Controller
                 
                 // if response_code not 200
                 if ($res->response_code != 200) {
+                    NotificationService::slack("Failed to get or create user in SQUARE");
                     return $res;
                 } 
             }
@@ -85,6 +88,7 @@ class SubscriptionController extends Controller
 
             // if customer card not found, create it
             if (!$user->square_card) {
+                NotificationService::slack("Storing Customer {$user->email}");
                 $data['payment_token']=$request->payment_token;
                 $res=$this->storeCustomerCard($request);
                 $res=$res->getData();
@@ -102,6 +106,9 @@ class SubscriptionController extends Controller
             $ps_res=$ps->create_subscription($data);
 
             if (!is_null($ps_res) && isset($ps_res['subscription_id'])) {
+
+                NotificationService::slack("Subscription Created ```{$ps_res}```");
+
                 $cs=new Subscription;
                 $cs->subs_id=$ps_res['subscription_id'];
                 $cs->plan_id=$ps_res['plan_id'];
@@ -112,7 +119,8 @@ class SubscriptionController extends Controller
                 $cs->save();
                 return $this->sendResponse($user, 'Subscription created successfully.');
             }
-    
+        
+            NotificationService::slack("Failed to create subscription ```{$ps_res}```");
             return $this->validationError('Subscription Failed', [], 400);
         } else {
             return $this->validationError('Payment token is required.', [], 400);
