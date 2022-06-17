@@ -100,7 +100,7 @@ class SubscriptionController extends Controller
                 } 
             }
 
-            $data['card_id']=$user->square_card->card_id;
+            $data['card_id']=$user->square_card()->first()->card_id;
             
             // create subscription
             $ps=new PaymentService;
