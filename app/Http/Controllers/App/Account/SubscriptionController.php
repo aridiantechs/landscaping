@@ -30,7 +30,7 @@ class SubscriptionController extends Controller
         if (!is_null($ps_res) && isset($ps_res['card_id'])) {
             $scc=new SquareCustomerCard;
             $scc->user_id=$user->id;
-            $scc->card_id='jhn126387n2723n9123';
+            $scc->card_id= $ps_res['card_id'];
             $scc->save();
             return $this->sendResponse($scc, 'Card added successfully.');
         }else{
