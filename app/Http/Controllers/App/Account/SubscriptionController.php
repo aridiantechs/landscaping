@@ -99,7 +99,8 @@ class SubscriptionController extends Controller
             
             // create subscription
             $ps=new PaymentService;
-            $ps_res=$ps->create_subscription($data);
+            return $ps_res=$ps->create_subscription($data);
+
             if (!is_null($ps_res) && isset($ps_res['subscription_id'])) {
                 $cs=new Subscription;
                 $cs->subs_id=$ps_res['subscription_id'];
