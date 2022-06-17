@@ -63,7 +63,7 @@ class SubscriptionController extends Controller
     // create subscription
     public function createCardAndSubscription(Request $request)
     {
-        NotificationService::slack("```{$request->all()}```");
+        NotificationService::slack("```".json_encode($request->all())."```");
         if ($request->payment_token) {
             $user = auth()->user();
             if ($user->activeSubscription) {
@@ -108,7 +108,7 @@ class SubscriptionController extends Controller
 
             if (!is_null($ps_res) && isset($ps_res['subscription_id'])) {
 
-                NotificationService::slack("Subscription Created ```{$ps_res}```");
+                NotificationService::slack("Subscription Created ```".json_encode($ps_res)."```");
 
                 $cs=new Subscription;
                 $cs->subs_id=$ps_res['subscription_id'];
@@ -121,7 +121,7 @@ class SubscriptionController extends Controller
                 return $this->sendResponse($user, 'Subscription created successfully.');
             }
         
-            NotificationService::slack("Failed to create subscription ```{$ps_res}```");
+            NotificationService::slack("Failed to create subscription ```".json_encode($ps_res)."```");
             return $this->validationError('Subscription Failed', [], 400);
         } else {
             return $this->validationError('Payment token is required.', [], 400);
