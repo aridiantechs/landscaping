@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Services;
+use App\Services\NotificationService;
 use Carbon\Carbon;
 use Square\Environment;
-use Square\SquareClient;
 use Square\Exceptions\ApiException;
+use Square\SquareClient;
 
 class PaymentService{
 
@@ -76,7 +77,7 @@ class PaymentService{
             ];
         } else {
             $result = $api_response->getErrors();
-            NotificationService::slack("SQUARE failed to create subcription ```".json_encode($result)."```");
+
             $result=[
                 'key'=>$result[0]->getField(),
                 'message'=>$result[0]->getDetail(),
@@ -151,6 +152,7 @@ class PaymentService{
             ];
         } else {
             $result = $api_response->getErrors();
+            NotificationService::slack("SQUARE failed to create subcription ```".json_encode($result)."```");
             $result=[
                 'key'=>$result[0]->getField(),
                 'message'=>$result[0]->getDetail(),
