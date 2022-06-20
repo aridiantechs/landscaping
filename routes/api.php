@@ -100,7 +100,7 @@ Route::group([
     Route::post('order/action', 'Account\OrderController@customer_action'); /* Order Action */
     Route::post('order/{order}/quote/action',  'Account\OrderController@customer_quoteAction'); /* Order Quote Action Will only be performed by Customer */
     Route::get('order/{order}/detail', 'Account\OrderController@show'); /* Order Details */
-    Route::get('order_complete', 'Account\OrderController@complete'); 
+    Route::get('order/{order}/complete', 'Account\OrderController@complete'); 
 
     Route::get('get_available_workers', 'Account\DashboardController@getWorkers');
     // Route::get ('order/quote/get',     'Account\OrderController@customer_quoteGet');
