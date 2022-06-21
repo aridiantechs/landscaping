@@ -51,7 +51,7 @@ class OrderController extends Controller
         }
 
         $order = Order::where('uuid', $request->order_id)->first();
-        /* if (auth()->user()->hasAcceptedOrder()) {
+        if (auth()->user()->hasAcceptedOrder()) {
             return $this->validationError('You are already to an order, and its not completed !', []);
         }
         
@@ -60,7 +60,7 @@ class OrderController extends Controller
         }
         elseif($order->accepted_response_user()){
             return $this->validationError('You are not authorized to perform this action again.', []);
-        } */
+        }
         $order_r = new OrderResponse;
         $order_r->order_id = $request->order_id;
         $order_r->user_id = auth()->user()->id;

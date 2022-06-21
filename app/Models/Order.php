@@ -121,4 +121,10 @@ class Order extends Model
             return false;
         }
     }
+
+    //  response has been rejected
+    public function rejected_response()
+    {
+        return $this->hasOne(OrderResponse::class, 'order_id', 'uuid')->where('response_type', 'REJECTED');
+    }
 }
