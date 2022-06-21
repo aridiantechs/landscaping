@@ -396,7 +396,8 @@ class OrderController extends Controller
                 'to_user_id'=> $order_a->worker_id,
                 'title'=> "Order qoute accepted !",
                 'body'=> "Customer has accepted your quote, you can start working on the order.",
-                'object'=> json_encode(['req_id' => $order->id])
+                'object'=> json_encode(['req_id' => $order->id]),
+                'dimensions_submitted'=>true
                 
             ];
             
