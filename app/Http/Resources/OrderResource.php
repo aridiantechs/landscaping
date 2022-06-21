@@ -44,7 +44,7 @@ class OrderResource extends JsonResource
         return [
             'id' => $this->id,
             'order_id' => $this->uuid,
-            'user' =>$this->when(Route::is('order.show') ,new UserResource($this->user), $this->user->name),
+            'user' =>$this->when(/* Route::is('order.show') */ auth()->user()->hasRole('worker') ,new UserResource($this->user), $this->user->name),
             'city'=> $this->city,
             'state'=> $this->state,
             'country'=> $this->country,
