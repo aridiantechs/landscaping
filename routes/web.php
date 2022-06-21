@@ -59,14 +59,12 @@ Route::get('/test_notify', function () {
 });
 
 Route::get('terms_and_conditions', function () {
-   // open pdf file from storage
-    $path = storage_path('app/public/terms_and_conditions.pdf');
-    return response()->file($path);
+   // open pdf file from public
+    return response()->file(public_path('storage/Terms_and_Conditions.pdf'));
 });
 
 Route::get('privacy_policy', function () {
-    $path = storage_path('app/public/Privacy_Policy.pdf');
-    return response()->file($path);
+    return response()->file(public_path('storage/Privacy_Policy.pdf'));
 });
 
 // Auth
