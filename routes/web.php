@@ -58,6 +58,17 @@ Route::get('/test_notify', function () {
         
 });
 
+Route::get('terms_and_conditions', function () {
+   // open pdf file from storage
+    $path = storage_path('app/public/terms_and_conditions.pdf');
+    return response()->file($path);
+});
+
+Route::get('privacy_policy', function () {
+    $path = storage_path('app/public/Privacy_Policy.pdf');
+    return response()->file($path);
+});
+
 // Auth
 
 Route::get('login', [AuthenticatedSessionController::class, 'create'])
