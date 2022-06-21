@@ -303,7 +303,8 @@ class OrderController extends Controller
             'to_user_id'=> $workers,
             'title'=> 'You have recieved a request !',
             'body'=> $req->additional_info,
-            'object'=> json_encode(['req_id' => $req->id])
+            'object'=> json_encode(['req_id' => $req->id]),
+            'dimensions_submitted'=>false
             
         ];
         // dd($data);
