@@ -411,9 +411,12 @@ class OrderController extends Controller
         if($order && $order->order_status){
             $order->order_status->status = 'COMPLETED';
             $order->order_status->save();
+
+            return $this->sendResponse(new OrderResource($order), 'Order Details.');
+        }else{
+            return $this->validationError('Order not found.', []);
         }
 
-        return $this->sendResponse(new OrderResource($order), 'Order Details.');
     }
     /**
      * Update the specified resource in storage.
