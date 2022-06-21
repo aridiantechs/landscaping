@@ -133,7 +133,8 @@ class OrderController extends Controller
                     'to_user_id'=> $request->worker_id,
                     'title'=> "Order Schedule accepted !",
                     'body'=> "Order schedule accepted by ".auth()->user()->name,
-                    'object'=> json_encode(['req_id' => $order->id])
+                    'object'=> json_encode(['req_id' => $order->id]),
+                    'dimensions_submitted'=>false
                     
                 ];
                 
@@ -181,7 +182,8 @@ class OrderController extends Controller
                 'to_user_id'=> $order->user_id,
                 'title'=> "Order Update !",
                 'body'=> "Your Order has been scheduled by ".auth()->user()->name." at ".$request->time,
-                'object'=> json_encode(['req_id' => $order->id,'order_r'=>$order_r])
+                'object'=> json_encode(['req_id' => $order->id,'order_r'=>$order_r]),
+                'dimensions_submitted'=>false
                 
             ];
             // dd($data);
