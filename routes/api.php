@@ -139,10 +139,7 @@ Route::get('/test_fcm_data', function (Request $request) {
     try {
         return fcm()
             ->to([
-                "er5aYf-lSyOiIURP47tQkp:APA91bEcBiI0DL_xydW7QwwXfW6gI5cA6xlp_aj-XGa4lTHxGH_s0-VZwmFwc9hqJTzc-x4v-R75rjJPrNVxNSrJSrRWOK7JTIgBfVfm2oZHjKbAKZZ2wB_Mn4mYqKEbss_j4yTNNT6s",
-                "cn-C3Db5QgWQjeTnfPf_J6:APA91bEoYktu0CP-x2fuBt83jDGQvRsNhRsGZWg-xse6n3oskQ62cDB-vWzi2kyQhBBmOXFRJx3XnR3JviuzQCDGyKk6rGVgxYeJ1VvZARKozBshsOmWEyoVanJv4wZKOP5ctbeuCUqe",
-                "cn-C3Db5QgWQjeTnfPf_J6:APA91bEoYktu0CP-x2fuBt83jDGQvRsNhRsGZWg-xse6n3oskQ62cDB-vWzi2kyQhBBmOXFRJx3XnR3JviuzQCDGyKk6rGVgxYeJ1VvZARKozBshsOmWEyoVanJv4wZKOP5ctbeuCUqe",
-                "er5aYf-lSyOiIURP47tQkp:APA91bEcBiI0DL_xydW7QwwXfW6gI5cA6xlp_aj-XGa4lTHxGH_s0-VZwmFwc9hqJTzc-x4v-R75rjJPrNVxNSrJSrRWOK7JTIgBfVfm2oZHjKbAKZZ2wB_Mn4mYqKEbss_j4yTNNT6s"
+                "e2zg4_g3SP6sdqL6u-x3AF:APA91bHM8SGfdsGsmDinQE2aIPAoVSgo4KVP38nW7f4slywu-OpuhGgQYddNhP0hhsFtU2vupm6MB8nzEHv5MG3vbAV4eo_0GTB-2uyvH1xR6stpYtTFKJqy36ZRhK_3JJMA8eY5x64M",
             ])
             ->priority('high')
             ->timeToLive(0)
