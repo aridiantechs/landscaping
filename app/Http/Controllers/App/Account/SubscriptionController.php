@@ -118,6 +118,8 @@ class SubscriptionController extends Controller
                 $cs->end_date=$ps_res['end_date'];
                 $cs->status='ACTIVE';
                 $cs->save();
+
+                $user=auth()->user();
                 return $this->sendResponse(new UserResource($user), 'Subscription created successfully.');
             }
         
