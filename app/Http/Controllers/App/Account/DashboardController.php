@@ -15,7 +15,7 @@ class DashboardController extends Controller
     // dashboard
     public function index(Request $request)
     {
-        $orders = Order::orderBy('id', 'desc')->limit(20)->get();
+        $orders = Order::listing()->orderBy('id', 'desc')->limit(20)->get();
         $new_notifications = Notification::where('to_user_id',auth()->user()->id)->where('seen', 0)->count();
         
         $data=[
