@@ -160,7 +160,7 @@ class AuthController extends Controller
 
     public function sendOtp($user)
     {
-        $user->otp=unique_serial('users','otp',null);
+        $user->otp=otp_unique_serial('users','otp',null);
         $user->otp_expiry=Carbon::now()->addMinutes('5');
         $user->otp_verified_at=null;
         $user->save();
@@ -192,7 +192,7 @@ class AuthController extends Controller
 
     public function sendResetOtp($user)
     {
-        $user->otp=unique_serial('users','otp',null);
+        $user->otp=otp_unique_serial('users','otp',null);
         $user->otp_expiry=Carbon::now()->addMinutes('60');
         $user->otp_verified_at=null;
         $user->save();

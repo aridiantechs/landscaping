@@ -111,6 +111,28 @@ if (!function_exists('unique_serial')) {
     } 
 }
 
+if (!function_exists('otp_unique_serial')) {
+    /**
+     * Generate Unique String with Model
+     *
+     * @param $condition
+     * @param $value
+     * @return null
+     */
+    function otp_unique_serial($table,$key, $prefix = null)
+    {   
+
+        $unique_id = $prefix.mt_rand(1000, 9999);
+        $d = \DB::table($table)->where($key,$unique_id)->first();
+        if($d){
+           unique_string($table,$key,$length); 
+        }else{
+            return $unique_id;
+        }
+
+    } 
+}
+
 if (!function_exists('totalCostPerSqft')) {
     
     function totalCostPerSqft($length, $width)
