@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\App\Account;
 
+use App\Models\User;
 use App\Models\Notification;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
@@ -121,7 +122,8 @@ class SubscriptionController extends Controller
                 $cs->status='ACTIVE';
                 $cs->save();
 
-                $user=auth()->user();
+                
+                $user=User::find(auth()->user()->id);
                 return $this->sendResponse(new UserResource($user), 'Subscription created successfully.');
             }
         
