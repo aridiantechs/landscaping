@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\App\Account;
 
-use App\Http\Controllers\Controller;
 use App\Models\Notification;
-use App\Models\SquareCustomerCard;
 use App\Models\Subscription;
-use App\Services\NotificationService;
-use App\Services\PaymentService;
 use Illuminate\Http\Request;
+use App\Services\PaymentService;
+use App\Models\SquareCustomerCard;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
+use App\Services\NotificationService;
 use Illuminate\Support\Facades\Storage;
 use Spatie\SlackAlerts\Facades\SlackAlert;
 
@@ -117,7 +118,7 @@ class SubscriptionController extends Controller
                 $cs->end_date=$ps_res['end_date'];
                 $cs->status='ACTIVE';
                 $cs->save();
-                return $this->sendResponse($user, 'Subscription created successfully.');
+                return $this->sendResponse(new UserResource($user), 'Subscription created successfully.');
             }
         
             NotificationService::slack("Failed to create subscription ```".json_encode($ps_res)."```");
