@@ -65,7 +65,7 @@ class SubscriptionController extends Controller
     // create subscription
     public function createCardAndSubscription(Request $request)
     {
-        NotificationService::slack("```".json_encode($request->all())."```");
+        // NotificationService::slack("```".json_encode($request->all())."```");
         if ($request->payment_token) {
             $user = auth()->user();
             if ($user->activeSubscription) {
@@ -78,7 +78,7 @@ class SubscriptionController extends Controller
                 $res=$res->getData();
                 // if response_code not 200
                 if ($res->response_code != 200) {
-                    NotificationService::slack("Failed to get or create user in SQUARE");
+                    // NotificationService::slack("Failed to get or create user in SQUARE");
                     return $res;
                 } 
             }
@@ -90,17 +90,17 @@ class SubscriptionController extends Controller
 
             // if customer card not found, create it
             if (!$user->square_card) {
-                NotificationService::slack("Storing Customer {$user->email}");
+                // NotificationService::slack("Storing Customer {$user->email}");
                 $data['payment_token']=$request->payment_token;
                 $res=$this->storeCustomerCard($request);
                 $res=$res->getData();
                 
                 // if response_code not 200
                 if ($res->response_code != 200) {
-                    NotificationService::slack("Card Failed ```".json_encode($res)."```");
+                    // NotificationService::slack("Card Failed ```".json_encode($res)."```");
                     return $res;
                 } 
-                NotificationService::slack("Card Added ```".json_encode($res)."```");
+                // NotificationService::slack("Card Added ```".json_encode($res)."```");
             }
 
             $data['card_id']=$user->square_card()->first()->card_id;
@@ -111,7 +111,7 @@ class SubscriptionController extends Controller
 
             if (!is_null($ps_res) && isset($ps_res['subscription_id'])) {
 
-                NotificationService::slack("Subscription Created ```".json_encode($ps_res)."```");
+                // NotificationService::slack("Subscription Created ```".json_encode($ps_res)."```");
 
                 $cs=new Subscription;
                 $cs->subs_id=$ps_res['subscription_id'];
@@ -127,7 +127,7 @@ class SubscriptionController extends Controller
                 return $this->sendResponse(new UserResource($user), 'Subscription created successfully.');
             }
         
-            NotificationService::slack("Failed to create subscription ```".json_encode($ps_res)."```");
+            // NotificationService::slack("Failed to create subscription ```".json_encode($ps_res)."```");
             return $this->validationError('Subscription Failed', [], 400);
         } else {
             return $this->validationError('Payment token is required.', [], 400);
