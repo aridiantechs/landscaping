@@ -89,19 +89,19 @@ class PaymentService{
     // create card
     public function create_card($data = array()){
 
-        $billing_address = new \Square\Models\Address();
-        $billing_address->setAddressLine1('500 Electric Ave');
-        $billing_address->setAddressLine2('Suite 600');
-        $billing_address->setLocality('New York');
-        $billing_address->setAdministrativeDistrictLevel1('NY');
-        $billing_address->setPostalCode('94103');
-        $billing_address->setCountry('US');
+        // $billing_address = new \Square\Models\Address();
+        // $billing_address->setAddressLine1('500 Electric Ave');
+        // $billing_address->setAddressLine2('Suite 600');
+        // $billing_address->setLocality('New York');
+        // $billing_address->setAdministrativeDistrictLevel1('NY');
+        // $billing_address->setPostalCode('94103');
+        // $billing_address->setCountry('US');
 
         $card = new \Square\Models\Card();
-        $card->setCardholderName('Jane Doe');
-        $card->setBillingAddress($billing_address);
+        // $card->setCardholderName('Jane Doe');
+        // $card->setBillingAddress($billing_address);
         $card->setCustomerId($data['customer_id']);
-        $card->setReferenceId('test-id-1');
+        $card->setReferenceId('ref-'.$data['customer_id']);
 
         $body = new \Square\Models\CreateCardRequest(
             uniqid(),
