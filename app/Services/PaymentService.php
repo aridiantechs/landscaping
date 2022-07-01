@@ -132,8 +132,8 @@ class PaymentService{
     public function create_subscription($data = array()){
 
         $body = new \Square\Models\CreateSubscriptionRequest(
-            'L5AHC9DNN4ZQB',
-            '7T4MEZ35TYX7W7AIGSAFDYGO',
+            'L4QTFJMA45YBE',//location_id
+            'KZO7LES5A7GZIU6Y3LGHX3F3',//plan_id
             $data['customer_id'],
         );
         $body->setIdempotencyKey(uniqid());
