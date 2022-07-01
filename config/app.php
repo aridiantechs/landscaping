@@ -124,8 +124,6 @@ return [
     'cipher' => 'AES-256-CBC',
 
     'SQUARE_ACCESS_TOKEN' => env('SQUARE_ACCESS_TOKEN'),
-    'SQUARE_LOCATION_ID' => env('SQUARE_LOCATION_ID'),
-    'SQUARE_PLAN_ID' => env('SQUARE_APPLICATION_ID'),
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
