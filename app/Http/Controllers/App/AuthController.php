@@ -135,18 +135,7 @@ class AuthController extends Controller
             ]);
 
             // store square customer
-            $ps=new PaymentService;
-            $ps_res=$ps->create_customer([
-                'email' => $user->email,
-                'phone' => $user->phone,
-                'first_name' => $user->first_name,
-                'last_name' => $user->last_name,
-            ]);
-            
-            if (!is_null($ps_res) && isset($ps_res['customer_id'])) {
-                $user->square_customer_id =$ps_res['customer_id'];
-                $user->save();
-            }
+            $this->storeSquareCustomer($user);
             
             $success['token'] =  $user->createToken('API Token')->plainTextToken;
             $success['user'] =  new UserResource($user);
@@ -156,6 +145,22 @@ class AuthController extends Controller
             return $this->sendResponse($success, 'User register successfully.');
         }
 
+    }
+
+    public function storeSquareCustomer($user)
+    {
+        $ps=new PaymentService;
+        $ps_res=$ps->create_customer([
+            'email' => $user->email,
+            'phone' => $user->phone,
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+        ]);
+        
+        if (!is_null($ps_res) && isset($ps_res['customer_id'])) {
+            $user->square_customer_id =$ps_res['customer_id'];
+            $user->save();
+        }
     }
 
     public function sendOtp($user)
@@ -456,6 +461,136 @@ class AuthController extends Controller
        
           return view('auth.verified');
 
+    }
+
+    public function socialAuthenticate(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'provider'           => 'required|string',
+            'access_token'   => 'required|string',
+            'device_id'   => 'required|string',
+            'role' => ['required', 'string', 'in:endUser,worker'],
+        ]);
+
+        if ($validator->fails()) {
+            $errors = [];
+            foreach ($validator->errors()->getMessages() as $key => $value){
+                $errors[$key] = $value[0];
+            }
+            return $this->validationError('Fields are Missing',$errors,400);
+        }
+
+        $res=$this->getUserInfo($request->access_token,$request->provider);
+        
+        if (isset($res['data']) && isset($res['data']['email']) ) {
+            $user_data = $this->createNewUser($res['data'],$request->provider);
+            
+            $device = UserDevice::where('user_id',$user_data['user']->id)->where('device_id',$request->device_id)->first();
+            if(!$device && $request->device_id){
+                UserDevice::create([
+                    'user_id' => $user_data['user']->id,
+                    'device_id' => $request->device_id,
+                ]);
+            }
+            $user_data['user']->assignRole($request->role);
+            return $this->sendResponse((object)[
+                'user' => new UserResource($user_data['user']),
+                'token' =>  $user_data['token'],
+            ], 'User Signup successfully.', 200,[]);
+        } else {
+            return $this->sendResponse((object)[], 'Something went wrong!', 400,[]);
+        }
+
+    }
+    
+    public function createNewUser($social_user,$provider){
+        $user = User::where(['email' => $social_user['email']])->first();
+        if(!$user){
+            $user = User::forceCreate([
+                'first_name'        => $social_user['first_name'] ?? '',
+                'last_name'         => $social_user['last_name'] ?? '',
+                'email'             => $social_user['email'] ?? '',
+                'photo_path'        => $social_user['image'] ?? '',
+                'password'          => Str::random(40),
+                'email_verified_at' => now(),
+                'otp_verified_at'   => now(),
+                'provider'          => $provider,
+            ]);
+        }
+
+        Auth::login($user);
+        $success['token'] =  $user->createToken('API Token')->plainTextToken; 
+        $success['user'] =  $user;
+        $this->storeSquareCustomer($user);
+        
+        return $success;
+    }   
+    
+    public function getUserInfo($access_token,$provider)
+    {
+        $curl = curl_init();
+
+        if ($provider == 'google') {
+            $curl_url="https://oauth2.googleapis.com/tokeninfo?id_token=".$access_token;
+            $curl_header=[
+                "Accept: application/json",
+                "Content-Type: application/json",
+            ];
+        } else if($provider == 'facebook') {
+            $curl_url="https://graph.facebook.com/me?access_token=".$access_token;
+            $curl_header=[
+                "Accept: application/json",
+                "Content-Type: application/json",
+            ];
+        }
+        
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $curl_url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => $curl_header,
+        ]);
+
+        $social_user = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+            $res=array(
+                "success"=>false,
+                "error"=>"cURL Error #:" . $err
+            );
+        } else {
+            if ($provider == 'google') {
+                $social_user =json_decode($social_user);
+                $response=[
+                    'first_name'        => $social_user->given_name ?? '',
+                    'last_name'         => $social_user->family_name ?? '',
+                    'email'             => $social_user->email ?? '',
+                    'image'             => $social_user->picture ?? '',
+                ];
+            } else if($provider == 'facebook') {
+                $social_user =json_decode($social_user);
+                $response=[
+                    'first_name'        => $social_user->first_name ?? '',
+                    'last_name'         => $social_user->last_name ?? '',
+                    'email'             => $social_user->email ?? '',
+                    'image'             => $social_user->picture->data->url ?? '',
+                ];
+            }
+            
+            $res=array(
+                "success"=>true,
+                "data"=>$response
+            );
+        }
+        
+        return $res;
     }
 
 } 

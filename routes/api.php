@@ -48,6 +48,8 @@ Route::group([
 
     // Route::post('refresh', 'AuthController@refresh');
     Route::post('signup', 'AuthController@signup');
+
+    Route::post('/social_authenticate', 'AuthController@socialAuthenticate')->name('social_authenticate');
     // renew subscription
     Route::post('renew_subscription', 'Account\SubscriptionController@subscriptionWebhook');// subscription update
 });
