@@ -10,7 +10,7 @@ use App\Services\PaymentService;
 use App\Models\SquareCustomerCard;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
-// use App\Services\NotificationService;
+use App\Services\NotificationService;
 use Illuminate\Support\Facades\Storage;
 use Spatie\SlackAlerts\Facades\SlackAlert;
 
