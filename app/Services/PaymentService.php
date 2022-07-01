@@ -125,7 +125,7 @@ class PaymentService{
             ];
         }
 
-        return (object)$result;
+        return $result;
     }
 
     // create subscription

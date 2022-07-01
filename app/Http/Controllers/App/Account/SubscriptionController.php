@@ -34,9 +34,9 @@ class SubscriptionController extends Controller
             $scc->user_id=$user->id;
             $scc->card_id= $ps_res['card_id'];
             $scc->save();
-            return $this->sendResponse($scc, 'Card added successfully.');
+            return $this->sendResponse((object)$scc, 'Card added successfully.');
         }else{
-            return $this->validationError('Something went wrong!', $ps_res, 400);
+            return $this->validationError('Something went wrong!', (object)$ps_res, 400);
         }
         
     }
@@ -55,9 +55,9 @@ class SubscriptionController extends Controller
         if (!is_null($ps_res) && isset($ps_res['customer_id'])) {
             $user->square_customer_id=$ps_res['customer_id'];
             $user->save();
-            return $this->sendResponse($user, 'Customer added successfully.');
+            return $this->sendResponse((object)$user, 'Customer added successfully.');
         }else{
-            return $this->validationError('Something went wrong!', $ps_res, 400);
+            return $this->validationError('Something went wrong!', (object)$ps_res, 400);
         }
         
     }
@@ -69,7 +69,7 @@ class SubscriptionController extends Controller
         if ($request->payment_token) {
             $user = auth()->user();
             if ($user->activeSubscription) {
-                return $this->validationError('You already have an active subscription.', [], 400);
+                return $this->validationError('You already have an active subscription.', (object)[], 400);
             }
 
             // if square customer not found, create it
@@ -128,9 +128,9 @@ class SubscriptionController extends Controller
             }
         
             // NotificationService::slack("Failed to create subscription ```".json_encode($ps_res)."```");
-            return $this->validationError('Subscription Failed', [], 400);
+            return $this->validationError('Subscription Failed', (object)[], 400);
         } else {
-            return $this->validationError('Payment token is required.', [], 400);
+            return $this->validationError('Payment token is required.', (object)[], 400);
         }
         
     }
