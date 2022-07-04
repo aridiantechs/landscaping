@@ -124,7 +124,7 @@ class SubscriptionController extends Controller
 
                 
                 $user=User::find(auth()->user()->id);
-                return $this->sendResponse(new UserResource($user), 'Subscription created successfully.');
+                return $this->sendResponse(new UserResource($user), 'Subscription created successfully.',200,(object)[]);
             }
         
             // NotificationService::slack("Failed to create subscription ```".json_encode($ps_res)."```");
