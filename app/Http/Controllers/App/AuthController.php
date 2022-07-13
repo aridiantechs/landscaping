@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Mail\EmailOtp;
 use App\Models\UserDevice;
+use Illuminate\Support\Str;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use App\Models\CompanyProfile;
