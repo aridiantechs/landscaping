@@ -492,7 +492,7 @@ class AuthController extends Controller
                     'device_id' => $request->device_id,
                 ]);
             }
-            $user_data['user']->assignRole($request->role);
+            $user_data['user']->assignRole('endUser');
             return $this->sendResponse((object)[
                 'user' => new UserResource($user_data['user']),
                 'token' =>  $user_data['token'],
