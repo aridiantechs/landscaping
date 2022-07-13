@@ -36,6 +36,7 @@ class UserResource extends JsonResource
             "email" => $this->email ?? "",
             "profile_image" => $this->profile_image ?? "",
             "role" => $role ?? "",
+            "provider" => $this->provider ?? "",
             // "company_profile" => $this->company_profile ?? null,
             "email_verified" => $email_verified ?? false,
             'has_active_subscription' => $this->activeSubscription || $this->dayOldSubscription() ? true : false,
