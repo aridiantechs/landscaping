@@ -34,7 +34,7 @@ class UserResource extends JsonResource
             "last_name" =>$this->last_name ?? "",
             "phone" => $this->phone ?? "",
             "email" => $this->email ?? "",
-            "profile_image" => $this->profile_image ?? "",
+            "profile_image" => $this->photo_path ?? "",
             "role" => $role ?? "",
             "provider" => $this->provider ?? "",
             // "company_profile" => $this->company_profile ?? null,

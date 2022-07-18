@@ -104,7 +104,7 @@ class ProfileController extends Controller
         // $user->phone = $request->phone;
         if ($request->hasFile('profile_image')) {
             $user->photo_path = custom_file_upload($request->profile_image, USER_IMAGE_PATH_PUBLIC);
-            // $user->provider = "";
+            $user->provider = null;
         }
         if ($user->email != $request->email) {
             $user->email_verified_at = null;

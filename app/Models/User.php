@@ -68,6 +68,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->where($field ?? 'id', $value)->withTrashed()->firstOrFail();
     }
 
+    public function getPhotoPathAttribute($value)
+    {
+        return $value ? ($this->provider ? $value : (url('/').'/storage/uploads/users/' . $value) ): "";
+    }
+
     public function account()
     {
         return $this->belongsTo(Account::class);
