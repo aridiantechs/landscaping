@@ -111,6 +111,9 @@ class ProfileController extends Controller
             $user->otp_verified_at = null;
             $this->sendOtp($user);
         }
+        if ($request->password) {
+            $user->password = Hash::make($request->password);
+        }
         // dd($user->email);
         $user->email = $request->email;
 
