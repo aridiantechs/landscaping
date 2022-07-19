@@ -50,7 +50,7 @@ class AuthController extends Controller
             $errors= $this->formatErrors($fields, $validator->errors());
             return $this->validationError('Fields are Missing', $errors, 400);
         }
-
+        return $request->all();
         $user= User::where('email', request('email'))->first();
         if ( Auth::attempt($request->only('email', 'password'))) {
             
