@@ -242,11 +242,11 @@ class AuthController extends Controller
             }
         }
 
-        $user = Auth::user();
-    	$user->tokens()->delete();
-        $user->otp_verified_at=null;
-        $user->otp=null;
-        $user->save();
+        // $user = Auth::user();
+    	// $user->tokens()->delete();
+        // $user->otp_verified_at=null;
+        // $user->otp=null;
+        // $user->save();
 
         return $this->sendResponse(null,'Successfully logged out');
 
