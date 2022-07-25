@@ -87,7 +87,8 @@ class OrderController extends Controller
                 'title'=> "Order Update !",
                 'body'=> "Your Order has been ".$request->status." by ".auth()->user()->name,
                 'object'=> json_encode(['req_id' => $order->id,'order_r'=>$order_r]),
-                'dimensions_submitted'=>false
+                'dimensions_submitted'=>false,
+                'content-available'=>0
                 
             ];
             
@@ -134,7 +135,8 @@ class OrderController extends Controller
                     'title'=> "Order Schedule accepted !",
                     'body'=> "Order schedule accepted by ".auth()->user()->name,
                     'object'=> json_encode(['req_id' => $order->id]),
-                    'dimensions_submitted'=>false
+                    'dimensions_submitted'=>false,
+                    'content-available'=>0
                     
                 ];
                 
@@ -183,7 +185,8 @@ class OrderController extends Controller
                 'title'=> "Order Update !",
                 'body'=> "Your Order has been scheduled by ".auth()->user()->name." at ".$request->time,
                 'object'=> json_encode(['req_id' => $order->id,'order_r'=>$order_r]),
-                'dimensions_submitted'=>false
+                'dimensions_submitted'=>false,
+                'content-available'=>0
                 
             ];
             // dd($data);
@@ -243,7 +246,8 @@ class OrderController extends Controller
                 'title'=> "Dimentions Submitted !",
                 'body'=> "Dimentions of the property have been submitted by ".auth()->user()->name,
                 'object'=> json_encode(['req_id' => $order->id]),
-                'dimensions_submitted'=>true
+                'dimensions_submitted'=>true,
+                'content-available'=>1
             ];
             
             NotificationService::send($user_devices,$data);
@@ -306,7 +310,8 @@ class OrderController extends Controller
             'title'=> 'You have recieved a request !',
             'body'=> $req->additional_info,
             'object'=> json_encode(['req_id' => $req->id]),
-            'dimensions_submitted'=>false
+            'dimensions_submitted'=>false,
+            'content-available'=>0
             
         ];
         // dd($data);
@@ -400,7 +405,8 @@ class OrderController extends Controller
                 'title'=> "Order qoute accepted !",
                 'body'=> "Customer has accepted your quote, you can start working on the order.",
                 'object'=> json_encode(['req_id' => $order->id]),
-                'dimensions_submitted'=>true
+                'dimensions_submitted'=>true,
+                'content-available'=>1
                 
             ];
             
