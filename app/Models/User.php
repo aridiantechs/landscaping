@@ -163,6 +163,8 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $orders= Order::whereHas('order_responses',function($q){
                     $q->where('user_id',auth()->user()->id)->where('response_type','ACCEPTED');
+                })->whereHas('order_area',function($q){
+                    $q->where('worker_id',auth()->user()->id)->where('customer_response','ACCEPTED');
                 })->whereHas('order_status',function($q){
                     $q->where('worker_id',auth()->user()->id)->where('status','PENDING');
                 })->count();

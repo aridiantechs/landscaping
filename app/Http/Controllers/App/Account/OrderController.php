@@ -51,13 +51,17 @@ class OrderController extends Controller
         }
 
         $order = Order::where('uuid', $request->order_id)->first();
+
+        // if some other order is assigned and not completed yet
         if (auth()->user()->hasAcceptedOrder()) {
-            return $this->validationError('You are already to an order, and its not completed !', []);
+            return $this->validationError('You are already assigned an order, and its not completed !', []);
         }
         
+        // if someone has already accepted the order
         if ( $order->accepted_response && $order->accepted_response->count()) {
             return $this->validationError('Order already accepted.', []);
         }
+        // if user has already made an action on the order
         elseif($order->accepted_response_user()){
             return $this->validationError('You are not authorized to perform this action again.', []);
         }
@@ -167,8 +171,10 @@ class OrderController extends Controller
             return $this->validationError('Order already scheduled.', []);
         }
 
-        $order_r = OrderResponse::where('order_id', $order_id)->where('user_id', auth()->user()->id)->first();
+        $order_r = new OrderResponse;
         if ($order_r && $order_r->response_type && $order_r->response_type == 'SCHEDULE') {
+            $order_r->user_id = auth()->user()->id;
+            $order_r->order_id = $order_id;
             $order_r->time = $request->time;
             $order_r->comments = $request->comments;
             $order_r->save();
