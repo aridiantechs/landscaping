@@ -176,7 +176,7 @@ class OrderController extends Controller
         }
 
         $order_r = new OrderResponse;
-        
+        $order_r->response_type = 'SCHEDULE';
         $order_r->user_id = auth()->user()->id;
         $order_r->order_id = $order_id;
         $order_r->time = $request->time;
