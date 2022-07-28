@@ -171,37 +171,38 @@ class OrderController extends Controller
             return $this->validationError('Order already scheduled.', []);
         }
 
-        $order_r = new OrderResponse;
-        if ($order_r && $order_r->response_type && $order_r->response_type == 'SCHEDULE') {
-            $order_r->user_id = auth()->user()->id;
-            $order_r->order_id = $order_id;
-            $order_r->time = $request->time;
-            $order_r->comments = $request->comments;
-            $order_r->save();
-
-            $user_devices = UserDevice::where('user_id',$order->user_id)->whereNotNull('device_id')->pluck('device_id')->toArray();
-            $data=[
-                'type'=>"Request Schedule",
-                'to_role'=>"endUser",
-                'req_id'=>$order->id,
-                'order_response_id'=>$order_r->id,
-                'schedule_time'=>$order_r->time,
-                'schedule_comments'=>$order_r->comments,
-                'to_user_id'=> $order->user_id,
-                'title'=> "Order Update !",
-                'body'=> "Your Order has been scheduled by ".auth()->user()->name." at ".$request->time,
-                'object'=> json_encode(['req_id' => $order->id,'order_r'=>$order_r]),
-                'dimensions_submitted'=>false,
-                'content-available'=>0
-                
-            ];
-            // dd($data);
-            $notify=NotificationService::send($user_devices,$data);
-
-            return $this->sendResponse(new OrderResource($order_r->order), 'Order Schedule Updated.');
-        } else {
-            return $this->validationError('Validation Error.', 'Order Response not found or cannot be SCHEDULE');
+        if($order->accepted_response){
+            return $this->validationError('Order already accepted.', []);
         }
+
+        $order_r = new OrderResponse;
+        
+        $order_r->user_id = auth()->user()->id;
+        $order_r->order_id = $order_id;
+        $order_r->time = $request->time;
+        $order_r->comments = $request->comments;
+        $order_r->save();
+
+        $user_devices = UserDevice::where('user_id',$order->user_id)->whereNotNull('device_id')->pluck('device_id')->toArray();
+        $data=[
+            'type'=>"Request Schedule",
+            'to_role'=>"endUser",
+            'req_id'=>$order->id,
+            'order_response_id'=>$order_r->id,
+            'schedule_time'=>$order_r->time,
+            'schedule_comments'=>$order_r->comments,
+            'to_user_id'=> $order->user_id,
+            'title'=> "Order Update !",
+            'body'=> "Your Order has been scheduled by ".auth()->user()->name." at ".$request->time,
+            'object'=> json_encode(['req_id' => $order->id,'order_r'=>$order_r]),
+            'dimensions_submitted'=>false,
+            'content-available'=>0
+            
+        ];
+        // dd($data);
+        $notify=NotificationService::send($user_devices,$data);
+
+        return $this->sendResponse(new OrderResource($order_r->order), 'Order Schedule Updated.');
     }
 
     /**
