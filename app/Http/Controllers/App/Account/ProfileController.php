@@ -217,6 +217,14 @@ class ProfileController extends Controller
         return $this->sendResponse(new CompanyProfileResource($res), 'Company Profile.');
     }
 
+    public function remove_account(Request $request)
+    {
+        $user = auth()->user();
+        $user->delete();
+
+        return $this->sendResponse(new UserResource($user), 'Account Deleted.');
+    }
+
     /**
      * Remove the specified resource from storage.
      *

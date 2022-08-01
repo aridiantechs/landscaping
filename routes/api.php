@@ -44,6 +44,8 @@ Route::group([
         Route::post('profile/password/update', 'Account\ProfileController@update_password');
 
         Route::get('dashboard', 'Account\DashboardController@index');
+
+        Route::post('remove_account', 'Account\ProfileController@remove_account');
     });
 
     // Route::post('refresh', 'AuthController@refresh');
