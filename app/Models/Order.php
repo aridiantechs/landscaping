@@ -30,9 +30,9 @@ class Order extends Model
         if (auth()->user()->hasRole('worker')) {
             $query->whereHas('order_status', function ($q) {
                 $q->where('worker_id', auth()->user()->id);
-            });
+            })->latest();
         } else {
-            $query->where('user_id', auth()->user()->id);
+            $query->where('user_id', auth()->user()->id)->latest();
         }
     }
 
