@@ -8,6 +8,7 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\ContactsController;
+use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrganizationsController;
 use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
@@ -65,7 +66,13 @@ Route::get('terms_and_conditions', function () {
 
 Route::get('privacy_policy', function () {
     return response()->file(public_path('storage/Privacy_Policy.pdf'));
-});
+})->name('contact-us');
+
+Route::get('/contact-us', function () {
+    return view('contact-us');
+})->name('contact-us');
+
+Route::post('/contact-us', [ContactUsController::class, 'store'])->name('contact-us.store');
 
 // Auth
 
