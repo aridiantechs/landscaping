@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import PortalVue from 'portal-vue'
+import "tailwindcss/tailwind.css"
 import { InertiaProgress } from '@inertiajs/progress'
 import { createInertiaApp } from '@inertiajs/inertia-vue'
 
