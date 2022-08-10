@@ -22,8 +22,10 @@
         </tr>
         <tr v-for="contact in contact_us.data" :key="contact.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
           <td class="border-t">
+            <Link class="flex items-center px-6 py-4" href="javascript:void" tabindex="-1">
               {{ contact.name }}
               <icon v-if="contact.deleted_at" name="trash" class="flex-shrink-0 ml-2 w-3 h-3 fill-gray-400" />
+            </Link>
           </td>
           <td class="border-t">
             {{ contact.email }}
