@@ -14,9 +14,12 @@ class ContactUsController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Organizations/Index', [
+        return Inertia::render('ContactUs/Index', [
             'filters' => Request::all('search', 'trashed'),
-            'contacts_us' => ContactUs::paginate(10)->withQueryString(),
+            'contact_us' => ContactUs::latest()
+                ->filter(Request::only('search', 'trashed'))
+                ->paginate(10)
+                ->withQueryString(),
         ]);
     }
 

@@ -181,6 +181,12 @@ Route::put('contacts/{contact}/restore', [ContactsController::class, 'restore'])
     ->name('contacts.restore')
     ->middleware('auth');
 
+// Contact Us
+
+Route::get('contact_us', [ContactUsController::class, 'index'])
+    ->name('contact_us')
+    ->middleware('auth');
+
 // Reports
 
 Route::get('reports', [ReportsController::class, 'index'])
