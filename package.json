@@ -21,18 +21,15 @@
         "@inertiajs/progress": "^0.2.7",
         "@inertiajs/server": "^0.1.0",
         "@popperjs/core": "^2.11.0",
-        "autoprefixer": "^10.4.0",
         "eslint": "^8.4.1",
         "eslint-plugin-vue": "^8.2.0",
         "laravel-mix": "^6.0.41",
         "lodash": "^4.17.21",
         "portal-vue": "^2.1.7",
-        "postcss": "^8.4.4",
         "postcss-import": "^12.0.1",
         "postcss-nesting": "^7.0.1",
         "prettier": "^2.5.1",
         "prettier-plugin-tailwind": "^2.2.12",
-        "tailwindcss": "^2.0.3",
         "uuid": "^8.3.2",
         "vue": "^2.6.14",
         "vue-loader": "^15.9.7",
@@ -41,7 +38,10 @@
         "webpack-node-externals": "^3.0.0"
     },
     "devDependencies": {
+        "autoprefixer": "^10.4.8",
         "laravel-echo": "^1.11.7",
-        "pusher-js": "^7.1.0-beta"
+        "postcss": "^8.4.14",
+        "pusher-js": "^7.1.0-beta",
+        "tailwindcss": "^2.2.19"
     }
 }
