@@ -29,11 +29,11 @@
           <th class="pb-4 pt-6 px-6">Email</th>
           <th class="pb-4 pt-6 px-6" colspan="2">Role</th>
         </tr>
-        <tr v-for="user in users" :key="user.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
+        <tr v-for="user in users.data" :key="user.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
           <td class="border-t">
             <Link class="flex items-center px-6 py-4 focus:text-indigo-500">
-              <img v-if="user.photo" class="block -my-2 mr-2 w-5 h-5 rounded-full" :src="user.photo" />
-              {{ user.name }}
+              <img v-if="user.photo_path" class="block -my-2 mr-2 w-5 h-5 rounded-full" :src="user.photo_path" />
+              {{ user.first_name }} {{ user.last_name }}
               <icon v-if="user.deleted_at" name="trash" class="flex-shrink-0 ml-2 w-3 h-3 fill-gray-400" />
             </Link>
           </td>
@@ -83,7 +83,7 @@ export default {
   layout: Layout,
   props: {
     filters: Object,
-    users: Array,
+    users: Object,
   },
   data() {
     return {
