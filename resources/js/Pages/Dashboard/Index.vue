@@ -1,19 +1,45 @@
 <template>
   <div>
-    <Head title="Dashboard" />
-    <h1 class="mb-8 text-3xl font-bold">Dashboard</h1>
-    <p class="mb-8 leading-normal">Hey there! Welcome to Ping CRM, a demo app designed to help illustrate how <a class="text-indigo-500 hover:text-orange-600 underline" href="https://inertiajs.com">Inertia.js</a> works.</p>
+    <header-stats />
+    <div class="flex flex-wrap">
+
+
+      <div class="w-full xl:w-8/12 mb-12 xl:mb-0 px-4">
+        <card-line-chart />
+      </div>
+      <div class="w-full xl:w-4/12 px-4">
+        <card-bar-chart />
+      </div>
+    </div>
+    <div class="flex flex-wrap mt-4">
+      <div class="w-full xl:w-8/12 mb-12 xl:mb-0 px-4">
+        <card-page-visits />
+      </div>
+      <div class="w-full xl:w-4/12 px-4">
+        <card-social-traffic />
+      </div>
+    </div>
   </div>
 </template>
-
 <script>
 import { Head } from '@inertiajs/inertia-vue'
 import Layout from '@/Shared/Layout'
 
+import HeaderStats from "@/components/Headers/HeaderStats.vue";
+import CardLineChart from "@/components/Cards/CardLineChart.vue";
+import CardBarChart from "@/components/Cards/CardBarChart.vue";
+import CardPageVisits from "@/components/Cards/CardPageVisits.vue";
+import CardSocialTraffic from "@/components/Cards/CardSocialTraffic.vue";
 export default {
+  name: "dashboard-page",
   components: {
+    HeaderStats,
+    CardLineChart,
+    CardBarChart,
+    CardPageVisits,
+    CardSocialTraffic,
     Head,
   },
-  layout: Layout,
-}
+   layout: Layout,
+};
 </script>

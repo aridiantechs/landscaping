@@ -101,6 +101,8 @@ class UsersController extends Controller
         return Redirect::back()->with('success', 'User updated.');
     }
 
+
+
     public function destroy(User $user)
     {
         if (App::environment('demo') && $user->isDemoUser()) {

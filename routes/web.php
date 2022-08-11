@@ -11,6 +11,7 @@ use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrganizationsController;
+use App\Http\Controllers\SettingsController;
 use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
@@ -185,6 +186,16 @@ Route::put('contacts/{contact}/restore', [ContactsController::class, 'restore'])
 
 Route::get('reports', [ReportsController::class, 'index'])
     ->name('reports')
+    ->middleware('auth');
+
+// Settings
+
+Route::get('settings', [SettingsController::class, 'edit'])
+    ->name('settings')
+    ->middleware('auth');
+
+Route::put('settings/{setting}', [SettingsController::class, 'update'])
+    ->name('settings.update')
     ->middleware('auth');
 
 // Images
