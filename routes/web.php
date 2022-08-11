@@ -12,6 +12,7 @@ use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrganizationsController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\OrdersController;
 use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
@@ -203,6 +204,13 @@ Route::get('settings', [SettingsController::class, 'edit'])
 Route::put('settings/{setting}', [SettingsController::class, 'update'])
     ->name('settings.update')
     ->middleware('auth');
+
+// Orders
+
+Route::get('orders', [OrdersController::class, 'index'])
+    ->name('orders')
+    ->middleware('auth');
+
 
 // Images
 

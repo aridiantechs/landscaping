@@ -78,13 +78,16 @@ class SettingsController extends Controller
      */
     public function update(Setting $setting)
     {
-        $setting->update(
-            Request::validate([
-                'name' => ['required', 'max:100'],
-                'value' => ['nullable', 'numeric'],
-            ])
+        $settings = Request::validate([
+            'name' => ['required', 'max:100'],
+            'value' => ['nullable', 'numeric'],
+        ]);
 
-        );
+        // Trim the value
+        // $setting = 
+        $setting->value = trim(Request::input('value'));
+        $setting->update();
+
 
         return Redirect::back()->with('success', 'Square pricing updated.');
     }

@@ -127,4 +127,32 @@ class Order extends Model
     {
         return $this->hasOne(OrderResponse::class, 'order_id', 'uuid')->where('response_type', 'REJECTED');
     }
+
+    public function scopeOrderByName($query)
+    {
+        $query->orderBy('city')->orderBy('state')->orderBy('country');
+    }
+
+    public function scopeFilter($query, array $filters)
+    {
+        $query->when($filters['search'] ?? null, function ($query, $search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('city', 'like', '%'.$search.'%')
+                    ->orWhere('state', 'like', '%'.$search.'%')
+                    ->orWhere('lat', 'like', '%'.$search.'%')
+                    ->orWhere('lng', 'like', '%'.$search.'%')
+                    ->orWhere('country', 'like', '%'.$search.'%')
+                    ->orWhere('full_address', 'like', '%'.$search.'%')
+                    ->orWhereHas('user', function ($query) use ($search) {
+                        $query->where('name', 'like', '%'.$search.'%');
+                    });
+            });
+        })->when($filters['trashed'] ?? null, function ($query, $trashed) {
+            if ($trashed === 'with') {
+                $query->withTrashed();
+            } elseif ($trashed === 'only') {
+                $query->onlyTrashed();
+            }
+        });
+    }
 }
