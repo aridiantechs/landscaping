@@ -471,17 +471,24 @@ class AuthController extends Controller
             'access_token'   => 'required|string',
             'device_id'   => 'required|string',
             'role' => ['required', 'string', 'in:endUser,worker'],
+            // required email if provider is apple
+            'email' => ['required_if:provider,apple', 'email', 'unique:users'],
+            'name' => ['required_if:provider,apple', 'string'],
         ]);
 
         if ($validator->fails()) {
-            $errors = [];
-            foreach ($validator->errors()->getMessages() as $key => $value){
-                $errors[$key] = $value[0];
-            }
+            $valid_errors=$validator->getMessageBag()->toArray();
+            
+            $errors[] = ['key' => 'provider','message' => $valid_errors['provider'][0] ?? ''];
+            $errors[] = ['key' => 'access_token','message' => $valid_errors['access_token'][0] ?? ''];
+            $errors[] = ['key' => 'device_id','message' => $valid_errors['device_id'][0] ?? ''];
+            $errors[] = ['key' => 'role','message' => $valid_errors['role'][0] ?? ''];
+            $errors[] = ['key' => 'email','message' => $valid_errors['email'][0] ?? ''];
+            $errors[] = ['key' => 'name','message' => $valid_errors['name'][0] ?? ''];
             return $this->validationError('Fields are Missing',$errors,400);
         }
 
-        $res=$this->getUserInfo($request->access_token,$request->provider);
+        $res=$this->getUserInfo($request->access_token,$request->provider,$request);
         
         if (isset($res['data']) && isset($res['data']['email']) ) {
             $user_data = $this->createNewUser($res['data'],$request->provider);
@@ -527,7 +534,7 @@ class AuthController extends Controller
         return $success;
     }   
     
-    public function getUserInfo($access_token,$provider)
+    public function getUserInfo($access_token,$provider,$request=null)
     {
         $curl = curl_init();
 
@@ -543,6 +550,17 @@ class AuthController extends Controller
                 "Accept: application/json",
                 "Content-Type: application/json",
             ];
+        } else if($provider == 'apple') {
+            $res=array(
+                "success"=>true,
+                "data"=>[
+                    'first_name'        => $request->name ?? '',
+                    'last_name'         => null,
+                    'email'             => $request->email ?? '',
+                    'image'             => null,
+                ]
+            );
+            return $res;
         }
         
         curl_setopt_array($curl, [
