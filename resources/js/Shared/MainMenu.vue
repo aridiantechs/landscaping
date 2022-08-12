@@ -25,6 +25,12 @@
       </Link>
     </div>
     <div class="mb-4">
+      <Link class="group flex items-center py-3" href="/orders">
+        <icon name="orders" class="mr-2 w-4 h-4" :class="isUrl('orders') ? 'fill-white' : 'fill-indigo-400 group-hover:fill-white'" />
+        <div :class="isUrl('orders') ? 'text-white' : 'text-indigo-300 group-hover:text-white'">Orders</div>
+      </Link>
+    </div>
+    <div class="mb-4">
       <Link class="group flex items-center py-3" href="/contact_us">
         <icon name="users" class="mr-2 w-4 h-4" :class="isUrl('contact_us') ? 'fill-white' : 'fill-indigo-400 group-hover:fill-white'" />
         <div :class="isUrl('contact_us') ? 'text-white' : 'text-indigo-300 group-hover:text-white'">Contact Us</div>
@@ -34,6 +40,12 @@
       <Link class="group flex items-center py-3" href="/reports">
         <icon name="printer" class="mr-2 w-4 h-4" :class="isUrl('reports') ? 'fill-white' : 'fill-indigo-400 group-hover:fill-white'" />
         <div :class="isUrl('reports') ? 'text-white' : 'text-indigo-300 group-hover:text-white'">Reports</div>
+      </Link>
+    </div>
+    <div class="mb-4">
+      <Link class="group flex items-center py-3" href="/settings">
+        <icon name="gear" class="mr-2 w-4 h-4" :class="isUrl('settings') ? 'fill-white' : 'fill-indigo-400 group-hover:fill-white'" />
+        <div :class="isUrl('settings') ? 'text-white' : 'text-indigo-300 group-hover:text-white'">Settings</div>
       </Link>
     </div>
   </div>
