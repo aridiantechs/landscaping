@@ -11,14 +11,14 @@
         <card-bar-chart />
       </div>
     </div>
-    <div class="flex flex-wrap mt-4">
+    <!-- <div class="flex flex-wrap mt-4">
       <div class="w-full xl:w-8/12 mb-12 xl:mb-0 px-4">
         <card-page-visits />
       </div>
       <div class="w-full xl:w-4/12 px-4">
         <card-social-traffic />
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -28,16 +28,16 @@ import Layout from '@/Shared/Layout'
 import HeaderStats from "@/components/Headers/HeaderStats.vue";
 import CardLineChart from "@/components/Cards/CardLineChart.vue";
 import CardBarChart from "@/components/Cards/CardBarChart.vue";
-import CardPageVisits from "@/components/Cards/CardPageVisits.vue";
-import CardSocialTraffic from "@/components/Cards/CardSocialTraffic.vue";
+// import CardPageVisits from "@/components/Cards/CardPageVisits.vue";
+// import CardSocialTraffic from "@/components/Cards/CardSocialTraffic.vue";
 export default {
   name: "dashboard-page",
   components: {
     HeaderStats,
     CardLineChart,
     CardBarChart,
-    CardPageVisits,
-    CardSocialTraffic,
+    // CardPageVisits,
+    // CardSocialTraffic,
     Head,
   },
    layout: Layout,

@@ -16,7 +16,7 @@
     </div>
     <div class="p-4 flex-auto">
       <div class="relative h-350-px">
-        <canvas id="bar-chart"></canvas>
+        <canvas id="bar-chart" height="300"></canvas>
       </div>
     </div>
   </div>
