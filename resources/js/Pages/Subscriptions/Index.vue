@@ -38,7 +38,7 @@
           </td>
           <td class="border-t w-50px">
             <div class="flex items-center px-6 py-4">
-              {{ subscription.plan.amount }}
+              $ {{ subscription.plan.amount }}
             </div>
           </td>
         </tr>
