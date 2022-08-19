@@ -11,7 +11,7 @@ class DashboardController extends Controller
     public function index()
     {
         $users=User::all()->count();
-        $subscribers=Subscription::all()->count();
+        $subscribers=Subscription::has('user')->has('plan')->count();
         $total_revenue=Subscription::has('user')->withCount(['plan'=>function($query){
             $query->select(\DB::raw('SUM(amount)'));
         }])->get()->sum('plan_count');
