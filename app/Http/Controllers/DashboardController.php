@@ -20,7 +20,7 @@ class DashboardController extends Controller
             'values' => [
                 'users' => (string)$users,
                 'subscribers' =>  (string)$subscribers,
-                'total_revenue' =>  (string)$total_revenue,
+                'total_revenue' =>  (string)'$'.$total_revenue,
             ],
         ]);
     }
