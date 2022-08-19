@@ -31,6 +31,12 @@
       </Link>
     </div>
     <div class="mb-4">
+      <Link class="group flex items-center py-3" href="/subscriptions">
+        <icon name="subscriptions" class="mr-2 w-4 h-4" :class="isUrl('subscriptions') ? 'fill-white' : 'fill-indigo-400 group-hover:fill-white'" />
+        <div :class="isUrl('subscriptions') ? 'text-white' : 'text-indigo-300 group-hover:text-white'">Subscriptions</div>
+      </Link>
+    </div>
+    <div class="mb-4">
       <Link class="group flex items-center py-3" href="/contact_us">
         <icon name="users" class="mr-2 w-4 h-4" :class="isUrl('contact_us') ? 'fill-white' : 'fill-indigo-400 group-hover:fill-white'" />
         <div :class="isUrl('contact_us') ? 'text-white' : 'text-indigo-300 group-hover:text-white'">Contact Us</div>

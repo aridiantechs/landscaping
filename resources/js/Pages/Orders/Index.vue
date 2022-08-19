@@ -26,6 +26,7 @@
           <th class="pb-4 pt-6 px-6">lat</th>
           <th class="pb-4 pt-6 px-6">lng</th>
           <th class="pb-4 pt-6 px-6">Full Address</th>
+          <th class="pb-4 pt-6 px-6">Action</th>
         </tr>
         <tr v-for="order in orders.data" :key="order.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
           <td class="border-t">
@@ -43,24 +44,31 @@
               {{ order.state }}
             </div>
           </td>
-          <td class="w-px border-t">
+          <td class="border-t">
             <div class="flex items-center px-6 py-4">
               {{ order.country }}
             </div>
           </td>
-          <td class="w-px border-t">
+          <td class="border-t">
             <div class="flex items-center px-6 py-4">
               {{ order.lat }}
             </div>
           </td>
-          <td class="w-px border-t">
+          <td class="border-t">
             <div class="flex items-center px-6 py-4">
               {{ order.lng }}
             </div>
           </td>
-          <td class="w-px border-t">
+          <td class="border-t w-50px">
             <div class="flex items-center px-6 py-4">
               {{ order.full_address }}
+            </div>
+          </td>
+          <td class="border-t">
+            <div class="flex items-center px-6 py-4">
+              <Link class="text-indigo-600" :href="'/orders/' + order.id">
+                <span>View</span>
+              </Link>
             </div>
           </td>
         </tr>
@@ -87,7 +95,7 @@ export default {
   components: {
     Head,
     // Icon,
-    // Link,
+    Link,
     Pagination,
     SearchFilter,
   },
@@ -119,3 +127,9 @@ export default {
   },
 }
 </script>
+
+<style>
+  .w-50px{
+    width: 50px !important;
+  }
+</style>

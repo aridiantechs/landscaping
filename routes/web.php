@@ -6,13 +6,14 @@ use App\Sockets\WebSocketHandler;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ImagesController;
+use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\ContactsController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\OrganizationsController;
-use App\Http\Controllers\SettingsController;
-use App\Http\Controllers\OrdersController;
 use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
@@ -211,7 +212,14 @@ Route::get('orders', [OrdersController::class, 'index'])
     ->name('orders')
     ->middleware('auth');
 
+Route::get('orders/{id}', [OrdersController::class, 'edit'])
+    ->name('orders.show')
+    ->middleware('auth');
 
+
+Route::get('subscriptions', [SubscriptionController::class, 'index'])
+    ->name('subscriptions')
+    ->middleware('auth');
 // Images
 
 Route::get('/img/{path}', [ImagesController::class, 'show'])

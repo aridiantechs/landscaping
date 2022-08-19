@@ -144,7 +144,7 @@ class Order extends Model
                     ->orWhere('country', 'like', '%'.$search.'%')
                     ->orWhere('full_address', 'like', '%'.$search.'%')
                     ->orWhereHas('user', function ($query) use ($search) {
-                        $query->where('name', 'like', '%'.$search.'%');
+                        $query->where('first_name', 'like', '%'.$search.'%')->orWhere('last_name', 'like', '%'.$search.'%');
                     });
             });
         })->when($filters['trashed'] ?? null, function ($query, $trashed) {

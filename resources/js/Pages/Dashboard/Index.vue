@@ -1,6 +1,6 @@
 <template>
   <div>
-    <header-stats />
+    <header-stats :values="values" />
     <div class="flex flex-wrap">
 
 
@@ -41,5 +41,15 @@ export default {
     Head,
   },
    layout: Layout,
+  props: {
+    values: {
+      type: Object,
+      default: () => ({
+        users: '0',
+        subscribers: '0',
+        total_revenue: '0',
+      }),
+    },
+  },
 };
 </script>
