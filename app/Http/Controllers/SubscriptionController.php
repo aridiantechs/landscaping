@@ -18,7 +18,7 @@ class SubscriptionController extends Controller
         // dd(Order::with('user')->get());
         return Inertia::render('Subscriptions/Index', [
             'filters' => Request::all('search', 'trashed'),
-            'subscriptions' => Subscription::with('user','plan')
+            'subscriptions' => Subscription::has('user')->has('plan')->with('user','plan')
                 ->paginate(10)
                 ->withQueryString()
                 ->through(fn ($subscription) => [
