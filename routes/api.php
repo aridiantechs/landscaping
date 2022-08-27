@@ -143,7 +143,7 @@ Route::get('/test_fcm_data', function (Request $request) {
     try {
         return fcm()
             ->to([
-                "e2zg4_g3SP6sdqL6u-x3AF:APA91bHM8SGfdsGsmDinQE2aIPAoVSgo4KVP38nW7f4slywu-OpuhGgQYddNhP0hhsFtU2vupm6MB8nzEHv5MG3vbAV4eo_0GTB-2uyvH1xR6stpYtTFKJqy36ZRhK_3JJMA8eY5x64M",
+                $request->query('token'),
             ])
             ->priority('high')
             ->timeToLive(0)
