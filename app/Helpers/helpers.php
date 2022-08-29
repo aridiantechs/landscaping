@@ -51,7 +51,7 @@ if (!function_exists('square')) {
         if ($option == 'accessToken') {
            $data=config('app.SQUARE_BETA')==true ? 'EAAAELNUIL2yxTDnBYk1hjt5r8MNv-HbMw1yP1rZP5q8CnLbz2nkCNSVW-jowoN7':config('app.SQUARE_ACCESS_TOKEN');
         }else if($option == 'location_id'){
-            $data=config('app.SQUARE_BETA')==true ? 'L4QTFJMA45YBE':'L4QTFJMA45YBE';
+            $data=config('app.SQUARE_BETA')==true ? 'L5AHC9DNN4ZQB':'L4QTFJMA45YBE';
         }else if($option == 'plan_id'){
             $data=config('app.SQUARE_BETA')==true ? 'L35QZZEBMXUO7XZWDYKKATMD':'L35QZZEBMXUO7XZWDYKKATMD';
         }else if($option=='env'){
