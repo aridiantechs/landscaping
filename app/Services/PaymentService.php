@@ -15,8 +15,8 @@ class PaymentService{
     public function __construct()
     {
         $this->client = new SquareClient([
-            'accessToken' => config('app.SQUARE_ACCESS_TOKEN'),
-            'environment' => Environment::PRODUCTION,
+            'accessToken' => square('accessToken'),
+            'environment' =>square('env'),
             'sslVerification' => false,
         ]);
     }

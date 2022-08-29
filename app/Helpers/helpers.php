@@ -7,6 +7,7 @@ use App\Currency;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage; 
 use Illuminate\Http\File;
+use Square\Environment;
 
 /**
  * Created by PhpStorm.
@@ -34,6 +35,30 @@ if (!function_exists('currency_icon')) {
     {
          
         return "$";
+    }
+}
+
+if (!function_exists('square')) {
+    /**
+     * Check's whether request url/route matches passed link
+     *
+     * @param $link
+     * @param string $type
+     * @return null
+     */
+    function square($option=null)
+    {   
+        if ($option == 'accessToken') {
+           $data=config('app.SQUARE_BETA')==true ? 'EAAAELNUIL2yxTDnBYk1hjt5r8MNv-HbMw1yP1rZP5q8CnLbz2nkCNSVW-jowoN7':config('app.SQUARE_ACCESS_TOKEN');
+        }else if($option == 'location_id'){
+            $data=config('app.SQUARE_BETA')==true ? 'L4QTFJMA45YBE':'L4QTFJMA45YBE';
+        }else if($option == 'plan_id'){
+            $data=config('app.SQUARE_BETA')==true ? 'L35QZZEBMXUO7XZWDYKKATMD':'L35QZZEBMXUO7XZWDYKKATMD';
+        }else if($option=='env'){
+            $data=Environment::PRODUCTION;
+        }
+
+        return $data;
     }
 }
 
