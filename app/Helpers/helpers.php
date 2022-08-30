@@ -61,6 +61,25 @@ if (!function_exists('square')) {
         return $data;
     }
 }
+if (!function_exists('createLog')) {
+    
+    function createLog($type,$log,$user_id = null){
+        if(is_array($log)){
+            $log = json_encode($log);
+        }
+        if(!$user_id){
+            if(auth()->check()){
+                $user_id = auth()->user()->id;
+            }
+        }
+        \DB::table('logs')->insert([
+            'type' => $type,
+            'user_id' => $user_id,
+            'log' => $log,
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
+    }
+}
 
 if (!function_exists('on_page')) {
     /**

@@ -54,6 +54,11 @@ Route::group([
     Route::post('/social_authenticate', 'AuthController@socialAuthenticate')->name('social_authenticate');
     // renew subscription
     Route::post('renew_subscription', 'Account\SubscriptionController@subscriptionWebhook');// subscription update
+    Route::post('square_webhook', function (Request $request) {// webhook notification
+        createLog('SQUARE_WEBHOOK',[
+            'square_payload' => $request->all(),
+        ]);
+    });
 });
 
 Route::group([

@@ -193,12 +193,19 @@ class SubscriptionController extends Controller
                         $cs->end_date=$ps_res['end_date'];
                         $cs->status='ACTIVE';
                         $cs->save();
+
+                        createLog('SQUARE_INVOICE_PAYMENT_MADE',[
+                            'square_payload' => $request->all(),
+                        ]);
                     }
                 }
                 
             }
         }elseif($request->type == 'invoice.canceled')
         {
+            createLog('SQUARE_INVOICE_CANCELLED',[
+                'square_payload' => $request->all(),
+            ]);
             // Storage::disk('public')->put('canceled.txt', json_encode($request->all()));
         }elseif($request->type == 'invoice.scheduled_charge_failed')
         {
@@ -209,11 +216,16 @@ class SubscriptionController extends Controller
                     $inv_subs->status='RENEWAL_FAILED';
                     $inv_subs->save();
                 }
-                
+                createLog('SQUARE_INVOICE_RENEWAL_FAILED',[
+                    'square_payload' => $request->all(),
+                ]);
             }
         }elseif($request->type == 'subscription.updated')
         {
             // Storage::disk('public')->put('subscription_canceled.txt', json_encode($request->all()));
+            createLog('SQUARE_SUBSCRIPTION_UPDATED',[
+                'square_payload' => $request->all(),
+            ]);
         }
         
     }
