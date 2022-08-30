@@ -53,7 +53,7 @@ if (!function_exists('square')) {
         }else if($option == 'location_id'){
             $data=config('app.SQUARE_BETA')==true ? 'L5AHC9DNN4ZQB':'L4QTFJMA45YBE';
         }else if($option == 'plan_id'){
-            $data=config('app.SQUARE_BETA')==true ? 'KZO7LES5A7GZIU6Y3LGHX3F3':'L35QZZEBMXUO7XZWDYKKATMD';
+            $data=config('app.SQUARE_BETA')==true ? 'L35QZZEBMXUO7XZWDYKKATMD':'EXAYWOK6HRPOCCXNKZEN4VPG';
         }else if($option=='env'){
             $data=config('app.SQUARE_BETA')==true ? Environment::SANDBOX : Environment::PRODUCTION;
         }
@@ -62,7 +62,7 @@ if (!function_exists('square')) {
     }
 }
 if (!function_exists('createLog')) {
-    
+
     function createLog($type,$log,$user_id = null){
         if(is_array($log)){
             $log = json_encode($log);
