@@ -88,6 +88,11 @@ class SubscriptionController extends Controller
                 'customer_id' => $user->square_customer_id,
             ];
 
+            // if trial not active store new card
+            if ($user->square_card && $user->trialEnded()) {
+                $user->square_card()->delete();
+            }
+
             // if customer card not found, create it
             if (!$user->square_card) {
                 // NotificationService::slack("Storing Customer {$user->email}");
@@ -107,7 +112,12 @@ class SubscriptionController extends Controller
             
             // create subscription
             $ps=new PaymentService;
-            $ps_res=$ps->create_subscription($data);
+            if ($user->trialEnded()) {
+                $ps_res=$ps->create_subscription($data);
+            } else {
+                $ps_res=$ps->swap_subscription_plan($user->lastSubscription->subs_id);
+            }
+            
 
             if (!is_null($ps_res) && isset($ps_res['subscription_id'])) {
 
@@ -119,6 +129,7 @@ class SubscriptionController extends Controller
                 $cs->customer_id=$ps_res['customer_id'];
                 $cs->start_date=$ps_res['start_date'];
                 $cs->end_date=$ps_res['end_date'];
+                $cs->trial_end_at=$ps_res['trial_end_at'] ?? '';
                 $cs->status='ACTIVE';
                 $cs->save();
 
@@ -222,7 +233,14 @@ class SubscriptionController extends Controller
             }
         }elseif($request->type == 'subscription.updated')
         {
-            // Storage::disk('public')->put('subscription_canceled.txt', json_encode($request->all()));
+            if ($request->data && $request->data->object && $request->data->object->subscription) {
+                $subs=$request->data->object->subscription;
+                $inv_subs=Subscription::where('subs_id',$subs->id)->first();
+                if ($inv_subs) {
+                    $inv_subs->status=$subs->status;
+                    $inv_subs->save();
+                }
+            }
             createLog('SQUARE_SUBSCRIPTION_UPDATED',[
                 'square_payload' => $request->all(),
             ]);

@@ -40,6 +40,7 @@ class UserResource extends JsonResource
             // "company_profile" => $this->company_profile ?? null,
             "email_verified" => $email_verified ?? false,
             'has_active_subscription' => $this->activeSubscription || $this->dayOldSubscription() ? true : false,
+            'trial_ended' => $this->trialEnded()
         ];
         return parent::toArray($request);
     }

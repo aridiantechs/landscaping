@@ -149,7 +149,8 @@ class PaymentService{
                 'plan_id'=>$result->getSubscription()->getPlanId(),
                 'customer_id'=>$result->getSubscription()->getCustomerId(),
                 'start_date'=>$result->getSubscription()->getStartDate(),
-                'end_date'=>Carbon::parse($result->getSubscription()->getStartDate())->addMonth()->format('Y-m-d H:i:s'),
+                'trial_end_at'=>Carbon::parse($result->getSubscription()->getStartDate())->addMonth()->format('Y-m-d H:i:s'),
+                'end_date'=>Carbon::parse($result->getSubscription()->getStartDate())->addMonth(2)->format('Y-m-d H:i:s'),
             ];
         } else {
             $result = $api_response->getErrors();
@@ -214,4 +215,30 @@ class PaymentService{
         return $result;
     }
         
+    // swap subscription
+    public function swap_subscription_plan($subscription_id){
+
+        $body = new \Square\Models\SwapPlanRequest('L35QZZEBMXUO7XZWDYKKATMD'); // plan without trial
+
+        $api_response = $client->getSubscriptionsApi()->swapPlan($subscription_id, $body);
+        if ($api_response->isSuccess()) {
+            $result = $api_response->getResult();
+            $result=[
+                'subscription_id'=>$result->getSubscription()->getId(),
+                'plan_id'=>$result->getSubscription()->getPlanId(),
+                'customer_id'=>$result->getSubscription()->getCustomerId(),
+                'start_date'=>$result->getSubscription()->getStartDate(),
+                'end_date'=>Carbon::parse($result->getSubscription()->getStartDate())->addMonth()->format('Y-m-d H:i:s'),
+            ];
+        } else {
+            $result = $api_response->getErrors();
+            // NotificationService::slack("SQUARE failed to create subcription ```".json_encode($result)."```");
+            $result=[
+                'key'=>$result[0]->getField(),
+                'message'=>$result[0]->getDetail(),
+            ];
+        }
+
+        return $result;
+    }
 }

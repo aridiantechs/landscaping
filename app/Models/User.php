@@ -89,6 +89,12 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Subscription::class,'customer_id','square_customer_id');
     }
+
+    // latest subscriptions
+    public function lastSubscription()
+    {
+        return $this->hasOne(Subscription::class,'customer_id','square_customer_id')->latest()->first();
+    }
     
     // active subscription
     public function activeSubscription()
@@ -101,6 +107,16 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $sub=$this->subscriptions()->latest()->first();
         if ($sub && Carbon::parse($sub->end_date)->diffInDays(now()) == 1) {
+            return $sub;
+        }
+        return false;
+    }
+
+    // subscriptions trial has ended
+    public function trialEnded()
+    {
+        $sub=$this->subscriptions()->latest()->first();
+        if ($sub && $sub->trial_end_at && Carbon::parse($sub->trial_end_at)->lt(now()) && $sub->status !='ACTIVE' ) {
             return $sub;
         }
         return false;
