@@ -93,7 +93,7 @@ class User extends Authenticatable implements MustVerifyEmail
     // active subscription
     public function activeSubscription()
     {
-        return $this->hasOne(Subscription::class,'customer_id','square_customer_id')->latest()->whereDate('end_date', '>=', now());
+        return $this->hasOne(Subscription::class,'customer_id','square_customer_id')->latest()->whereDate('end_date', '>=', now())->where('status','ACTIVE');
     }
 
     // subscriptions where 1 day have passed since the end date
