@@ -52,7 +52,7 @@ Route::get('/test_notify', function () {
     // socket_close($socket);
     // dd($conexion);
     // try {
-        broadcast(new RequestRecieved(/* auth()->user(), 'You have a new request' */))->toOthers();
+        broadcast(new RequestRecieved(/* auth()->user(), */ 'You have a new request'))->toOthers();
     // } catch (\Throwable $th) {
     //    dd($th->getMessage()) ;
     
