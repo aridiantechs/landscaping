@@ -458,7 +458,7 @@ class OrderController extends Controller
     public function destroy(Order $order)
     {
         $order = Order::where('uuid', $order_id)->where('user_id' , auth()->user()->id)->first();
-        if($order && $order->order_status){
+        if($order){
             $order->delete();
             return $this->sendResponse(new OrderResource($order), 'Order Deleted.');
         }else{
