@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Square\Models\Location;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -135,6 +136,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isDemoUser()
     {
         return $this->email === 'johndoe@example.com';
+    }
+
+    public function location()
+    {
+        return $this->hasOne(GeoLocation::class,'user_id','id')->latest();
     }
 
     public function scopeOrderByName($query)
