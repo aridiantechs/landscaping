@@ -455,7 +455,7 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Order $order)
+    public function destroy( $order_id)
     {
         $order = Order::where('uuid', $order_id)->where('user_id' , auth()->user()->id)->first();
         if($order){
