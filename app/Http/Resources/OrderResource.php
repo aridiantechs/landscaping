@@ -41,6 +41,8 @@ class OrderResource extends JsonResource
             $worker = null;
         }
         
+        $location=$worker && $worker->location()->exists() ? (clone $worker)->location : [];
+
         return [
             'id' => $this->id,
             'order_id' => $this->uuid,
@@ -57,7 +59,7 @@ class OrderResource extends JsonResource
             'schedule_data'=>$this->schedule_data() ? $this->schedule_data() : null,
             'area'=>$this->order_area ? $this->order_area : null,
             'worker'=>  $this->when(auth()->user()->hasRole('endUser'), $worker),
-            'location'=>  (object)$this->when( request()->query('q')=='tracking', auth()->user()->location),
+            'location'=>  (object)$this->when( request()->query('q')=='tracking', $location,''),
             'enable_action' => $this->when(auth()->user()->hasRole('endUser') && $this->order_area()->exists() && $this->order_area->customer_response == 'PENDING', function () {
                 return true;
             }),
