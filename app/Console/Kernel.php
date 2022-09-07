@@ -18,8 +18,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->job(new SubscriptionRenew)->everyMinute()->withoutOverlapping();
-        $schedule->job(new WorkerStatusUpdate)->everyMinute()->withoutOverlapping();
+        // $schedule->job(new SubscriptionRenew)->everyMinute()->withoutOverlapping();
+        $schedule->job(new WorkerStatusUpdate)->everyThreeMinutes()->withoutOverlapping();
     }
 
     /**
