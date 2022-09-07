@@ -38,7 +38,7 @@ class WorkerStatusUpdate implements ShouldQueue
         })->get();
         
         foreach ($workers as $worker) {
-            $worker->state =$worker->state=='ACTIVE' ? Str::upper('INACTIVE') : Str::upper('ACTIVE');
+            $worker->state =Str::upper('INACTIVE');
             $worker->save();
         }
     }
