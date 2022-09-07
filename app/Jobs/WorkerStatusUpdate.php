@@ -36,9 +36,9 @@ class WorkerStatusUpdate implements ShouldQueue
         $workers= User::whereHas('location',function($q){
             $q->where('updated_at','<',now()->subMinutes(5));
         })->get();
-
+        
         foreach ($workers as $worker) {
-            $worker->state = Str::upper($request->state);
+            $worker->state =$worker->state=='ACTIVE' ? Str::upper('INACTIVE') : Str::upper('ACTIVE');
             $worker->save();
         }
     }
