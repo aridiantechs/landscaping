@@ -19,7 +19,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         // $schedule->job(new SubscriptionRenew)->everyMinute()->withoutOverlapping();
-        $schedule->job(new WorkerStatusUpdate)->everyThreeMinutes()->withoutOverlapping();
+        $schedule->job(new WorkerStatusUpdate)->everyTwoMinutes()->withoutOverlapping();
     }
 
     /**
