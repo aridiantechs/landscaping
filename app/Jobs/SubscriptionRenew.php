@@ -42,21 +42,16 @@ class SubscriptionRenew implements ShouldQueue
             if ($worker && $worker->dayOldSubscription()) {
                 $subscription = $worker->dayOldSubscription();
 
-                $sc=new SubscriptionController;
-                $res=$sc->store__($worker);
-                $res=$res->getData();
-                if ($res->response_code != 200) {
-                    // send subscription fail email
-                    $data = [
-                        'user' => $worker,
-                        'subscription' => $subscription,
-                        'plan' => $subscription->plan,
-                        'error' => $res->errors,
-                    ];
+                // send subscription fail email
+                $data = [
+                    'user' => $worker,
+                    'subscription' => $subscription,
+                    'plan' => $subscription->plan,
+                    'error' => $res->errors,
+                ];
 
-                    $email = new SubscriptionFailMail($data);
-                    Mail::to($worker->email )->send($email);
-                }
+                $email = new SubscriptionFailMail($data);
+                Mail::to($worker->email )->send($email);
             }
             
         }
