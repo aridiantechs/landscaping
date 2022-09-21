@@ -472,7 +472,7 @@ class AuthController extends Controller
             'device_id'   => 'required|string',
             'role' => ['required', 'string', 'in:endUser,worker'],
             // required email if provider is apple
-            'email' => ['required_if:provider,apple', 'email', 'unique:users'],
+            'email' => ['required_if:provider,apple', 'email'],
             'name' => ['required_if:provider,apple', 'string'],
         ]);
 
