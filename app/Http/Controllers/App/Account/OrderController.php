@@ -122,9 +122,9 @@ class OrderController extends Controller
             return $this->validationError('Order response not found.', []);
         }
 
-        $orderStatus = OrderStatus::where('order_id',$request->order_id)->first();
+        $orderStatus = OrderStatus::where('order_id',$request->order_id)->where('worker_id',$request->worker_id)->first();
 
-        if(!is_null($orderStatus) && $request->status=='ACCEPTED' && $order_r->status = 'REJECTED'){
+        if(!is_null($orderStatus) && $request->status=='ACCEPTED' && $order_r->status == 'REJECTED'){
             return $this->sendResponse([], 'Order already rejected.');
         }elseif ($request->status=='ACCEPTED') {
             $order_r = new OrderStatus;
