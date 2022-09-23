@@ -123,7 +123,7 @@ class OrderController extends Controller
         }
 
         $orderStatus = OrderStatus::where('order_id',$request->order_id)->where('worker_id',$request->worker_id)->first();
-
+        dd($request , $orderStatus);
         if(!is_null($orderStatus) && $order_r->status){
             return $this->sendResponse([], 'Order already '. strToLower($request->status));
         }elseif ($request->status=='ACCEPTED') {
