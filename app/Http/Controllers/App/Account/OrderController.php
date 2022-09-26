@@ -125,7 +125,7 @@ class OrderController extends Controller
         $orderStatus = OrderStatus::where('order_id',$request->order_id)->where('worker_id',$request->worker_id)->first();
         // dd($request , $orderStatus);
         if(!is_null($orderStatus) && $orderStatus->status){
-            return $this->sendResponse([], 'Order already '. strToLower($orderStatus->status));
+            return $this->sendResponse((object)[], 'Order already '. strToLower($orderStatus->status) , 400);
         }elseif ($request->status=='ACCEPTED') {
             $order_r = new OrderStatus;
             $order_r->order_id = $request->order_id;
