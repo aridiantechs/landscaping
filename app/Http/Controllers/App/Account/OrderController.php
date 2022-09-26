@@ -177,7 +177,7 @@ class OrderController extends Controller
                 NotificationService::send($user_devices,$data);
             }
 
-            return $this->sendResponse([], 'Response Rejected.');
+            return $this->sendResponse((object)[], 'Response Rejected.');
         }
         
     }
