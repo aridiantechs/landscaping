@@ -159,23 +159,23 @@ class OrderController extends Controller
             $order_r->status = 'REJECTED';
             $order_r->save();
 
-            $user_devices = UserDevice::where('user_id',$request->worker_id)->whereNotNull('device_id')->pluck('device_id')->toArray();
-            if ($user_devices && count($user_devices)) {
-                $data=[
-                    'type'=>"Customer Request Action",
-                    'to_role'=>"worker",
-                    'req_id'=>$order->id,
-                    'to_user_id'=> $request->worker_id,
-                    'title'=> "Order Schedule rejected !",
-                    'body'=> "Order schedule rejected by ".auth()->user()->name,
-                    'object'=> json_encode(['req_id' => $order->id]),
-                    'dimensions_submitted'=>false,
-                    'content-available'=>0
+            // $user_devices = UserDevice::where('user_id',$request->worker_id)->whereNotNull('device_id')->pluck('device_id')->toArray();
+            // if ($user_devices && count($user_devices)) {
+            //     $data=[
+            //         'type'=>"Customer Request Action",
+            //         'to_role'=>"worker",
+            //         'req_id'=>$order->id,
+            //         'to_user_id'=> $request->worker_id,
+            //         'title'=> "Order Schedule rejected !",
+            //         'body'=> "Order schedule rejected by ".auth()->user()->name,
+            //         'object'=> json_encode(['req_id' => $order->id]),
+            //         'dimensions_submitted'=>false,
+            //         'content-available'=>0
                     
-                ];
+            //     ];
                 
-                NotificationService::send($user_devices,$data);
-            }
+            //     NotificationService::send($user_devices,$data);
+            // }
 
             return $this->sendResponse((object)[], 'Response Rejected.');
         }
