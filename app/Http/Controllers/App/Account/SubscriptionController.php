@@ -147,7 +147,7 @@ class SubscriptionController extends Controller
             }
         } catch (\Throwable $th) {
             //throw $th;
-            NotificationService::slack("Subscription Created ```".json_encode($th->getMessage())."```");
+            NotificationService::slack("Subscription Error ```".json_encode($th->getMessage())."```");
         }
 
        
