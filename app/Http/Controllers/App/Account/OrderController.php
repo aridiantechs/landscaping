@@ -166,8 +166,8 @@ class OrderController extends Controller
                     'to_role'=>"worker",
                     'req_id'=>$order->id,
                     'to_user_id'=> $request->worker_id,
-                    'title'=> "Order Schedule accepted !",
-                    'body'=> "Order schedule accepted by ".auth()->user()->name,
+                    'title'=> "Order Schedule rejected !",
+                    'body'=> "Order schedule rejected by ".auth()->user()->name,
                     'object'=> json_encode(['req_id' => $order->id]),
                     'dimensions_submitted'=>false,
                     'content-available'=>0
