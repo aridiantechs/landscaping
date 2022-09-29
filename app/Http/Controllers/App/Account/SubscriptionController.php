@@ -187,6 +187,11 @@ class SubscriptionController extends Controller
 
     public function subscriptionWebhook(Request $request)
     {
+
+        createLog('SQUARE_WEBHOOK',[
+            'data' => $request->all(),
+        ]);
+
         // if request has type and type is invoice.payment_made
         if ($request->type == 'invoice.payment_made') 
         {
