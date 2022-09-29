@@ -318,7 +318,7 @@ class OrderController extends Controller
         // Send Push notification
         $this->sendNotification($req);
 
-        return $this->sendResponse(new OrderResource($req), 'Order Created.');
+        return $this->sendResponse(new OrderResource($req), 'Request Created.');
     }
 
     public function sendNotification($req)
