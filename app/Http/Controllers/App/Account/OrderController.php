@@ -122,7 +122,11 @@ class OrderController extends Controller
             return $this->validationError('Order response not found.', []);
         }
 
-        if ($request->status=='ACCEPTED') {
+        $orderStatus = OrderStatus::where('order_id',$request->order_id)->where('worker_id',$request->worker_id)->first();
+        // dd($request , $orderStatus);
+        if(!is_null($orderStatus) && $orderStatus->status){
+            return $this->sendResponse((object)[], 'Order already '. strToLower($orderStatus->status) , 400);
+        }elseif ($request->status=='ACCEPTED') {
             $order_r = new OrderStatus;
             $order_r->order_id = $request->order_id;
             $order_r->worker_id = $request->worker_id;
@@ -148,8 +152,32 @@ class OrderController extends Controller
             }
 
             return $this->sendResponse(new OrderResource($order), 'Order Status Updated.');
-        }else{
-            return $this->sendResponse([], 'Response Rejected.');
+        }elseif ($request->status=='REJECTED'){
+            $order_r = new OrderStatus;
+            $order_r->order_id = $request->order_id;
+            $order_r->worker_id = $request->worker_id;
+            $order_r->status = 'REJECTED';
+            $order_r->save();
+
+            $user_devices = UserDevice::where('user_id',$request->worker_id)->whereNotNull('device_id')->pluck('device_id')->toArray();
+            if ($user_devices && count($user_devices)) {
+                $data=[
+                    'type'=>"Customer Request Action",
+                    'to_role'=>"worker",
+                    'req_id'=>$order->id,
+                    'to_user_id'=> $request->worker_id,
+                    'title'=> "Order Schedule accepted !",
+                    'body'=> "Order schedule accepted by ".auth()->user()->name,
+                    'object'=> json_encode(['req_id' => $order->id]),
+                    'dimensions_submitted'=>false,
+                    'content-available'=>0
+                    
+                ];
+                
+                NotificationService::send($user_devices,$data);
+            }
+
+            return $this->sendResponse((object)[], 'Response Rejected.');
         }
         
     }
