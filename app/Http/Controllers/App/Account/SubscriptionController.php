@@ -66,83 +66,91 @@ class SubscriptionController extends Controller
     public function createCardAndSubscription(Request $request)
     {
         // NotificationService::slack("```".json_encode($request->all())."```");
-        if ($request->payment_token) {
-            $user = auth()->user();
-            if ($user->activeSubscription) {
-                return $this->validationError('You already have an active subscription.', (object)[], 400);
-            }
 
-            // if square customer not found, create it
-            if(is_null($user->square_customer_id)){
-                $res = $this->storeCustomer($user);
-                $res=$res->getData();
-                // if response_code not 200
-                if ($res->response_code != 200) {
-                    // NotificationService::slack("Failed to get or create user in SQUARE");
-                    return $res;
-                } 
-            }
-
-            $data=[
-                'user'=>$user,
-                'customer_id' => $user->square_customer_id,
-            ];
-
-            // if trial not active store new card
-            if ($user->square_card && $user->trialEnded()) {
-                $user->square_card()->delete();
-            }
-
-            // if customer card not found, create it
-            if (!$user->square_card) {
-                // NotificationService::slack("Storing Customer {$user->email}");
-                $data['payment_token']=$request->payment_token;
-                $res=$this->storeCustomerCard($request);
-                $res=$res->getData();
+        try {
+            if ($request->payment_token) {
+                $user = auth()->user();
+                if ($user->activeSubscription) {
+                    return $this->validationError('You already have an active subscription.', (object)[], 400);
+                }
+    
+                // if square customer not found, create it
+                if(is_null($user->square_customer_id)){
+                    $res = $this->storeCustomer($user);
+                    $res=$res->getData();
+                    // if response_code not 200
+                    if ($res->response_code != 200) {
+                        // NotificationService::slack("Failed to get or create user in SQUARE");
+                        return $res;
+                    } 
+                }
+    
+                $data=[
+                    'user'=>$user,
+                    'customer_id' => $user->square_customer_id,
+                ];
+    
+                // if trial not active store new card
+                if ($user->square_card && $user->trialEnded()) {
+                    $user->square_card()->delete();
+                }
+    
+                // if customer card not found, create it
+                if (!$user->square_card) {
+                    // NotificationService::slack("Storing Customer {$user->email}");
+                    $data['payment_token']=$request->payment_token;
+                    $res=$this->storeCustomerCard($request);
+                    $res=$res->getData();
+                    
+                    // if response_code not 200
+                    if ($res->response_code != 200) {
+                        // NotificationService::slack("Card Failed ```".json_encode($res)."```");
+                        return $res;
+                    } 
+                    // NotificationService::slack("Card Added ```".json_encode($res)."```");
+                }
+    
+                $data['card_id']=$user->square_card()->first()->card_id;
                 
-                // if response_code not 200
-                if ($res->response_code != 200) {
-                    // NotificationService::slack("Card Failed ```".json_encode($res)."```");
-                    return $res;
-                } 
-                // NotificationService::slack("Card Added ```".json_encode($res)."```");
-            }
-
-            $data['card_id']=$user->square_card()->first()->card_id;
+                // create subscription
+                $ps=new PaymentService;
+                if ($user->trialEnded()) {
+                    $ps_res=$ps->create_subscription($data);
+                } else {
+                    $ps_res=$ps->swap_subscription_plan($user->lastSubscription->subs_id);
+                }
+                
+    
+                if (!is_null($ps_res) && isset($ps_res['subscription_id'])) {
+    
+                    
+    
+                    $cs=new Subscription;
+                    $cs->subs_id=$ps_res['subscription_id'];
+                    $cs->plan_id=$ps_res['plan_id'];
+                    $cs->customer_id=$ps_res['customer_id'];
+                    $cs->start_date=$ps_res['start_date'];
+                    $cs->end_date=$ps_res['end_date'];
+                    $cs->trial_end_at=$ps_res['trial_end_at'] ?? '';
+                    $cs->status='ACTIVE';
+                    $cs->save();
+    
+                    
+                    $user=User::find(auth()->user()->id);
+                    return $this->sendResponse(new UserResource($user), 'Subscription created successfully.',200,(object)[]);
+                }
             
-            // create subscription
-            $ps=new PaymentService;
-            if ($user->trialEnded()) {
-                $ps_res=$ps->create_subscription($data);
+                // NotificationService::slack("Failed to create subscription ```".json_encode($ps_res)."```");
+                return $this->validationError('Subscription Failed', (object)[], 400);
             } else {
-                $ps_res=$ps->swap_subscription_plan($user->lastSubscription->subs_id);
+                return $this->validationError('Payment token is required.', (object)[], 400);
             }
-            
-
-            if (!is_null($ps_res) && isset($ps_res['subscription_id'])) {
-
-                // NotificationService::slack("Subscription Created ```".json_encode($ps_res)."```");
-
-                $cs=new Subscription;
-                $cs->subs_id=$ps_res['subscription_id'];
-                $cs->plan_id=$ps_res['plan_id'];
-                $cs->customer_id=$ps_res['customer_id'];
-                $cs->start_date=$ps_res['start_date'];
-                $cs->end_date=$ps_res['end_date'];
-                $cs->trial_end_at=$ps_res['trial_end_at'] ?? '';
-                $cs->status='ACTIVE';
-                $cs->save();
-
-                
-                $user=User::find(auth()->user()->id);
-                return $this->sendResponse(new UserResource($user), 'Subscription created successfully.',200,(object)[]);
-            }
-        
-            // NotificationService::slack("Failed to create subscription ```".json_encode($ps_res)."```");
-            return $this->validationError('Subscription Failed', (object)[], 400);
-        } else {
-            return $this->validationError('Payment token is required.', (object)[], 400);
+        } catch (\Throwable $th) {
+            //throw $th;
+            NotificationService::slack("Subscription Created ```".json_encode($th->getMessage())."```");
         }
+
+       
         
     }
 
