@@ -220,7 +220,7 @@ class PaymentService{
 
         $body = new \Square\Models\SwapPlanRequest('L35QZZEBMXUO7XZWDYKKATMD'); // plan without trial
 
-        $api_response = $client->getSubscriptionsApi()->swapPlan($subscription_id, $body);
+        $api_response = $this->client->getSubscriptionsApi()->swapPlan($subscription_id, $body);
         if ($api_response->isSuccess()) {
             $result = $api_response->getResult();
             $result=[
