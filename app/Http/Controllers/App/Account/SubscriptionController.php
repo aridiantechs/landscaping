@@ -65,6 +65,12 @@ class SubscriptionController extends Controller
     // create subscription
     public function createCardAndSubscription(Request $request)
     {
+        createLog(
+            'CREATE_SUBSCRIPTION',
+            [
+                "request" => $request->all()
+            ]
+        );
         // NotificationService::slack("```".json_encode($request->all())."```");
         if ($request->payment_token) {
             $user = auth()->user();
