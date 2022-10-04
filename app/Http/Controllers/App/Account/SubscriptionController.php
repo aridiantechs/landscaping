@@ -203,7 +203,7 @@ class SubscriptionController extends Controller
         {
             if ($request->data && ($request->data['object'] ?? false) && ($request->data['object']['invoice'] ?? false)) {
                 $invoice=$request->data['object']['invoice'];
-                $inv_subs=Subscription::where('customer_id',$invoice['primary_recipient']['customer_id'])->first();
+                $inv_subs=Subscription::where('customer_id',$invoice['customer_id'] ?? $invoice['primary_recipient']['customer_id'])->first();
                 if (!$inv_subs) {
                     $ps_res= $this->getSubscription($invoice['subscription_id']);
                     if (!is_null($ps_res) && isset($ps_res['subscription_id'])) {
