@@ -89,7 +89,7 @@ class SubscriptionController extends Controller
             ];
 
             // if trial not active store new card
-            if ($user->square_card && $user->trialEnded()) {
+            if ($user->square_card && $user->trialEndedOrNoSubscription()) {
                 $user->square_card()->delete();
             }
 
@@ -112,7 +112,7 @@ class SubscriptionController extends Controller
             
             // create subscription
             $ps=new PaymentService;
-            if ($user->trialEnded()) {
+            if ($user->trialEndedOrNoSubscription()) {
                 $ps_res=$ps->create_subscription($data);
             } else {
                 $ps_res=$ps->swap_subscription_plan($user->lastSubscription->subs_id);

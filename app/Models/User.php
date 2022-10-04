@@ -123,6 +123,18 @@ class User extends Authenticatable implements MustVerifyEmail
         return false;
     }
 
+    public function trialEndedOrNoSubscription()
+    {
+        $sub=$this->subscriptions()->latest()->first();
+        if(!$sub){
+            return true;
+        }
+        if ($sub && $sub->trial_end_at && Carbon::parse($sub->trial_end_at)->lt(now()) && $sub->status !='ACTIVE' ) {
+            return $sub;
+        }
+        return false;
+    }
+
     public function getNameAttribute()
     {
         return $this->first_name.' '.$this->last_name;
@@ -198,4 +210,6 @@ class User extends Authenticatable implements MustVerifyEmail
         }
         
     }
+    
+
 }

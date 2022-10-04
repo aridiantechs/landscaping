@@ -53,7 +53,7 @@ if (!function_exists('square')) {
         }else if($option == 'location_id'){
             $data=config('app.SQUARE_BETA')==true ? 'L5AHC9DNN4ZQB':'L4QTFJMA45YBE';
         }else if($option == 'plan_id'){
-            $data=config('app.SQUARE_BETA')==true ? 'L35QZZEBMXUO7XZWDYKKATMD':'FUKKZV4IMCHIL37IOD5Y2N7I';
+            $data=config('app.SQUARE_BETA')==true ? 'L35QZZEBMXUO7XZWDYKKATMD':'EXAYWOK6HRPOCCXNKZEN4VPG';
         }else if($option=='env'){
             $data=config('app.SQUARE_BETA')==true ? Environment::SANDBOX : Environment::PRODUCTION;
         }
