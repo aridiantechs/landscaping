@@ -36,7 +36,7 @@ class SubscriptionController extends Controller
             $scc->save();
             return $this->sendResponse((object)$scc, 'Card added successfully.');
         }else{
-            return $this->validationError('Something went wrong!', (object)$ps_res, 400);
+            return $this->validationError('Please provide valid card details.', (object)$ps_res, 400);
         }
         
     }
