@@ -195,13 +195,13 @@ class SubscriptionController extends Controller
         // if request has type and type is invoice.payment_made
         if ($request->type == 'invoice.payment_made') 
         {
-            if ($request->data && $request->data->object && $request->data->object->invoice) {
-                $invoice=$request->data->object->invoice;
-                $inv_subs=Subscription::where('customer_id',$invoice->customer_id)->first();
+            if ($request->data && ($request->data['object'] ?? false) && ($request->data['object']['invoice'] ?? false)) {
+                $invoice=$request->data['object']['invoice'];
+                $inv_subs=Subscription::where('customer_id',$invoice['customer_id'])->first();
                 if (!$inv_subs) {
-                    $ps_res= $this->getSubscription($invoice->subscription_id);
+                    $ps_res= $this->getSubscription($invoice['subscription_id']);
                     if (!is_null($ps_res) && isset($ps_res['subscription_id'])) {
-                        $cs=new Subscription;
+                        $cs = new Subscription;
                         $cs->subs_id=$ps_res['subscription_id'];
                         $cs->plan_id=$ps_res['plan_id'];
                         $cs->customer_id=$ps_res['customer_id'];
@@ -213,6 +213,7 @@ class SubscriptionController extends Controller
                         createLog('SQUARE_INVOICE_PAYMENT_MADE',[
                             'square_payload' => $request->all(),
                         ]);
+
                     }
                 }
                 
