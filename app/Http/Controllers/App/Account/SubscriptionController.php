@@ -234,7 +234,7 @@ class SubscriptionController extends Controller
         {
             if ($request->data && ($request->data['object'] ?? false) && ($request->data['object']['invoice'] ?? false)) {
                 $invoice=$request->data['object']['invoice'];
-                $inv_subs=Subscription::where('subs_id',$invoice->subscription_id)->first();
+                $inv_subs=Subscription::where('subs_id',$invoice['subscription_id'])->first();
                 if ($inv_subs) {
                     $inv_subs->status='RENEWAL_FAILED';
                     $inv_subs->save();
@@ -288,7 +288,6 @@ class SubscriptionController extends Controller
         } else {
             return $this->validationError('You need to have an active subscription to cancel.', [], 400);
         }
-        
         
     }
 
