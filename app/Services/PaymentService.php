@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Services;
-use App\Services\NotificationService;
 use Carbon\Carbon;
 use Square\Environment;
-use Square\Exceptions\ApiException;
 use Square\SquareClient;
+use Square\Exceptions\ApiException;
+use App\Services\NotificationService;
+use Square\Models\RetrieveSubscriptionRequest;
 
 class PaymentService{
 
@@ -167,7 +168,7 @@ class PaymentService{
     // get subscription
     public function get_subscription($data = array()){
 
-        $body = new \Square\Models\GetSubscriptionRequest(
+        $body = new RetrieveSubscriptionRequest(
             $data['subscription_id']
         );
 
