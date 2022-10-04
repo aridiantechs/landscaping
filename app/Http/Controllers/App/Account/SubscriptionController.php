@@ -226,8 +226,8 @@ class SubscriptionController extends Controller
             // Storage::disk('public')->put('canceled.txt', json_encode($request->all()));
         }elseif($request->type == 'invoice.scheduled_charge_failed')
         {
-            if ($request->data && $request->data->object && $request->data->object->invoice) {
-                $invoice=$request->data->object->invoice;
+            if ($request->data && ($request->data['object'] ?? false) && ($request->data['object']['invoice'] ?? false)) {
+                $invoice=$request->data['object']['invoice'];
                 $inv_subs=Subscription::where('subs_id',$invoice->subscription_id)->first();
                 if ($inv_subs) {
                     $inv_subs->status='RENEWAL_FAILED';
@@ -239,8 +239,8 @@ class SubscriptionController extends Controller
             }
         }elseif($request->type == 'subscription.updated')
         {
-            if ($request->data && $request->data->object && $request->data->object->subscription) {
-                $subs=$request->data->object->subscription;
+            if ($request->data && ($request->data['object'] ?? false) && ($request->data['object']['subscription'] ?? false)) {
+                $subs=$request->data['object']['subscription'];
                 $inv_subs=Subscription::where('subs_id',$subs->id)->first();
                 if ($inv_subs) {
                     $inv_subs->status=$subs->status;
