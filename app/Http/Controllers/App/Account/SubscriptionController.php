@@ -299,7 +299,7 @@ class SubscriptionController extends Controller
                 auth()->user()->square_card()->delete();
                 return $this->sendResponse(new UserResource(auth()->user()), 'Subscription canceled successfully.');
             }else{
-                return $this->validationError('Subscription Failed',(object)$ps_res);
+                return $this->validationError('Subscription Failed',(object)[]);
             }
         } else {
             return $this->validationError('You need to have an active subscription to cancel.', []);
