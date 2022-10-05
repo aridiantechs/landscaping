@@ -168,11 +168,11 @@ class PaymentService{
     // get subscription
     public function get_subscription($subscription_id){
 
-        $body = new RetrieveSubscriptionRequest(
-            $subscription_id
-        );
+        // $body = new RetrieveSubscriptionRequest(
+        //     $subscription_id
+        // );
 
-        $api_response = $this->client->getSubscriptionsApi()->getSubscription($body);
+        $api_response = $this->client->getSubscriptionsApi()->retrieveSubscription($subscription_id);
 
         if ($api_response->isSuccess()) {
             $result = $api_response->getResult();
