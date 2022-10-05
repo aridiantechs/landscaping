@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\App\Account;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Notification;
 use App\Models\Subscription;
@@ -212,8 +213,8 @@ class SubscriptionController extends Controller
                             $cs->subs_id=$ps_res['subscription_id'];
                             $cs->plan_id=$ps_res['plan_id'];
                             $cs->customer_id=$ps_res['customer_id'];
-                            $cs->start_date=$ps_res['start_date'];
-                            $cs->end_date=$ps_res['end_date'];
+                            $cs->start_date=Carbon::parse($invoice['created_at'])->format('Y-m-d H:i:s')/* $ps_res['start_date'] */;
+                            $cs->end_date=Carbon::parse($invoice['created_at'])->addMonth()->format('Y-m-d H:i:s')/* $ps_res['end_date'] */;
                             $cs->status='ACTIVE';
                             $cs->save();
 
@@ -253,14 +254,14 @@ class SubscriptionController extends Controller
             }
         }elseif($request->type == 'subscription.updated')
         {
-            if ($request->data && ($request->data['object'] ?? false) && ($request->data['object']['subscription'] ?? false)) {
+           /*  if ($request->data && ($request->data['object'] ?? false) && ($request->data['object']['subscription'] ?? false)) {
                 $subs=$request->data['object']['subscription'];
                 $inv_subs=Subscription::where('subs_id',$subs->id)->first();
                 if ($inv_subs) {
                     $inv_subs->status=$subs->status;
                     $inv_subs->save();
                 }
-            }
+            } */
             createLog('SQUARE_SUBSCRIPTION_UPDATED',[
                 'square_payload' => $request->all(),
             ]);
