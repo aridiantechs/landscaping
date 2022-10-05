@@ -102,7 +102,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         // return $this->hasOne(Subscription::class,'customer_id','square_customer_id')->latest()/* ->whereDate('end_date', '>=', now()) */->where('status','ACTIVE');
         $sub=$this->subscriptions()->latest()->first();
-        if ($sub->status=='ACTIVE') {
+        if ($sub && $sub->status=='ACTIVE') {
             return $sub;
         } else {
             return false;
