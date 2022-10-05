@@ -206,7 +206,7 @@ class SubscriptionController extends Controller
                     $invoice=$request->data['object']['invoice'];
                     $inv_subs=Subscription::where('customer_id',$invoice['customer_id'] ?? $invoice['primary_recipient']['customer_id'])->first();
                     if (!$inv_subs) {
-                        $ps_res= $this->getSubscription($invoice['subscription_id']);
+                        $ps_res= $this->getSubscription($invoice);
                         if (!is_null($ps_res) && isset($ps_res['subscription_id'])) {
                             $cs = new Subscription;
                             $cs->subs_id=$ps_res['subscription_id'];
@@ -267,11 +267,11 @@ class SubscriptionController extends Controller
         
     }
 
-    public function getSubscription($subscription_id)
+    public function getSubscription($invoice)
     {
         // fetch subscription
         $ps=new PaymentService;
-        return $ps_res=$ps->get_subscription($subscription_id);
+        return $ps_res=$ps->get_subscription($invoice);
         
     }
 
