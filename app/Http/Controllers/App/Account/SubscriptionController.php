@@ -228,6 +228,7 @@ class SubscriptionController extends Controller
             } catch (\Exception $e) {
                 createLog('SQUARE_INVOICE_PAYMENT_MADE_FAILED',[
                     'payload' => $e->getMessage(),
+                    'complete_log'=>$e
                 ]);
             }
             
