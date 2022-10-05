@@ -135,7 +135,7 @@ class PaymentService{
         $body = new \Square\Models\CreateSubscriptionRequest(
             square('location_id'),//location_id
             // 'KZO7LES5A7GZIU6Y3LGHX3F3',//plan_id 1$
-            square('plan_id'),//plan_id 5$
+            isset($data['plan_id']) ? $data['plan_id'] : square('plan_id'),//plan_id 5$
             $data['customer_id'],
         );
         $body->setIdempotencyKey(uniqid());

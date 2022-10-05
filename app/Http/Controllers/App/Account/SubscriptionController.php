@@ -122,7 +122,9 @@ class SubscriptionController extends Controller
             if ($user->trialEndedOrNoSubscription()) {
                 $ps_res=$ps->create_subscription($data);
             } else {
-                $ps_res=$ps->swap_subscription_plan($user->lastSubscription()->subs_id);
+                // $ps_res=$ps->swap_subscription_plan($user->lastSubscription()->subs_id);
+                $data['plan_id']='L35QZZEBMXUO7XZWDYKKATMD';
+                $ps_res=$ps->create_subscription($data);
             }
             
 
