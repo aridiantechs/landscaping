@@ -290,6 +290,8 @@ class SubscriptionController extends Controller
                 $subscription->cancel_date=$ps_res['cancelled_at'];
                 $subscription->status='CANCELLED';
                 $subscription->save();
+
+                auth()->user()->square_card()->delete();
                 return $this->sendResponse(new UserResource(auth()->user()), 'Subscription canceled successfully.');
             }else{
                 return $this->validationError('Subscription Failed',$ps_res);
