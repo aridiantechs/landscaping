@@ -288,10 +288,13 @@ class SubscriptionController extends Controller
             $ps_res=$ps->cancel_subscription($subscription->subs_id);
             
             if (!is_null($ps_res) && isset($ps_res['cancelled_at'])) {
-                $subs=Subscription::where('id',$subscription->id)->first();
-                $subs->cancel_date=$ps_res['cancelled_at'];
+                $subs=Subscription::where('id',$subscription->id)->update([
+                    'cancel_date'=>$ps_res['cancelled_at'],
+                    'status'=>'CANCELLED'
+                ]);
+                /* $subs->cancel_date=$ps_res['cancelled_at'];
                 $subs->status='CANCELLED';
-                $subs->save();
+                $subs->save(); */
 
                 auth()->user()->square_card()->delete();
                 return $this->sendResponse(new UserResource(auth()->user()), 'Subscription canceled successfully.');
