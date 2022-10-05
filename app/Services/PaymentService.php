@@ -166,10 +166,10 @@ class PaymentService{
     }
 
     // get subscription
-    public function get_subscription($data = array()){
+    public function get_subscription($subscription_id){
 
         $body = new RetrieveSubscriptionRequest(
-            $data['subscription_id']
+            $subscription_id
         );
 
         $api_response = $this->client->getSubscriptionsApi()->getSubscription($body);

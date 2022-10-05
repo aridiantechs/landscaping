@@ -206,7 +206,7 @@ class SubscriptionController extends Controller
                     $invoice=$request->data['object']['invoice'];
                     $inv_subs=Subscription::where('customer_id',$invoice['customer_id'] ?? $invoice['primary_recipient']['customer_id'])->first();
                     if (!$inv_subs) {
-                        $ps_res= $this->getSubscription($invoice);
+                        $ps_res= $this->getSubscription($inv_subs->subs_id);
                         if (!is_null($ps_res) && isset($ps_res['subscription_id'])) {
                             $cs = new Subscription;
                             $cs->subs_id=$ps_res['subscription_id'];
@@ -228,7 +228,7 @@ class SubscriptionController extends Controller
             } catch (\Exception $e) {
                 createLog('SQUARE_INVOICE_PAYMENT_MADE_FAILED',[
                     'payload' => $e->getMessage(),
-                    'complete_log'=>$e
+                    'request'=>$request->all()
                 ]);
             }
             
@@ -268,11 +268,11 @@ class SubscriptionController extends Controller
         
     }
 
-    public function getSubscription($invoice)
+    public function getSubscription($subscription_id)
     {
         // fetch subscription
         $ps=new PaymentService;
-        return $ps_res=$ps->get_subscription($invoice);
+        return $ps_res=$ps->get_subscription($subscription_id);
         
     }
 
