@@ -37,7 +37,7 @@ class SubscriptionController extends Controller
             $scc->save();
             return $this->sendResponse((object)$scc, 'Card added successfully.');
         }else{
-            return $this->validationError('Please provide valid card details.', (object)$ps_res, 400);
+            return $this->validationError('Please provide valid card details.', (object)$ps_res);
         }
         
     }
@@ -58,7 +58,7 @@ class SubscriptionController extends Controller
             $user->save();
             return $this->sendResponse((object)$user, 'Customer added successfully.');
         }else{
-            return $this->validationError('Something went wrong!', (object)$ps_res, 400);
+            return $this->validationError('Something went wrong!', (object)$ps_res);
         }
         
     }
@@ -76,7 +76,7 @@ class SubscriptionController extends Controller
         if ($request->payment_token) {
             $user = auth()->user();
             if ($user->activeSubscription) {
-                return $this->validationError('You already have an active subscription.', (object)[], 400);
+                return $this->validationError('You already have an active subscription.', (object)[]);
             }
 
             // if square customer not found, create it
@@ -146,9 +146,9 @@ class SubscriptionController extends Controller
             }
         
             // NotificationService::slack("Failed to create subscription ```".json_encode($ps_res)."```");
-            return $this->validationError('Subscription Failed', (object)[], 400);
+            return $this->validationError('Subscription Failed', (object)[]);
         } else {
-            return $this->validationError('Payment token is required.', (object)[], 400);
+            return $this->validationError('Payment token is required.', (object)[]);
         }
         
     }
@@ -166,7 +166,7 @@ class SubscriptionController extends Controller
             return $this->validationError('You need to add a card first.', [
                 'key'=>'card',
                 'message'=>'You need to add a card first!',
-            ], 400);
+            ]);
         }
 
         $data=[
@@ -188,7 +188,7 @@ class SubscriptionController extends Controller
             $cs->save();
             return $this->sendResponse(auth()->user(), 'Subscription created successfully.');
         }else{
-            return $this->validationError('Subscription Failed',$ps_res, 400);
+            return $this->validationError('Subscription Failed',$ps_res);
         }
     }
 
@@ -292,10 +292,10 @@ class SubscriptionController extends Controller
                 $subscription->save();
                 return $this->sendResponse($subscription, 'Subscription canceled successfully.');
             }else{
-                return $this->validationError('Subscription Failed',$ps_res, 400);
+                return $this->validationError('Subscription Failed',$ps_res);
             }
         } else {
-            return $this->validationError('You need to have an active subscription to cancel.', [], 400);
+            return $this->validationError('You need to have an active subscription to cancel.', []);
         }
         
     }
