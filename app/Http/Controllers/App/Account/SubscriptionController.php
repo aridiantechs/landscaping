@@ -75,7 +75,7 @@ class SubscriptionController extends Controller
         // NotificationService::slack("```".json_encode($request->all())."```");
         if ($request->payment_token) {
             $user = auth()->user();
-            if ($user->activeSubscription) {
+            if ($user->activeSubscription()) {
                 return $this->validationError('You already have an active subscription.', (object)[]);
             }
 
@@ -281,8 +281,8 @@ class SubscriptionController extends Controller
 
     public function cancelSubscription(Request $request)
     {
-        if (auth()->user()->square_customer_id && (auth()->user()->activeSubscription || auth()->user()->dayOldSubscription()) ) {
-            $subscription=auth()->user()->activeSubscription ? auth()->user()->activeSubscription : auth()->user()->dayOldSubscription();
+        if (auth()->user()->square_customer_id && (auth()->user()->activeSubscription() || auth()->user()->dayOldSubscription()) ) {
+            $subscription=auth()->user()->activeSubscription() ? auth()->user()->activeSubscription() : auth()->user()->dayOldSubscription();
             // cancel subscription
             $ps=new PaymentService;
             $ps_res=$ps->cancel_subscription($subscription->subs_id);
