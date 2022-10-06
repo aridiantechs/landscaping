@@ -29,7 +29,9 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request)
     {
         $request->authenticate();
-
+        if ( !auth()->user()->hasRole('superadmin')) {
+            Auth::guard('web')->logout();
+        }
         $request->session()->regenerate();
 
         return redirect()->intended(RouteServiceProvider::HOME);
