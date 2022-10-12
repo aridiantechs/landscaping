@@ -198,7 +198,7 @@ if (!function_exists('distance')) {
     
         $d= $distance * $radius;
         // echo $d ;
-        if($d  < 5000)
+        if($d  < 16000)
         {
             return true;
         }
