@@ -78,6 +78,11 @@ class Order extends Model
     {
         return $this->hasOne(OrderArea::class, 'order_id', 'uuid')->where('customer_response', 'ACCEPTED')->orWhere('customer_response', 'REJECTED')->orWhere('customer_response', 'RESUBMIT');
     }
+    
+    public function rating()
+    {
+        return $this->hasOne(Rating::class, 'order_id', 'uuid');
+    }
 
     // user has submitted area
     public function userSubmittedArea()

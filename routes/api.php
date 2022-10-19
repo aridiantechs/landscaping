@@ -113,6 +113,8 @@ Route::group([
     Route::get('delete_order/{order}', 'Account\OrderController@destroy')->name('order.delete');
 
     Route::get('get_available_workers', 'Account\DashboardController@getWorkers');
+    
+    Route::post('rating', 'Account\RatingController@rate');
     // Route::get ('order/quote/get',     'Account\OrderController@customer_quoteGet');
     // Customer Side Orders Ends Here
 });
